@@ -536,9 +536,9 @@ async function loadNews(){
     list.innerHTML=data.news.map(item=>{
       const bc=BADGE_MAP[item.badge]||'nb-info';
       // 回覧は直接URLへ、それ以外はnews.htmlフィルター経由
-      const href = item.badge === '回覧'
-        ? item.url
-        : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
+      const href = item.url && item.url !== '#'
+  ? item.url
+  : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
       const target = item.badge === '回覧' ? 'target="_blank" rel="noopener"' : '';
       return `<a class="notice-item" href="${href}" ${target}>
         <div class="notice-left"><div class="notice-day">${item.day}</div><div class="notice-month">${item.month}</div><span class="n-badge ${bc}">${item.badge}</span></div>

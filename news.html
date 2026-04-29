@@ -188,10 +188,8 @@ function renderNews() {
       ? `<img class="notice-thumb" src="${item.imageUrl}" alt="" loading="lazy"
            onerror="this.style.display='none'">`
       : '';
-    const target = item.url && item.url !== '#' ? 'target="_blank" rel="noopener"' : '';
-    return `
-      <a class="notice-item" href="${item.url || '#'}" ${target}>
-        <div class="notice-left">
+    const target = item.badge === '回覧' || (item.url && item.url.startsWith('http')) ? 'target="_blank" rel="noopener"' : '';return `
+      <a class="notice-item" href="${item.url && item.url !== '#' ? item.url : `news.html?filter=${encodeURIComponent(item.badge||'all')}`}" ${target}>        <div class="notice-left">
           <div class="notice-day">${item.day}</div>
           <div class="notice-month">${item.month}</div>
           <span class="n-badge ${bc}">${item.badge}</span>

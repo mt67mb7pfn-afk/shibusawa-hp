@@ -566,16 +566,16 @@ async function loadNews(){
     }
 
     grid.innerHTML=items.map(p=>`
-      <a class="topic-card" href="${p.url||'#'}" target="_blank" rel="noopener">
-        <div class="topic-img">
-          <img src="${p.imageUrl}" alt="${p.category}" loading="lazy">
-        </div>
-        <div class="topic-body">
-          <div class="topic-cat">${p.category}</div>
-          <div class="topic-title">${p.title||p.category}</div>
-        </div>
-      </a>
-    `).join('');
+  <a class="topic-card" href="topics.html?filter=${encodeURIComponent(p.category)}">
+    <div class="topic-img">
+      <img src="${p.imageUrl}" alt="${p.category}" loading="lazy">
+    </div>
+    <div class="topic-body">
+      <div class="topic-cat">${p.category}</div>
+      <div class="topic-title">${p.title||p.category}</div>
+    </div>
+  </a>`
+).join('');
   }catch(e){console.log('トピックス読み込みエラー:',e);}
 }
   document.addEventListener('DOMContentLoaded',()=>{loadNews();loadTopics();});

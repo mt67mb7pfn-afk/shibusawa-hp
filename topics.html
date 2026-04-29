@@ -157,6 +157,48 @@ header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top
 /* 空状態 */
 .empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;}
 
+/* ライトボックス */
+.lightbox{
+  display:none;
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.92);
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.lightbox.open{display:flex;}
+.lightbox-inner{
+  position:relative;
+  max-width:90vw;max-height:90vh;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.lightbox-img{
+  max-width:100%;max-height:80vh;
+  border-radius:12px;
+  object-fit:contain;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.lightbox-info{
+  color:#fff;text-align:center;
+}
+.lightbox-cat{
+  font-size:11px;font-weight:700;
+  background:linear-gradient(135deg,var(--coral),var(--lavender));
+  padding:3px 12px;border-radius:20px;
+  display:inline-block;margin-bottom:6px;
+}
+.lightbox-title{font-size:14px;font-weight:700;color:#fff;}
+.lightbox-sub{font-size:12px;color:rgba(255,255,255,.6);}
+.lightbox-close{
+  position:fixed;top:20px;right:20px;
+  width:40px;height:40px;
+  background:rgba(255,255,255,.15);
+  border:none;border-radius:50%;
+  color:#fff;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;z-index:1001;
+}
+.lightbox-close:hover{background:rgba(255,255,255,.3);}
+
 /* フッター */
 footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;margin-top:60px;text-align:center;position:relative;z-index:1;}
 .footer-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:10px 24px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:all .2s;margin-bottom:16px;}
@@ -179,6 +221,19 @@ footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;marg
     <a class="back-btn" href="index.html">← トップに戻る</a>
   </div>
 </header>
+
+<!-- ライトボックス -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightbox-close">✕</button>
+  <div class="lightbox-inner">
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <div class="lightbox-info">
+      <div class="lightbox-cat" id="lightbox-cat"></div>
+      <div class="lightbox-title" id="lightbox-title"></div>
+      <div class="lightbox-sub" id="lightbox-sub"></div>
+    </div>
+  </div>
+</div>
 
 <div class="main">
   <h1 class="page-title">トピックス一覧</h1>
@@ -275,7 +330,7 @@ function renderPhotos() {
     return;
   }
 
-  grid.innerHTML = filtered.map(item => {
+  grid.innerHTML = filtered.map((item, i) => {
     const imgHtml = item.imageUrl
       ? `<img src="${item.imageUrl}" alt="${item.title||item.category}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-image\\'>📷</div>'">`
       : `<div class="no-image">📷</div>`;
@@ -284,13 +339,8 @@ function renderPhotos() {
       ? `<div class="photo-card-link">詳細を見る ›</div>`
       : '';
 
-    const cardTag = item.url && item.url !== '#'
-      ? `<a class="photo-card" href="${item.url}" target="_blank" rel="noopener">`
-      : `<div class="photo-card">`;
-    const cardClose = item.url && item.url !== '#' ? `</a>` : `</div>`;
-
     return `
-      ${cardTag}
+      <div class="photo-card" onclick="openLightbox(${i})">
         <div class="photo-card-img">${imgHtml}</div>
         <div class="photo-card-body">
           <div class="photo-card-cat">${item.category}</div>
@@ -298,9 +348,35 @@ function renderPhotos() {
           ${item.sub ? `<div class="photo-card-sub">${item.sub}</div>` : ''}
           ${linkHtml}
         </div>
-      ${cardClose}`;
+      </div>`;
   }).join('');
+
+  // 現在表示中のアイテムをグローバルに保持
+  window._currentFiltered = filtered;
 }
+
+// ライトボックス
+function openLightbox(index) {
+  const item = window._currentFiltered[index];
+  if (!item || !item.imageUrl) return;
+  document.getElementById('lightbox-img').src = item.imageUrl;
+  document.getElementById('lightbox-img').alt = item.title || item.category;
+  document.getElementById('lightbox-cat').textContent = item.category;
+  document.getElementById('lightbox-title').textContent = item.title || '';
+  document.getElementById('lightbox-sub').textContent = item.sub || '';
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+});
 
 loadPhotos();
 </script>

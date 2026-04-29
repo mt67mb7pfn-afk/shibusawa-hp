@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>掲示板投稿 | 渋沢連合自治会</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --amber:#ffd43b;--amber-l:#fff9db;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;}
+
+/* パスワード画面 */
+.pw-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.pw-box{
+  background:#fff;border-radius:20px;padding:40px 32px;
+  box-shadow:0 8px 32px rgba(0,0,0,.08);border:2px solid var(--border);
+  width:100%;max-width:400px;text-align:center;
+}
+.pw-icon{font-size:40px;margin-bottom:16px;}
+.pw-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;margin-bottom:8px;}
+.pw-sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
+.pw-input{
+  width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;
+  font-size:16px;font-family:inherit;outline:none;transition:border-color .2s;margin-bottom:16px;
+}
+.pw-input:focus{border-color:var(--sky);}
+.pw-btn{
+  width:100%;padding:12px;
+  background:linear-gradient(135deg,var(--sky),var(--mint));
+  color:#fff;font-size:15px;font-weight:700;
+  border:none;border-radius:10px;cursor:pointer;transition:opacity .2s;
+}
+.pw-btn:hover{opacity:.9;}
+.pw-error{color:var(--coral);font-size:13px;margin-top:12px;display:none;}
+
+/* メイン */
+.main-screen{display:none;}
+header{background:#fff;border-bottom:2px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.header-inner{max-width:700px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:14px;}
+.header-title{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;}
+.header-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--sky-l);color:var(--sky);}
+
+.main{max-width:700px;margin:40px auto;padding:0 24px 60px;}
+.form-card{
+  background:#fff;border-radius:16px;border:2px solid var(--border);
+  padding:32px;box-shadow:0 2px 10px rgba(0,0,0,.04);
+  display:flex;flex-direction:column;gap:24px;
+}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-label{font-size:13px;font-weight:700;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.form-label .required{font-size:10px;color:#fff;background:var(--coral);padding:2px 6px;border-radius:4px;}
+.form-label .optional{font-size:10px;color:var(--text3);}
+.form-input,.form-select{
+  width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:10px;
+  font-size:15px;font-family:inherit;color:var(--text);
+  outline:none;transition:border-color .2s;background:#fff;
+}
+.form-input:focus,.form-select:focus{border-color:var(--sky);}
+
+/* 日付グループ */
+.date-group{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:500px){.date-group{grid-template-columns:1fr;}}
+
+/* 種別説明 */
+.type-hint{font-size:11px;color:var(--text3);padding:8px 12px;background:var(--sky-l);border-radius:8px;line-height:1.6;}
+
+/* 画像アップロード */
+.image-upload-list{display:flex;flex-direction:column;gap:12px;}
+.image-upload-item{
+  border:2px dashed var(--border);border-radius:10px;
+  padding:16px;position:relative;
+  transition:border-color .2s,background .2s;
+}
+.image-upload-item:hover{border-color:var(--sky);background:var(--sky-l);}
+.image-upload-item input[type="file"]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.upload-row{display:flex;align-items:center;gap:12px;}
+.upload-num{
+  width:28px;height:28px;border-radius:50%;
+  background:linear-gradient(135deg,var(--sky),var(--mint));
+  color:#fff;font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.upload-text{font-size:13px;color:var(--text3);}
+.upload-text strong{color:var(--sky);}
+.image-preview{
+  margin-top:10px;border-radius:8px;
+  max-width:100%;max-height:160px;
+  object-fit:contain;display:none;
+}
+
+/* 送信ボタン */
+.submit-btn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--sky),var(--mint));
+  color:#fff;font-size:16px;font-weight:700;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(77,171,247,.4);
+  transition:transform .2s,box-shadow .2s;
+}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(77,171,247,.5);}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* 結果 */
+.result{
+  text-align:center;padding:20px;border-radius:12px;
+  font-size:14px;font-weight:700;display:none;margin-top:16px;
+}
+.result.success{background:var(--mint-l);color:var(--mint-d);border:2px solid var(--mint);}
+.result.error{background:var(--coral-l);color:var(--coral);border:2px solid var(--coral);}
+
+input[type="date"]{appearance:auto;}
+</style>
+</head>
+<body>
+
+<!-- パスワード画面 -->
+<div class="pw-screen" id="pw-screen">
+  <div class="pw-box">
+    <div class="pw-icon">📋</div>
+    <div class="pw-title">管理者ログイン</div>
+    <div class="pw-sub">掲示板投稿フォームです。<br>パスワードを入力してください。</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="パスワード" autocomplete="current-password">
+    <button class="pw-btn" onclick="checkPassword()">ログイン</button>
+    <div class="pw-error" id="pw-error">パスワードが違います</div>
+  </div>
+</div>
+
+<!-- メイン画面 -->
+<div class="main-screen" id="main-screen">
+  <header>
+    <div class="header-inner">
+      <div class="header-title">掲示板投稿</div>
+      <div class="header-badge">管理者専用</div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="form-card">
+
+      <!-- タイトル -->
+      <div class="form-group">
+        <label class="form-label">タイトル <span class="required">必須</span></label>
+        <input class="form-input" type="text" id="title" placeholder="掲示物のタイトルを入力">
+      </div>
+
+      <!-- 種別 -->
+      <div class="form-group">
+        <label class="form-label">種別 <span class="required">必須</span></label>
+        <select class="form-select" id="type" onchange="updateDateFields()">
+          <option value="短期">短期掲示（日付が決まっているもの）</option>
+          <option value="中期">中期掲示（期間が長めのもの）</option>
+          <option value="常設">常設（期間なし）</option>
+        </select>
+        <div class="type-hint">
+          短期：イベント告知など期限付き ／ 中期：工事・募集など長期 ／ 常設：規約・連絡先など
+        </div>
+      </div>
+
+      <!-- 掲示期間 -->
+      <div class="form-group" id="date-group">
+        <label class="form-label">掲示期間 <span class="required">必須</span></label>
+        <div class="date-group">
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">開始日</div>
+            <input class="form-input" type="date" id="start-date">
+          </div>
+          <div id="end-date-wrap">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">終了日</div>
+            <input class="form-input" type="date" id="end-date">
+          </div>
+        </div>
+      </div>
+
+      <!-- 画像（最大3枚） -->
+      <div class="form-group">
+        <label class="form-label">画像 <span class="optional">最大3枚</span></label>
+        <div class="image-upload-list">
+          <!-- 1枚目 -->
+          <div class="image-upload-item">
+            <input type="file" id="image-1" accept="image/*" onchange="previewImage(this,'preview-1')">
+            <div class="upload-row">
+              <div class="upload-num">1</div>
+              <div class="upload-text">タップして画像を選択<br><strong>JPG・PNG対応</strong></div>
+            </div>
+            <img class="image-preview" id="preview-1">
+          </div>
+          <!-- 2枚目 -->
+          <div class="image-upload-item">
+            <input type="file" id="image-2" accept="image/*" onchange="previewImage(this,'preview-2')">
+            <div class="upload-row">
+              <div class="upload-num">2</div>
+              <div class="upload-text">タップして画像を選択（任意）</div>
+            </div>
+            <img class="image-preview" id="preview-2">
+          </div>
+          <!-- 3枚目 -->
+          <div class="image-upload-item">
+            <input type="file" id="image-3" accept="image/*" onchange="previewImage(this,'preview-3')">
+            <div class="upload-row">
+              <div class="upload-num">3</div>
+              <div class="upload-text">タップして画像を選択（任意）</div>
+            </div>
+            <img class="image-preview" id="preview-3">
+          </div>
+        </div>
+      </div>
+
+      <!-- 送信ボタン -->
+      <button class="submit-btn" id="submit-btn" onclick="submitForm()">掲示する</button>
+
+      <!-- 結果 -->
+      <div class="result" id="result"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+const PASSWORD = 'shibusawa2026';
+let enteredPassword = '';
+
+// 今日の日付をデフォルト設定
+window.addEventListener('DOMContentLoaded', () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('start-date').value = `${yyyy}-${mm}-${dd}`;
+  updateDateFields();
+});
+
+// 種別変更で終了日フィールドの表示切替
+function updateDateFields() {
+  const type = document.getElementById('type').value;
+  const endWrap = document.getElementById('end-date-wrap');
+  const dateGroup = document.getElementById('date-group');
+  if (type === '常設') {
+    endWrap.style.display = 'none';
+    dateGroup.style.display = 'none';
+  } else {
+    endWrap.style.display = 'block';
+    dateGroup.style.display = 'block';
+  }
+}
+
+// パスワード確認
+function checkPassword() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD) {
+    enteredPassword = pw;
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+  } else {
+    document.getElementById('pw-error').style.display = 'block';
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPassword();
+});
+
+// 画像プレビュー
+function previewImage(input, previewId) {
+  const preview = document.getElementById(previewId);
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// Base64変換
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// 投稿処理
+async function submitForm() {
+  const title = document.getElementById('title').value.trim();
+  const type = document.getElementById('type').value;
+  const startDate = document.getElementById('start-date').value;
+  const endDate = document.getElementById('end-date').value;
+
+  if (!title) {
+    showResult('タイトルは必須です', 'error');
+    return;
+  }
+  if (type !== '常設' && !startDate) {
+    showResult('掲示開始日を入力してください', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+
+  try {
+    // 画像を最大3枚処理
+    const images = [];
+    for (let i = 1; i <= 3; i++) {
+      const file = document.getElementById(`image-${i}`).files[0];
+      if (file) {
+        const base64 = await toBase64(file);
+        images.push({ base64, name: file.name, mime: file.type });
+      } else {
+        images.push(null);
+      }
+    }
+
+    const payload = {
+      password: enteredPassword,
+      type: 'bulletin',
+      title, bulletinType: type,
+      startDate: type !== '常設' ? startDate : '',
+      endDate: type !== '常設' ? endDate : '',
+      images
+    };
+
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showResult('✅ 掲示が完了しました！サイトに反映されます。', 'success');
+      resetForm();
+    } else {
+      showResult(`❌ エラー：${data.error}`, 'error');
+    }
+  } catch(e) {
+    showResult('❌ 送信に失敗しました。もう一度お試しください。', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '掲示する';
+  }
+}
+
+function showResult(msg, type) {
+  const el = document.getElementById('result');
+  el.textContent = msg;
+  el.className = `result ${type}`;
+  el.style.display = 'block';
+  el.scrollIntoView({behavior: 'smooth'});
+}
+
+function resetForm() {
+  document.getElementById('title').value = '';
+  document.getElementById('end-date').value = '';
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById(`image-${i}`).value = '';
+    document.getElementById(`preview-${i}`).style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>

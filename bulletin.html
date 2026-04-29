@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>掲示板 | 渋沢連合自治会</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --amber:#ffd43b;--amber-l:#fff9db;
+  --lavender:#b197fc;--lavender-l:#f3f0ff;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+
+/* 背景バルーン */
+.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.balloon{position:absolute;border-radius:50%;opacity:.15;animation:balloonDrift linear infinite;filter:blur(1px);}
+.b1{width:180px;height:180px;background:radial-gradient(circle,var(--sky),var(--mint));top:8%;left:2%;animation-duration:22s;}
+.b2{width:120px;height:120px;background:radial-gradient(circle,var(--amber),var(--coral));top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
+.b3{width:90px;height:90px;background:radial-gradient(circle,var(--lavender),var(--sky));top:60%;left:1%;animation-duration:20s;animation-delay:-8s;}
+.b4{width:150px;height:150px;background:radial-gradient(circle,var(--mint),var(--amber));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
+@keyframes balloonDrift{
+  0%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-24px) scale(1.03);}
+  100%{transform:translateY(0) scale(1);}
+}
+
+/* HEADER */
+header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.header-inner{max-width:1080px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:14px;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-pref{font-size:10px;color:var(--text3);}
+.logo-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--text);}
+.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--sky);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--sky-l);transition:background .2s;}
+.back-btn:hover{background:var(--sky);color:#fff;}
+
+/* MAIN */
+.main{max-width:1080px;margin:40px auto;padding:0 24px;position:relative;z-index:1;}
+.page-title{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.page-sub{font-size:13px;color:var(--text3);margin-bottom:16px;}
+.page-divider{width:48px;height:3px;background:linear-gradient(90deg,var(--sky),var(--mint));border-radius:2px;margin-bottom:28px;}
+
+/* フィルター */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.filter-btn{font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;border:2px solid var(--border);background:#fff;color:var(--text2);cursor:pointer;transition:all .2s;}
+.filter-btn.active,.filter-btn:hover{background:linear-gradient(135deg,var(--sky),var(--mint));border-color:transparent;color:#fff;}
+
+/* 件数 */
+.result-count{font-size:12px;color:var(--text3);margin-bottom:16px;}
+.result-count span{font-weight:700;color:var(--text2);}
+
+/* 掲示グリッド */
+.bulletin-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:24px;
+}
+@media(max-width:600px){
+  .bulletin-grid{grid-template-columns:1fr;}
+}
+
+/* 掲示カード */
+.bulletin-card{
+  background:#fff;
+  border-radius:16px;
+  border:2px solid var(--border);
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.04);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.bulletin-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(77,171,247,.15);
+  border-color:var(--sky);
+}
+
+/* 種別バッジ */
+.type-short{background:linear-gradient(135deg,var(--coral),#c0392b);color:#fff;}
+.type-mid{background:linear-gradient(135deg,var(--amber),#f39c12);color:#1a1a2e;}
+.type-permanent{background:linear-gradient(135deg,var(--sky),var(--mint));color:#fff;}
+
+/* 画像スライダー */
+.card-slider{position:relative;aspect-ratio:3/4;background:var(--sky-l);overflow:hidden;cursor:zoom-in;}
+.card-slides{display:flex;height:100%;transition:transform .3s ease;}
+.card-slide{min-width:100%;height:100%;}
+.card-slide img{width:100%;height:100%;object-fit:contain;background:#f0f0f0;}
+.slider-prev,.slider-next{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,.4);color:#fff;border:none;
+  width:32px;height:32px;border-radius:50%;
+  font-size:16px;cursor:pointer;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.slider-prev{left:8px;}
+.slider-next{right:8px;}
+.slider-prev:hover,.slider-next:hover{background:rgba(0,0,0,.7);}
+.slider-dots{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  display:flex;gap:4px;z-index:2;
+}
+.slider-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.5);cursor:pointer;transition:background .2s;
+}
+.slider-dot.active{background:#fff;}
+.no-image{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;color:var(--border);
+}
+
+/* カード本文 */
+.card-body{padding:16px 18px;}
+.card-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.card-type{
+  font-size:10px;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+}
+.card-period{font-size:11px;color:var(--text3);}
+.card-title{font-size:15px;font-weight:700;color:var(--text);line-height:1.5;}
+
+/* ライトボックス */
+.lightbox{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.95);
+  align-items:center;justify-content:center;
+}
+.lightbox.open{display:flex;}
+.lightbox-inner{
+  position:relative;width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+}
+.lightbox-img{
+  max-width:95vw;max-height:95vh;
+  object-fit:contain;
+}
+.lightbox-close{
+  position:fixed;top:16px;right:16px;
+  width:40px;height:40px;
+  background:rgba(255,255,255,.15);
+  border:none;border-radius:50%;
+  color:#fff;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;z-index:1001;
+}
+.lightbox-close:hover{background:rgba(255,255,255,.3);}
+.lightbox-prev,.lightbox-next{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.15);color:#fff;
+  border:none;width:44px;height:44px;border-radius:50%;
+  font-size:20px;cursor:pointer;z-index:1001;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.lightbox-prev{left:16px;}
+.lightbox-next{right:16px;}
+.lightbox-prev:hover,.lightbox-next:hover{background:rgba(255,255,255,.3);}
+.lightbox-counter{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,.7);font-size:13px;z-index:1001;
+}
+
+/* ローディング */
+.loading{text-align:center;padding:80px 20px;color:var(--text3);}
+.loading-spinner{
+  width:36px;height:36px;border:3px solid var(--border);
+  border-top-color:var(--sky);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 16px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* 空状態 */
+.empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;grid-column:1/-1;}
+
+/* フッター */
+footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;margin-top:60px;text-align:center;position:relative;z-index:1;}
+.footer-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:10px 24px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:all .2s;margin-bottom:16px;}
+.footer-back:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
+</style>
+</head>
+<body>
+
+<div class="bg-balloons">
+  <div class="balloon b1"></div><div class="balloon b2"></div>
+  <div class="balloon b3"></div><div class="balloon b4"></div>
+</div>
+
+<!-- ライトボックス -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightbox-close">✕</button>
+  <button class="lightbox-prev" id="lightbox-prev">‹</button>
+  <button class="lightbox-next" id="lightbox-next">›</button>
+  <div class="lightbox-inner">
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  </div>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div><div class="logo-pref">横浜市都筑区</div><div class="logo-name">渋沢連合自治会</div></div>
+    </a>
+    <a class="back-btn" href="index.html">← トップに戻る</a>
+  </div>
+</header>
+
+<div class="main">
+  <h1 class="page-title">掲示板</h1>
+  <p class="page-sub">渋沢連合自治会からのチラシ・お知らせを掲示しています。</p>
+  <div class="page-divider"></div>
+
+  <!-- フィルター -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">すべて</button>
+    <button class="filter-btn" data-filter="短期">短期掲示</button>
+    <button class="filter-btn" data-filter="中期">中期掲示</button>
+    <button class="filter-btn" data-filter="常設">常設</button>
+  </div>
+
+  <!-- 件数 -->
+  <div class="result-count" id="result-count"></div>
+
+  <!-- 掲示グリッド -->
+  <div class="bulletin-grid" id="bulletin-grid">
+    <div class="loading" style="grid-column:1/-1">
+      <div class="loading-spinner"></div>
+      読み込み中...
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a class="footer-back" href="index.html">← トップページに戻る</a>
+  <div class="footer-copy">© Shibusawa Rengo Jichikai All Rights Reserved.</div>
+</footer>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+
+let allBulletin = [];
+let currentFilter = 'all';
+let lightboxImages = [];
+let lightboxIndex = 0;
+
+const TYPE_CLASS = {
+  '短期': 'type-short',
+  '中期': 'type-mid',
+  '常設': 'type-permanent',
+};
+
+async function loadBulletin() {
+  try {
+    const res = await fetch(GAS_URL + '?type=bulletin');
+    const data = await res.json();
+    allBulletin = data.bulletin || [];
+    renderBulletin();
+  } catch(e) {
+    document.getElementById('bulletin-grid').innerHTML =
+      '<div class="empty">データの読み込みに失敗しました。<br>しばらくしてから再度お試しください。</div>';
+  }
+}
+
+function renderBulletin() {
+  const grid = document.getElementById('bulletin-grid');
+  const countEl = document.getElementById('result-count');
+
+  const filtered = currentFilter === 'all'
+    ? allBulletin
+    : allBulletin.filter(b => b.type === currentFilter);
+
+  countEl.innerHTML = `<span>${filtered.length}</span> 件`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty">該当する掲示物はありません。</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((item, cardIndex) => {
+    const typeClass = TYPE_CLASS[item.type] || 'type-permanent';
+    const images = item.images || [];
+
+    const period = item.type === '常設'
+      ? '常時掲示中'
+      : item.endDate
+        ? `${item.startDate} 〜 ${item.endDate}`
+        : item.startDate;
+
+    // スライダーHTML
+    let sliderHtml = '';
+    if (images.length === 0) {
+      sliderHtml = `<div class="card-slider"><div class="no-image">📋</div></div>`;
+    } else if (images.length === 1) {
+      sliderHtml = `
+        <div class="card-slider" onclick="openLightbox(${cardIndex}, 0)">
+          <div class="card-slides">
+            <div class="card-slide"><img src="${images[0]}" alt="${item.title}" loading="lazy"></div>
+          </div>
+        </div>`;
+    } else {
+      const slidesHtml = images.map(url =>
+        `<div class="card-slide"><img src="${url}" alt="${item.title}" loading="lazy"></div>`
+      ).join('');
+      const dotsHtml = images.map((_, i) =>
+        `<div class="slider-dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation();slideCard(${cardIndex},${i})"></div>`
+      ).join('');
+
+      sliderHtml = `
+        <div class="card-slider" id="slider-${cardIndex}" onclick="openLightbox(${cardIndex}, getCurrentSlide(${cardIndex}))">
+          <div class="card-slides" id="slides-${cardIndex}">${slidesHtml}</div>
+          <button class="slider-prev" onclick="event.stopPropagation();slideCardPrev(${cardIndex})">‹</button>
+          <button class="slider-next" onclick="event.stopPropagation();slideCardNext(${cardIndex})">›</button>
+          <div class="slider-dots" id="dots-${cardIndex}">${dotsHtml}</div>
+        </div>`;
+    }
+
+    return `
+      <div class="bulletin-card" data-index="${cardIndex}">
+        ${sliderHtml}
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-type ${typeClass}">${item.type}</span>
+            <span class="card-period">${period}</span>
+          </div>
+          <div class="card-title">${item.title}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // カードごとの画像リストをグローバルに保持
+  window._bulletinFiltered = filtered;
+  window._cardSlideIndex = {};
+}
+
+// カードスライダー制御
+function getCurrentSlide(cardIndex) {
+  return window._cardSlideIndex[cardIndex] || 0;
+}
+
+function slideCard(cardIndex, index) {
+  const slides = document.getElementById(`slides-${cardIndex}`);
+  const dots = document.querySelectorAll(`#dots-${cardIndex} .slider-dot`);
+  if (!slides) return;
+  slides.style.transform = `translateX(-${index * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === index));
+  window._cardSlideIndex[cardIndex] = index;
+}
+
+function slideCardPrev(cardIndex) {
+  const item = window._bulletinFiltered[cardIndex];
+  const max = item.images.length - 1;
+  const cur = getCurrentSlide(cardIndex);
+  slideCard(cardIndex, cur > 0 ? cur - 1 : max);
+}
+
+function slideCardNext(cardIndex) {
+  const item = window._bulletinFiltered[cardIndex];
+  const max = item.images.length - 1;
+  const cur = getCurrentSlide(cardIndex);
+  slideCard(cardIndex, cur < max ? cur + 1 : 0);
+}
+
+// ライトボックス
+function openLightbox(cardIndex, imageIndex) {
+  const item = window._bulletinFiltered[cardIndex];
+  if (!item || !item.images.length) return;
+  lightboxImages = item.images;
+  lightboxIndex = imageIndex;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function updateLightbox() {
+  document.getElementById('lightbox-img').src = lightboxImages[lightboxIndex];
+  document.getElementById('lightbox-counter').textContent =
+    lightboxImages.length > 1 ? `${lightboxIndex + 1} / ${lightboxImages.length}` : '';
+  document.getElementById('lightbox-prev').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+  document.getElementById('lightbox-next').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox') ||
+      e.target === document.getElementById('lightbox-img')) closeLightbox();
+});
+document.getElementById('lightbox-prev').addEventListener('click', e => {
+  e.stopPropagation();
+  lightboxIndex = lightboxIndex > 0 ? lightboxIndex - 1 : lightboxImages.length - 1;
+  updateLightbox();
+});
+document.getElementById('lightbox-next').addEventListener('click', e => {
+  e.stopPropagation();
+  lightboxIndex = lightboxIndex < lightboxImages.length - 1 ? lightboxIndex + 1 : 0;
+  updateLightbox();
+});
+
+// キーボード操作
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') {
+    lightboxIndex = lightboxIndex > 0 ? lightboxIndex - 1 : lightboxImages.length - 1;
+    updateLightbox();
+  }
+  if (e.key === 'ArrowRight') {
+    lightboxIndex = lightboxIndex < lightboxImages.length - 1 ? lightboxIndex + 1 : 0;
+    updateLightbox();
+  }
+});
+
+// フィルター
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderBulletin();
+  });
+});
+
+loadBulletin();
+</script>
+</body>
+</html>

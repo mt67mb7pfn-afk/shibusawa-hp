@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ投稿 | 渋沢連合自治会</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+
+/* パスワード画面 */
+.pw-screen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+.pw-box{
+  background:#fff;border-radius:20px;padding:40px 32px;
+  box-shadow:0 8px 32px rgba(0,0,0,.08);
+  border:2px solid var(--border);
+  width:100%;max-width:400px;text-align:center;
+}
+.pw-icon{font-size:40px;margin-bottom:16px;}
+.pw-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;margin-bottom:8px;}
+.pw-sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
+.pw-input{
+  width:100%;padding:12px 16px;
+  border:2px solid var(--border);border-radius:10px;
+  font-size:16px;font-family:inherit;
+  outline:none;transition:border-color .2s;
+  margin-bottom:16px;
+}
+.pw-input:focus{border-color:var(--mint);}
+.pw-btn{
+  width:100%;padding:12px;
+  background:linear-gradient(135deg,var(--mint),var(--mint-d));
+  color:#fff;font-size:15px;font-weight:700;
+  border:none;border-radius:10px;cursor:pointer;
+  transition:opacity .2s;
+}
+.pw-btn:hover{opacity:.9;}
+.pw-error{color:var(--coral);font-size:13px;margin-top:12px;display:none;}
+
+/* メイン */
+.main-screen{display:none;}
+header{background:#fff;border-bottom:2px solid var(--border);box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.header-inner{max-width:700px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:14px;}
+.header-title{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;}
+.header-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--mint-l);color:var(--mint-d);}
+
+.main{max-width:700px;margin:40px auto;padding:0 24px 60px;}
+
+.form-card{
+  background:#fff;border-radius:16px;border:2px solid var(--border);
+  padding:32px;box-shadow:0 2px 10px rgba(0,0,0,.04);
+  display:flex;flex-direction:column;gap:24px;
+}
+
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-label{
+  font-size:13px;font-weight:700;color:var(--text2);
+  display:flex;align-items:center;gap:6px;
+}
+.form-label .required{
+  font-size:10px;color:#fff;background:var(--coral);
+  padding:2px 6px;border-radius:4px;
+}
+.form-label .optional{
+  font-size:10px;color:var(--text3);
+}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:12px 16px;
+  border:2px solid var(--border);border-radius:10px;
+  font-size:15px;font-family:inherit;color:var(--text);
+  outline:none;transition:border-color .2s;
+  background:#fff;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  border-color:var(--mint);
+}
+.form-textarea{
+  min-height:100px;resize:vertical;line-height:1.8;
+}
+
+/* 画像アップロード */
+.image-upload-area{
+  border:2px dashed var(--border);border-radius:10px;
+  padding:24px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+  position:relative;
+}
+.image-upload-area:hover{border-color:var(--mint);background:var(--mint-l);}
+.image-upload-area input[type="file"]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.upload-icon{font-size:32px;margin-bottom:8px;}
+.upload-text{font-size:13px;color:var(--text3);}
+.upload-text strong{color:var(--mint-d);}
+.image-preview{
+  margin-top:12px;border-radius:8px;
+  max-width:100%;max-height:200px;
+  object-fit:contain;display:none;
+}
+
+/* 送信ボタン */
+.submit-btn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--mint),var(--mint-d));
+  color:#fff;font-size:16px;font-weight:700;
+  border:none;border-radius:12px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(78,203,141,.4);
+  transition:transform .2s,box-shadow .2s;
+}
+.submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(78,203,141,.5);}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* 結果メッセージ */
+.result{
+  text-align:center;padding:20px;border-radius:12px;
+  font-size:14px;font-weight:700;display:none;margin-top:16px;
+}
+.result.success{background:var(--mint-l);color:var(--mint-d);border:2px solid var(--mint);}
+.result.error{background:var(--coral-l);color:var(--coral);border:2px solid var(--coral);}
+
+/* 日付デフォルト */
+input[type="date"]{appearance:auto;}
+</style>
+</head>
+<body>
+
+<!-- パスワード画面 -->
+<div class="pw-screen" id="pw-screen">
+  <div class="pw-box">
+    <div class="pw-icon">🔐</div>
+    <div class="pw-title">管理者ログイン</div>
+    <div class="pw-sub">お知らせ投稿フォームです。<br>パスワードを入力してください。</div>
+    <input class="pw-input" type="password" id="pw-input" placeholder="パスワード" autocomplete="current-password">
+    <button class="pw-btn" onclick="checkPassword()">ログイン</button>
+    <div class="pw-error" id="pw-error">パスワードが違います</div>
+  </div>
+</div>
+
+<!-- メイン画面 -->
+<div class="main-screen" id="main-screen">
+  <header>
+    <div class="header-inner">
+      <div class="header-title">お知らせ投稿</div>
+      <div class="header-badge">管理者専用</div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="form-card">
+
+      <!-- 日付 -->
+      <div class="form-group">
+        <label class="form-label">
+          日付 <span class="required">必須</span>
+        </label>
+        <input class="form-input" type="date" id="date">
+      </div>
+
+      <!-- タイトル -->
+      <div class="form-group">
+        <label class="form-label">
+          タイトル <span class="required">必須</span>
+        </label>
+        <input class="form-input" type="text" id="title" placeholder="お知らせのタイトルを入力">
+      </div>
+
+      <!-- バッジ -->
+      <div class="form-group">
+        <label class="form-label">
+          バッジ <span class="required">必須</span>
+        </label>
+        <select class="form-select" id="badge">
+          <option value="お知らせ">お知らせ</option>
+          <option value="回覧">回覧</option>
+          <option value="イベント">イベント</option>
+          <option value="NEW">NEW</option>
+          <option value="トピックス">トピックス</option>
+        </select>
+      </div>
+
+      <!-- URL -->
+      <div class="form-group">
+        <label class="form-label">
+          リンクURL <span class="optional">任意</span>
+        </label>
+        <input class="form-input" type="url" id="url" placeholder="https://...（空欄でも可）">
+      </div>
+
+      <!-- 説明文 -->
+      <div class="form-group">
+        <label class="form-label">
+          説明文 <span class="optional">任意</span>
+        </label>
+        <textarea class="form-textarea" id="description" placeholder="お知らせの説明文を入力（任意）"></textarea>
+      </div>
+
+      <!-- 画像 -->
+      <div class="form-group">
+        <label class="form-label">
+          画像 <span class="optional">任意</span>
+        </label>
+        <div class="image-upload-area" id="upload-area">
+          <input type="file" id="image-file" accept="image/*" onchange="previewImage(this)">
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">タップして画像を選択<br><strong>JPG・PNG・GIF対応</strong></div>
+          <img class="image-preview" id="image-preview">
+        </div>
+      </div>
+
+      <!-- 送信ボタン -->
+      <button class="submit-btn" id="submit-btn" onclick="submitForm()">投稿する</button>
+
+      <!-- 結果 -->
+      <div class="result" id="result"></div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+const PASSWORD = 'shibusawa2026';
+let enteredPassword = '';
+
+// 今日の日付をデフォルト設定
+window.addEventListener('DOMContentLoaded', () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
+});
+
+// パスワード確認
+function checkPassword() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD) {
+    enteredPassword = pw;
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+  } else {
+    document.getElementById('pw-error').style.display = 'block';
+  }
+}
+
+// Enterキーでログイン
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPassword();
+});
+
+// 画像プレビュー
+function previewImage(input) {
+  const preview = document.getElementById('image-preview');
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+// 投稿処理
+async function submitForm() {
+  const date = document.getElementById('date').value;
+  const title = document.getElementById('title').value.trim();
+  const badge = document.getElementById('badge').value;
+  const url = document.getElementById('url').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const imageFile = document.getElementById('image-file').files[0];
+
+  if (!date || !title) {
+    showResult('日付とタイトルは必須です', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = '送信中...';
+
+  try {
+    let imageBase64 = '';
+    let imageName = '';
+    let imageMime = '';
+
+    if (imageFile) {
+      imageBase64 = await toBase64(imageFile);
+      imageName = imageFile.name;
+      imageMime = imageFile.type;
+    }
+
+    const payload = {
+      password: enteredPassword,
+      type: 'news',
+      date, title, badge, url, description,
+      imageBase64, imageName, imageMime
+    };
+
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      showResult('✅ 投稿が完了しました！サイトに反映されます。', 'success');
+      resetForm();
+    } else {
+      showResult(`❌ エラー：${data.error}`, 'error');
+    }
+  } catch(e) {
+    showResult('❌ 送信に失敗しました。もう一度お試しください。', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '投稿する';
+  }
+}
+
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function showResult(msg, type) {
+  const el = document.getElementById('result');
+  el.textContent = msg;
+  el.className = `result ${type}`;
+  el.style.display = 'block';
+  el.scrollIntoView({behavior: 'smooth'});
+}
+
+function resetForm() {
+  document.getElementById('title').value = '';
+  document.getElementById('url').value = '';
+  document.getElementById('description').value = '';
+  document.getElementById('image-file').value = '';
+  document.getElementById('image-preview').style.display = 'none';
+}
+</script>
+</body>
+</html>

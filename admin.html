@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理画面 | 渋沢連合自治会</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #333;
+  }
+
+  /* ログイン画面 */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+  .login-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 360px;
+    backdrop-filter: blur(20px);
+  }
+  .login-box h1 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .login-box p {
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .login-box input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .login-box input:focus { border-color: rgba(255,255,255,0.4); }
+  .login-box input::placeholder { color: rgba(255,255,255,0.3); }
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: #e85d26;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .login-btn:hover { background: #d04e1a; }
+  .login-btn:active { transform: scale(0.98); }
+  .login-error {
+    color: #ff6b6b;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 12px;
+    display: none;
+  }
+
+  /* 管理画面 */
+  #admin-screen { display: none; }
+  .header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .header-title span {
+    color: #e85d26;
+    margin-right: 8px;
+  }
+  .logout-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { background: #f5f5f5; }
+
+  .main { padding: 24px; max-width: 900px; margin: 0 auto; }
+
+  /* タブ */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    background: #fff;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .tab-btn.active {
+    background: #e85d26;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(232,93,38,0.3);
+  }
+  .tab-btn:not(.active):hover { background: #f5f5f5; }
+
+  /* テーブル */
+  .table-wrap {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .table-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .table-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+  }
+  .reload-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reload-btn:hover { background: #f5f5f5; }
+
+  .loading {
+    text-align: center;
+    padding: 48px;
+    color: #999;
+    font-size: 14px;
+  }
+  .empty {
+    text-align: center;
+    padding: 48px;
+    color: #bbb;
+    font-size: 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th {
+    background: #fafafa;
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f8f8f8;
+    font-size: 13px;
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+
+  .title-cell {
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .date-cell { color: #888; white-space: nowrap; }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    background: #e8f4fd;
+    color: #2196f3;
+  }
+  .badge.hidden { background: #ffeaea; color: #f44336; }
+  .badge.visible { background: #e8f5e9; color: #4caf50; }
+
+  .action-btns {
+    display: flex;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .btn-hide {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #ff9800;
+    background: #fff8f0;
+    color: #ff9800;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-hide:hover { background: #ff9800; color: #fff; }
+  .btn-show {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #4caf50;
+    background: #f0fff0;
+    color: #4caf50;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-show:hover { background: #4caf50; color: #fff; }
+  .btn-delete {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #f44336;
+    background: #fff5f5;
+    color: #f44336;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-delete:hover { background: #f44336; color: #fff; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* トースト */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #333;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: transform 0.3s;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.success { background: #4caf50; }
+  #toast.error { background: #f44336; }
+</style>
+</head>
+<body>
+
+<!-- ログイン画面 -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>🔒 管理画面</h1>
+    <p>渋沢連合自治会 コンテンツ管理</p>
+    <input type="password" id="pw-input" placeholder="パスワードを入力" />
+    <button class="login-btn" onclick="login()">ログイン</button>
+    <div class="login-error" id="login-error">パスワードが違います</div>
+  </div>
+</div>
+
+<!-- 管理画面 -->
+<div id="admin-screen">
+  <div class="header">
+    <div class="header-title"><span>⚙</span>コンテンツ管理</div>
+    <button class="logout-btn" onclick="logout()">ログアウト</button>
+  </div>
+  <div class="main">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('お知らせ', this)">📢 お知らせ</button>
+      <button class="tab-btn" onclick="switchTab('トピックス', this)">📰 トピックス</button>
+      <button class="tab-btn" onclick="switchTab('掲示板', this)">📋 掲示板</button>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <h2 id="table-title">お知らせ一覧</h2>
+        <button class="reload-btn" onclick="loadList()">🔄 再読み込み</button>
+      </div>
+      <div id="table-body"><div class="loading">読み込み中...</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+const PASSWORD = 'shibusawa2026';
+let currentSheet = 'お知らせ';
+let password = '';
+
+// エンター押下でログイン
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+
+function login() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD) {
+    password = pw;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    loadList();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function logout() {
+  password = '';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function switchTab(sheet, btn) {
+  currentSheet = sheet;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('table-title').textContent = sheet + '一覧';
+  loadList();
+}
+
+async function loadList() {
+  document.getElementById('table-body').innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent(currentSheet)}`);
+    const data = await res.json();
+    renderTable(data.list || []);
+  } catch(e) {
+    document.getElementById('table-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
+  }
+}
+
+function renderTable(list) {
+  if (list.length === 0) {
+    document.getElementById('table-body').innerHTML = '<div class="empty">データがありません</div>';
+    return;
+  }
+
+  let html = '<table>';
+
+  if (currentSheet === 'お知らせ') {
+    html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>バッジ</th><th>状態</th><th>操作</th></tr>';
+    list.forEach(item => {
+      const row = item.row;
+      const d = item.data;
+      const date = d[0] ? formatDate(d[0]) : '';
+      const title = d[1] || '';
+      const badge = d[2] || '';
+      const isHidden = d[5] === true;
+      html += `<tr>
+        <td style="color:#bbb;font-size:12px">${row}</td>
+        <td class="date-cell">${date}</td>
+        <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
+        <td><span class="badge">${esc(badge)}</span></td>
+        <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
+        <td><div class="action-btns">
+          ${isHidden
+            ? `<button class="btn-show" onclick="showItem(${row})">公開</button>`
+            : `<button class="btn-hide" onclick="hideItem(${row})">非公開</button>`}
+          <button class="btn-delete" onclick="deleteItem(${row}, '${esc(title)}')">削除</button>
+        </div></td>
+      </tr>`;
+    });
+  } else if (currentSheet === 'トピックス') {
+    html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>カテゴリ</th><th>状態</th><th>操作</th></tr>';
+    list.forEach(item => {
+      const row = item.row;
+      const d = item.data;
+      const date = d[1] ? formatDate(d[1]) : '';
+      const category = d[2] || '';
+      const title = d[3] || '';
+      const isHidden = d[6] === true;
+      html += `<tr>
+        <td style="color:#bbb;font-size:12px">${row}</td>
+        <td class="date-cell">${date}</td>
+        <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
+        <td><span class="badge">${esc(category)}</span></td>
+        <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
+        <td><div class="action-btns">
+          ${isHidden
+            ? `<button class="btn-show" onclick="showItem(${row})">公開</button>`
+            : `<button class="btn-hide" onclick="hideItem(${row})">非公開</button>`}
+          <button class="btn-delete" onclick="deleteItem(${row}, '${esc(title)}')">削除</button>
+        </div></td>
+      </tr>`;
+    });
+  } else if (currentSheet === '掲示板') {
+    html += '<tr><th>行</th><th>タイトル</th><th>種別</th><th>掲示開始</th><th>状態</th><th>操作</th></tr>';
+    list.forEach(item => {
+      const row = item.row;
+      const d = item.data;
+      const title = d[1] || '';
+      const type = d[2] || '';
+      const startDate = d[3] ? formatDate(d[3]) : '';
+      const isHidden = d[8] === true;
+      html += `<tr>
+        <td style="color:#bbb;font-size:12px">${row}</td>
+        <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
+        <td><span class="badge">${esc(type)}</span></td>
+        <td class="date-cell">${startDate}</td>
+        <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
+        <td><div class="action-btns">
+          ${isHidden
+            ? `<button class="btn-show" onclick="showItem(${row})">公開</button>`
+            : `<button class="btn-hide" onclick="hideItem(${row})">非公開</button>`}
+          <button class="btn-delete" onclick="deleteItem(${row}, '${esc(title)}')">削除</button>
+        </div></td>
+      </tr>`;
+    });
+  }
+
+  html += '</table>';
+  document.getElementById('table-body').innerHTML = html;
+}
+
+async function hideItem(row) {
+  if (!confirm('この項目を非公開にしますか？')) return;
+  await postAction('admin_hide', row);
+}
+
+async function showItem(row) {
+  await postAction('admin_show', row);
+}
+
+async function deleteItem(row, title) {
+  if (!confirm(`「${title}」を完全に削除しますか？\nこの操作は元に戻せません。`)) return;
+  await postAction('admin_delete', row);
+}
+
+async function postAction(type, row) {
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type,
+        sheet: currentSheet,
+        row,
+        password
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(type === 'admin_delete' ? '削除しました' : type === 'admin_hide' ? '非公開にしました' : '公開しました', 'success');
+      loadList();
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+  }
+}
+
+function formatDate(val) {
+  if (!val) return '';
+  const d = new Date(val);
+  if (isNaN(d)) return String(val).slice(0, 10);
+  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

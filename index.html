@@ -99,7 +99,12 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .line-title{color:#fff;font-size:14px;font-weight:700;margin-bottom:3px;}
 .line-desc{color:rgba(255,255,255,.85);font-size:12px;}
 .line-cta{background:#fff;color:#06c755;font-size:12px;font-weight:700;padding:9px 18px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
-
+  @media(max-width:600px){
+  .line-banner{flex-wrap:wrap;padding:16px;}
+  .line-title{font-size:13px;}
+  .line-desc{font-size:11px;}
+  .line-cta{width:100%;text-align:center;margin-top:8px;}
+}
 /* MAIN */
 .main{max-width:1080px;margin:40px auto 0;padding:0 24px;}
 .sec-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;}

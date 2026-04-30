@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>役員名簿・決算書 | 渋沢連合自治会</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #333;
+  }
+
+  /* ログイン画面 */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+  .login-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 48px 40px;
+    width: 360px;
+    backdrop-filter: blur(20px);
+    text-align: center;
+  }
+  .login-logo {
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 20px;
+  }
+  .login-box h1 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .login-box p {
+    color: rgba(255,255,255,0.4);
+    font-size: 13px;
+    margin-bottom: 32px;
+  }
+  .login-box input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: center;
+    letter-spacing: 4px;
+  }
+  .login-box input:focus { border-color: rgba(255,255,255,0.4); }
+  .login-box input::placeholder { letter-spacing: 0; color: rgba(255,255,255,0.3); }
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .login-btn:hover { background: #1d4ed8; }
+  .login-btn:active { transform: scale(0.98); }
+  .login-error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 12px;
+    display: none;
+  }
+  .login-note {
+    color: rgba(255,255,255,0.3);
+    font-size: 12px;
+    margin-top: 20px;
+    line-height: 1.6;
+  }
+
+  /* メイン画面 */
+  #main-screen { display: none; }
+
+  .header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-back {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .header-back:hover { opacity: 0.7; }
+  .header-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .lock-badge {
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .logout-btn {
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { background: #f5f5f5; }
+
+  .main {
+    padding: 32px 24px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .page-intro {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    border-left: 4px solid #2563eb;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .page-intro p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+  }
+
+  /* セクション */
+  .section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .icon-blue { background: #eff6ff; }
+  .icon-green { background: #f0fdf4; }
+  .icon-purple { background: #faf5ff; }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1a1a2e;
+  }
+  .section-meta {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  .section-body { padding: 24px; }
+
+  /* プレビューエリア */
+  .preview-area {
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .preview-area iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+    display: block;
+  }
+  .preview-area img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ダウンロードボタン */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: #2563eb;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-download:hover { background: #1d4ed8; }
+  .btn-download:active { transform: scale(0.98); }
+  .btn-open {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: #f1f5f9;
+    color: #334155;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .btn-open:hover { background: #e2e8f0; }
+
+  .updated-note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 12px;
+  }
+
+  /* フッター */
+  .footer {
+    text-align: center;
+    padding: 32px;
+    color: #bbb;
+    font-size: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .main { padding: 20px 16px; }
+    .preview-area iframe { height: 360px; }
+    .header-title { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ログイン画面 -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🔒</div>
+    <h1>役員名簿・決算書</h1>
+    <p>渋沢連合自治会 — 閲覧制限ページ</p>
+    <input type="password" id="pw-input" placeholder="パスワードを入力" />
+    <button class="login-btn" onclick="login()">閲覧する</button>
+    <div class="login-error" id="login-error">⚠ パスワードが違います</div>
+    <div class="login-note">
+      このページは役員・関係者限定です。<br>
+      パスワードは自治会事務局にお問い合わせください。
+    </div>
+  </div>
+</div>
+
+<!-- メイン画面 -->
+<div id="main-screen">
+  <div class="header">
+    <div class="header-left">
+      <a href="/" class="header-back">← ホーム</a>
+      <div class="header-title">役員名簿・決算書</div>
+      <span class="lock-badge">🔒 閲覧制限</span>
+    </div>
+    <button class="logout-btn" onclick="logout()">ログアウト</button>
+  </div>
+
+  <div class="main">
+    <div class="page-intro">
+      <p>このページは渋沢連合自治会の役員・関係者向けの閲覧制限ページです。掲載内容の外部への共有はお控えください。</p>
+    </div>
+
+    <!-- 連合役員名簿 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-blue">👥</div>
+        <div>
+          <div class="section-title">渋沢連合自治会 役員名簿</div>
+          <div class="section-meta">連合自治会 役員一覧</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="preview-area">
+          <iframe src="https://drive.google.com/file/d/1_yMg3hdYrxEnmouwxB0477nBbd6xOIJc/preview" allowfullscreen></iframe>
+        </div>
+        <div class="action-row">
+          <a class="btn-download" href="https://drive.google.com/uc?export=download&id=1_yMg3hdYrxEnmouwxB0477nBbd6xOIJc" target="_blank">⬇ ダウンロード</a>
+          <a class="btn-open" href="https://drive.google.com/file/d/1_yMg3hdYrxEnmouwxB0477nBbd6xOIJc/view" target="_blank">🔗 Googleドライブで開く</a>
+        </div>
+        <div class="updated-note">※ 内容に変更がある場合は事務局までご連絡ください。</div>
+      </div>
+    </div>
+
+    <!-- 決算書 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-green">📊</div>
+        <div>
+          <div class="section-title">決算書</div>
+          <div class="section-meta">渋沢連合自治会 会計決算</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="preview-area">
+          <iframe src="https://drive.google.com/file/d/1dWz_aw7AMk3rF2xCq7anVKwB1DSMvFzQ/preview" allowfullscreen></iframe>
+        </div>
+        <div class="action-row">
+          <a class="btn-download" href="https://drive.google.com/uc?export=download&id=1dWz_aw7AMk3rF2xCq7anVKwB1DSMvFzQ" target="_blank">⬇ ダウンロード</a>
+          <a class="btn-open" href="https://drive.google.com/file/d/1dWz_aw7AMk3rF2xCq7anVKwB1DSMvFzQ/view" target="_blank">🔗 Googleドライブで開く</a>
+        </div>
+        <div class="updated-note">※ 年度末に更新されます。</div>
+      </div>
+    </div>
+
+    <!-- 社協役員・理事名簿 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon icon-purple">🏛</div>
+        <div>
+          <div class="section-title">渋沢地区社協 役員・理事名簿</div>
+          <div class="section-meta">渋沢地区社会福祉協議会</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="preview-area">
+          <iframe src="https://drive.google.com/file/d/1tc1lbZc33aLIDukVjPXJnz3raAG-CjoK/preview" allowfullscreen></iframe>
+        </div>
+        <div class="action-row">
+          <a class="btn-download" href="https://drive.google.com/uc?export=download&id=1tc1lbZc33aLIDukVjPXJnz3raAG-CjoK" target="_blank">⬇ ダウンロード</a>
+          <a class="btn-open" href="https://drive.google.com/file/d/1tc1lbZc33aLIDukVjPXJnz3raAG-CjoK/view" target="_blank">🔗 Googleドライブで開く</a>
+        </div>
+        <div class="updated-note">※ 内容に変更がある場合は事務局までご連絡ください。</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer">© Shibusawa Rengo Jichikai All Rights Reserved.</div>
+</div>
+
+<script>
+const PASSWORD = 'sy1234';
+
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+
+function login() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function logout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('pw-input').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+</script>
+</body>
+</html>

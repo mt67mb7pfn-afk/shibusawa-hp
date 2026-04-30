@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>各種資料 | 渋沢連合自治会</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    color: #333;
+  }
+  .header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-back { color: #2563eb; text-decoration: none; font-size: 14px; }
+  .header-back:hover { opacity: 0.7; }
+  .header-title { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+
+  .main { padding: 32px 24px; max-width: 860px; margin: 0 auto; }
+
+  .page-intro {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    border-left: 4px solid #2563eb;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .page-intro p { font-size: 14px; color: #555; line-height: 1.7; }
+
+  .section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .section-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .icon-blue { background: #eff6ff; }
+  .icon-green { background: #f0fdf4; }
+  .icon-amber { background: #fffbeb; }
+  .section-title { font-size: 16px; font-weight: 700; color: #1a1a2e; }
+  .section-meta { font-size: 12px; color: #999; margin-top: 2px; }
+  .section-body { padding: 24px; }
+
+  .img-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+  .img-card {
+    border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; background: #f8f9fa;
+  }
+  .img-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .img-card img { width: 100%; height: 200px; object-fit: contain; display: block; padding: 8px; }
+  .img-card-label {
+    padding: 8px 12px; font-size: 12px; color: #666;
+    border-top: 1px solid #f0f0f0; text-align: center;
+  }
+  .empty {
+    text-align: center; padding: 32px; color: #bbb; font-size: 14px;
+  }
+  .loading {
+    text-align: center; padding: 32px; color: #999; font-size: 14px;
+  }
+
+  #lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92); z-index: 9999;
+    align-items: center; justify-content: center; flex-direction: column;
+  }
+  #lightbox.show { display: flex; }
+  #lightbox img { max-width: 92vw; max-height: 82vh; object-fit: contain; border-radius: 4px; }
+  .lb-close {
+    position: absolute; top: 16px; right: 20px;
+    color: #fff; font-size: 32px; cursor: pointer; opacity: 0.8;
+  }
+  .lb-close:hover { opacity: 1; }
+  .lb-nav { display: flex; align-items: center; gap: 24px; margin-top: 16px; }
+  .lb-btn {
+    background: rgba(255,255,255,0.15); border: none; color: #fff;
+    width: 40px; height: 40px; border-radius: 50%; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.3); }
+  .lb-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .lb-counter { color: rgba(255,255,255,0.7); font-size: 14px; min-width: 60px; text-align: center; }
+
+  .footer { text-align: center; padding: 32px; color: #bbb; font-size: 12px; }
+
+  @media (max-width: 600px) {
+    .main { padding: 16px; }
+    .header-title { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <a href="/" class="header-back">← ホーム</a>
+    <div class="header-title">各種資料</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="page-intro">
+    <p>渋沢連合自治会の各種資料を掲載しています。</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-blue">📋</div>
+      <div>
+        <div class="section-title">連合定例会資料</div>
+        <div class="section-meta">渋沢連合自治会 定例会</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="img-grid loading-area" id="grid-teirekai"><div class="loading">読み込み中...</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-green">📝</div>
+      <div>
+        <div class="section-title">渋沢地区社協 議事録</div>
+        <div class="section-meta">渋沢地区社会福祉協議会</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="img-grid loading-area" id="grid-shakyo"><div class="loading">読み込み中...</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon icon-amber">📜</div>
+      <div>
+        <div class="section-title">連合自治会規約</div>
+        <div class="section-meta">渋沢連合自治会</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="img-grid loading-area" id="grid-kiyaku"><div class="loading">読み込み中...</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">© Shibusawa Rengo Jichikai All Rights Reserved.</div>
+
+<div id="lightbox">
+  <span class="lb-close" onclick="closeLightbox()">×</span>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-nav">
+    <button class="lb-btn" id="lb-prev" onclick="lbNav(-1)">‹</button>
+    <span class="lb-counter" id="lb-counter"></span>
+    <button class="lb-btn" id="lb-next" onclick="lbNav(1)">›</button>
+  </div>
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+
+const CATEGORY_MAP = {
+  '連合定例会資料': 'teirekai',
+  '社協議事録': 'shakyo',
+  '連合自治会規約': 'kiyaku'
+};
+
+let lbImages = [];
+let lbIndex = 0;
+let gridData = { teirekai: [], shakyo: [], kiyaku: [] };
+
+async function loadData() {
+  try {
+    const res = await fetch(`${GAS_URL}?type=shiryo`);
+    const data = await res.json();
+    const items = data.shiryo || [];
+
+    items.forEach(item => {
+      const key = CATEGORY_MAP[item.category];
+      if (key && item.imageUrl) {
+        gridData[key].push({ src: item.imageUrl, label: item.title });
+      }
+    });
+
+    renderGrid('grid-teirekai', gridData.teirekai);
+    renderGrid('grid-shakyo', gridData.shakyo);
+    renderGrid('grid-kiyaku', gridData.kiyaku);
+  } catch(e) {
+    document.querySelectorAll('.loading-area').forEach(el => {
+      el.innerHTML = '<div class="empty">データの取得に失敗しました</div>';
+    });
+  }
+}
+
+function renderGrid(gridId, images) {
+  const grid = document.getElementById(gridId);
+  if (images.length === 0) {
+    grid.innerHTML = '<div class="empty">資料はありません</div>';
+    return;
+  }
+  grid.innerHTML = images.map((img, i) => `
+    <div class="img-card" onclick="openLightbox('${gridId}', ${i})">
+      <img src="${img.src}" alt="${img.label}" loading="lazy">
+      <div class="img-card-label">${img.label}</div>
+    </div>
+  `).join('');
+}
+
+function openLightbox(gridId, index) {
+  const key = gridId.replace('grid-', '');
+  lbImages = gridData[key].map(img => img.src);
+  lbIndex = index;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('show');
+}
+
+function updateLightbox() {
+  document.getElementById('lb-img').src = lbImages[lbIndex];
+  document.getElementById('lb-counter').textContent = (lbIndex + 1) + ' / ' + lbImages.length;
+  document.getElementById('lb-prev').disabled = lbIndex === 0;
+  document.getElementById('lb-next').disabled = lbIndex === lbImages.length - 1;
+}
+
+function lbNav(dir) {
+  lbIndex += dir;
+  updateLightbox();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('show');
+}
+
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === this) closeLightbox();
+});
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('show')) return;
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+  if (e.key === 'Escape') closeLightbox();
+});
+
+loadData();
+</script>
+</body>
+</html>

@@ -67,7 +67,9 @@ header{background:#fff;border-bottom:2px solid var(--border);box-shadow:0 2px 16
 
 /* 日付グループ */
 .date-group{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.date-group > div{min-width:0;}
 @media(max-width:500px){.date-group{grid-template-columns:1fr;}}
+input[type="date"]{max-width:100%;}
 
 /* 種別説明 */
 .type-hint{font-size:11px;color:var(--text3);padding:8px 12px;background:var(--sky-l);border-radius:8px;line-height:1.6;}

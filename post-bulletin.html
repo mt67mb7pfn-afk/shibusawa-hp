@@ -15,7 +15,7 @@
   --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;overflow-x:hidden;}
 
 /* パスワード画面 */
 .pw-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
@@ -121,7 +121,7 @@ input[type="date"]{max-width:100%;}
 .result.success{background:var(--mint-l);color:var(--mint-d);border:2px solid var(--mint);}
 .result.error{background:var(--coral-l);color:var(--coral);border:2px solid var(--coral);}
 
-input[type="date"]{appearance:auto;}
+input[type="date"]{-webkit-appearance:none;appearance:auto;width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
 </style>
 </head>
 <body>

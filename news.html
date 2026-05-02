@@ -124,18 +124,10 @@ footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;marg
 
 <div class="main">
   <h1 class="page-title">お知らせ一覧</h1>
-  <p class="page-sub">渋沢連合自治会からのお知らせ・回覧板・イベント情報です。</p>
+  <p class="page-sub">渋沢連合自治会からのお知らせ情報です。</p>
   <div class="page-divider"></div>
 
-  <!-- フィルター -->
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">すべて</button>
-    <button class="filter-btn" data-filter="お知らせ">お知らせ</button>
-    <button class="filter-btn" data-filter="掲示板">掲示板</button>
-    <button class="filter-btn" data-filter="イベント">イベント</button>
-    <button class="filter-btn" data-filter="NEW">NEW</button>
-    <button class="filter-btn" data-filter="トピックス">トピックス</button>
-  </div>
+
 
   <!-- お知らせリスト -->
   <div class="notice-list" id="notice-list">
@@ -163,7 +155,7 @@ async function loadNews() {
   try {
     const res = await fetch(GAS_URL + '?type=news');
     const data = await res.json();
-    allNews = data.news || [];
+    allNews = (data.news || []).filter(n => n.badge === 'お知らせ');
     renderNews();
   } catch(e) {
     document.getElementById('notice-list').innerHTML =

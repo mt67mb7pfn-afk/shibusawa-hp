@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ詳細 | 渋沢連合自治会</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --amber:#ffd43b;--amber-l:#fff9db;
+  --lavender:#b197fc;--lavender-l:#f3f0ff;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+
+/* バブル */
+.bubble{position:fixed;border-radius:50%;opacity:.13;animation:float 20s ease-in-out infinite;pointer-events:none;z-index:0;}
+.b1{width:180px;height:180px;background:radial-gradient(circle,var(--mint),var(--sky));top:8%;left:2%;animation-duration:22s;}
+.b2{width:120px;height:120px;background:radial-gradient(circle,var(--coral),#ffa94d);top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
+.b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:60%;left:1%;animation-duration:20s;animation-delay:-8s;}
+.b4{width:150px;height:150px;background:radial-gradient(circle,var(--lavender),var(--sky));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
+@keyframes float{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);}}
+
+/* ヘッダー */
+header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.header-inner{max-width:900px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;}
+.logo-wrap{display:flex;flex-direction:column;}
+.logo-pref{font-size:10px;color:var(--text3);}
+.logo-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--text);}
+.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--mint-d);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--mint-l);transition:background .2s;text-decoration:none;}
+.back-btn:hover{background:var(--mint);color:#fff;}
+
+/* メイン */
+.main{max-width:760px;margin:40px auto;padding:0 20px 80px;position:relative;z-index:1;}
+
+/* バッジ */
+.n-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:12px;}
+.nb-info{background:var(--sky-l);color:var(--sky);}
+.nb-new{background:var(--coral-l);color:var(--coral);}
+.nb-event{background:var(--amber-l);color:#b8860b;}
+.nb-topics{background:var(--lavender-l);color:var(--lavender);}
+.nb-kairan{background:var(--mint-l);color:var(--mint-d);}
+
+/* 記事カード */
+.article-card{background:#fff;border-radius:16px;border:2px solid var(--border);padding:36px;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.article-date{font-size:13px;color:var(--text3);margin-bottom:8px;}
+.article-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:20px;}
+.article-divider{width:48px;height:3px;background:linear-gradient(90deg,var(--mint),var(--sky));border-radius:2px;margin-bottom:24px;}
+.article-desc{font-size:14px;color:var(--text2);margin-bottom:20px;padding:12px 16px;background:var(--bg);border-radius:8px;border-left:3px solid var(--mint);}
+.article-body{font-size:15px;color:var(--text);line-height:1.9;white-space:pre-wrap;word-break:break-word;}
+.article-image{width:100%;border-radius:12px;margin-bottom:24px;object-fit:cover;max-height:400px;}
+.article-link{display:inline-flex;align-items:center;gap:6px;margin-top:24px;padding:10px 20px;background:var(--mint);color:#fff;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;transition:background .2s;}
+.article-link:hover{background:var(--mint-d);}
+
+/* ローディング */
+.loading{text-align:center;padding:60px;color:var(--text3);}
+</style>
+</head>
+<body>
+<div class="bubble b1"></div>
+<div class="bubble b2"></div>
+<div class="bubble b3"></div>
+<div class="bubble b4"></div>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <div class="logo-pref">横浜市都筑区</div>
+      <div class="logo-name">渋沢連合自治会</div>
+    </div>
+    <a class="back-btn" href="news.html">← お知らせ一覧</a>
+  </div>
+</header>
+
+<div class="main">
+  <div id="article-content"><div class="loading">読み込み中...</div></div>
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+const BADGE_MAP = {'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan','イベント':'nb-event','トピックス':'nb-topics'};
+
+async function loadArticle() {
+  const params = new URLSearchParams(location.search);
+  const date = params.get('date');
+  const content = document.getElementById('article-content');
+
+  if (!date) {
+    content.innerHTML = '<div class="loading">記事が見つかりません</div>';
+    return;
+  }
+
+  try {
+    const res = await fetch(GAS_URL + '?type=news');
+    const data = await res.json();
+    const item = (data.news || []).find(n => n.date === date);
+
+    if (!item) {
+      content.innerHTML = '<div class="loading">記事が見つかりません</div>';
+      return;
+    }
+
+    // ページタイトル更新
+    document.title = item.title + ' | 渋沢連合自治会';
+
+    const bc = BADGE_MAP[item.badge] || 'nb-info';
+
+    content.innerHTML = `
+      <div class="article-card">
+        <span class="n-badge ${bc}">${item.badge}</span>
+        <div class="article-date">${item.date}</div>
+        <h1 class="article-title">${item.title}</h1>
+        <div class="article-divider"></div>
+        ${item.imageUrl ? `<img class="article-image" src="${item.imageUrl}" alt="${item.title}">` : ''}
+        ${item.description ? `<div class="article-desc">${item.description}</div>` : ''}
+        ${item.body ? `<div class="article-body">${item.body}</div>` : ''}
+        ${item.url && item.url !== '#' && item.url !== 'news.html' ? `<a class="article-link" href="${item.url}" target="_blank" rel="noopener">詳細はこちら →</a>` : ''}
+      </div>
+    `;
+  } catch(e) {
+    content.innerHTML = '<div class="loading">読み込みに失敗しました</div>';
+  }
+}
+
+loadArticle();
+</script>
+</body>
+</html>

@@ -537,17 +537,47 @@ const GAS_URL='https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0
 const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan','イベント':'nb-event','トピックス':'nb-topics'};
   async function loadNews(){
   try{
-    const res=await fetch(GAS_URL+'?type=news&limit=5');
-    const data=await res.json();
-    if(!data.news||data.news.length===0)return;
+    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const [newsRes, bulletinRes] = await Promise.all([
+      fetch(GAS_URL+'?type=news'),
+      fetch(GAS_URL+'?type=bulletin')
+    ]);
+    const newsData = await newsRes.json();
+    const bulletinData = await bulletinRes.json();
+
+    const newsItems = (newsData.news || []).map(item => ({
+      ...item,
+      _sortDate: new Date(item.date)
+    }));
+
+    const bulletinItems = (bulletinData.bulletin || []).map(item => {
+      const d = item.startDate ? new Date(item.startDate) : new Date();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return {
+        date: `${d.getFullYear()}.${mm}.${dd}`,
+        day: dd,
+        month: months[d.getMonth()] + ' ' + d.getFullYear(),
+        title: item.title,
+        badge: '掲示板',
+        url: 'bulletin.html',
+        _sortDate: d
+      };
+    });
+
+    const combined = [...newsItems, ...bulletinItems]
+      .sort((a,b) => b._sortDate - a._sortDate)
+      .slice(0, 5);
+
     const list=document.getElementById('notice-list');
     if(!list)return;
-    list.innerHTML=data.news.map(item=>{
+    if(combined.length===0)return;
+
+    list.innerHTML=combined.map(item=>{
       const bc=BADGE_MAP[item.badge]||'nb-info';
-      // 回覧は直接URLへ、それ以外はnews.htmlフィルター経由
       const href = item.url && item.url !== '#'
-  ? item.url
-  : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
+        ? item.url
+        : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
       const target = item.badge === '回覧' ? 'target="_blank" rel="noopener"' : '';
       return `<a class="notice-item" href="${href}" ${target}>
         <div class="notice-left"><div class="notice-day">${item.day}</div><div class="notice-month">${item.month}</div><span class="n-badge ${bc}">${item.badge}</span></div>

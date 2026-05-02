@@ -207,6 +207,14 @@ input[type="date"]{appearance:auto;}
         <textarea class="form-textarea" id="description" placeholder="お知らせの説明文を入力（任意）"></textarea>
       </div>
 
+      <!-- 本文 -->
+      <div class="form-group">
+        <label class="form-label">
+          本文 <span class="optional">任意</span>
+        </label>
+        <textarea class="form-textarea" id="body" placeholder="記事の本文を入力（入力すると詳細ページが作成されます）" style="min-height:160px;"></textarea>
+      </div>
+
       <!-- 画像 -->
       <div class="form-group">
         <label class="form-label">
@@ -281,6 +289,7 @@ async function submitForm() {
   const badge = document.getElementById('badge').value;
   const url = document.getElementById('url').value.trim();
   const description = document.getElementById('description').value.trim();
+  const body = document.getElementById('body').value.trim();
   const imageFile = document.getElementById('image-file').files[0];
 
   if (!date || !title) {
@@ -306,7 +315,7 @@ async function submitForm() {
     const payload = {
       password: enteredPassword,
       type: 'news',
-      date, title, badge, url, description,
+      date, title, badge, url, description, body,
       imageBase64, imageName, imageMime
     };
 
@@ -351,6 +360,7 @@ function resetForm() {
   document.getElementById('title').value = '';
   document.getElementById('url').value = '';
   document.getElementById('description').value = '';
+  document.getElementById('body').value = '';
   document.getElementById('image-file').value = '';
   document.getElementById('image-preview').style.display = 'none';
 }

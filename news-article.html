@@ -99,7 +99,8 @@ async function loadArticle() {
   try {
     const res = await fetch(GAS_URL + '?type=news');
     const data = await res.json();
-    const item = (data.news || []).find(n => n.date === date);
+    const title = params.get('title');
+    const item = (data.news || []).find(n => n.date === date && (!title || n.title === title));
 
     if (!item) {
       content.innerHTML = '<div class="loading">記事が見つかりません</div>';

@@ -551,7 +551,7 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
     }));
 
     const bulletinItems = (bulletinData.bulletin || []).map(item => {
-      const d = item.startDate ? new Date(item.startDate) : new Date();
+      const d = (item.startDate && item.startDate !== '') ? new Date(item.startDate.replace(/\./g, '-')) : new Date();
       const mm = String(d.getMonth()+1).padStart(2,'0');
       const dd = String(d.getDate()).padStart(2,'0');
       return {

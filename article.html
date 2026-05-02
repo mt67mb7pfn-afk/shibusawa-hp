@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>トピックス | 渋沢連合自治会</title>
+<title>お知らせ詳細 | 渋沢連合自治会</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -18,275 +18,116 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
-a{text-decoration:none;color:inherit;}
 
-/* 背景バルーン */
-.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.balloon{position:absolute;border-radius:50%;opacity:.15;animation:balloonDrift linear infinite;filter:blur(1px);}
-.b1{width:180px;height:180px;background:radial-gradient(circle,var(--coral),var(--lavender));top:8%;left:2%;animation-duration:22s;}
-.b2{width:120px;height:120px;background:radial-gradient(circle,var(--lavender),var(--sky));top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
+/* バブル */
+.bubble{position:fixed;border-radius:50%;opacity:.13;animation:float 20s ease-in-out infinite;pointer-events:none;z-index:0;}
+.b1{width:180px;height:180px;background:radial-gradient(circle,var(--mint),var(--sky));top:8%;left:2%;animation-duration:22s;}
+.b2{width:120px;height:120px;background:radial-gradient(circle,var(--coral),#ffa94d);top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
 .b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:60%;left:1%;animation-duration:20s;animation-delay:-8s;}
-.b4{width:150px;height:150px;background:radial-gradient(circle,var(--coral),var(--mint));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
-@keyframes balloonDrift{
-  0%{transform:translateY(0) scale(1);}
-  50%{transform:translateY(-24px) scale(1.03);}
-  100%{transform:translateY(0) scale(1);}
-}
+.b4{width:150px;height:150px;background:radial-gradient(circle,var(--lavender),var(--sky));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
+@keyframes float{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);}}
 
-/* HEADER */
+/* ヘッダー */
 header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.06);}
-.header-inner{max-width:800px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:14px;}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.header-inner{max-width:900px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px;}
+.logo-wrap{display:flex;flex-direction:column;}
 .logo-pref{font-size:10px;color:var(--text3);}
 .logo-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--text);}
-.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--coral);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--coral-l);transition:background .2s;}
-.back-btn:hover{background:var(--coral);color:#fff;}
+.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--mint-d);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--mint-l);transition:background .2s;text-decoration:none;}
+.back-btn:hover{background:var(--mint);color:#fff;}
 
-/* MAIN */
-.main{max-width:800px;margin:40px auto;padding:0 24px;position:relative;z-index:1;}
+/* メイン */
+.main{max-width:760px;margin:40px auto;padding:0 20px 80px;position:relative;z-index:1;}
 
-/* パンくず */
-.breadcrumb{font-size:12px;color:var(--text3);margin-bottom:24px;display:flex;align-items:center;gap:6px;}
-.breadcrumb a{color:var(--coral);}
-.breadcrumb a:hover{text-decoration:underline;}
+/* バッジ */
+.n-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-bottom:12px;}
+.nb-info{background:var(--sky-l);color:var(--sky);}
+.nb-new{background:var(--coral-l);color:var(--coral);}
+.nb-event{background:var(--amber-l);color:#b8860b;}
+.nb-topics{background:var(--lavender-l);color:var(--lavender);}
+.nb-kairan{background:var(--mint-l);color:var(--mint-d);}
 
-/* 記事ヘッダー */
-.article-header{margin-bottom:32px;}
-.article-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
-.article-cat{
-  font-size:11px;font-weight:700;
-  padding:4px 12px;border-radius:20px;
-  background:linear-gradient(135deg,var(--coral),var(--lavender));
-  color:#fff;
-}
-.article-date{font-size:12px;color:var(--text3);}
-.article-title{
-  font-family:'Noto Serif JP',serif;
-  font-size:clamp(20px,3vw,28px);
-  font-weight:700;
-  color:var(--text);
-  line-height:1.4;
-  margin-bottom:24px;
-}
-
-/* アイキャッチ画像 */
-.article-eyecatch{
-  width:100%;
-  border-radius:16px;
-  overflow:hidden;
-  margin-bottom:32px;
-  background:var(--coral-l);
-  aspect-ratio:16/9;
-}
-.article-eyecatch img{
-  width:100%;height:100%;
-  object-fit:cover;
-}
-
-/* 本文 */
-.article-body{
-  background:#fff;
-  border-radius:16px;
-  padding:32px;
-  border:2px solid var(--border);
-  box-shadow:0 2px 10px rgba(0,0,0,.04);
-  margin-bottom:40px;
-}
-.article-body .body-text{
-  font-size:15px;
-  color:var(--text2);
-  line-height:2;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-/* 戻るボタン */
-.back-link{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  font-size:13px;
-  font-weight:700;
-  color:var(--coral);
-  padding:12px 24px;
-  border-radius:24px;
-  background:var(--coral-l);
-  border:2px solid var(--coral);
-  transition:all .2s;
-  margin-bottom:40px;
-}
-.back-link:hover{background:var(--coral);color:#fff;}
+/* 記事カード */
+.article-card{background:#fff;border-radius:16px;border:2px solid var(--border);padding:36px;box-shadow:0 2px 10px rgba(0,0,0,.04);}
+.article-date{font-size:13px;color:var(--text3);margin-bottom:8px;}
+.article-title{font-family:'Noto Serif JP',serif;font-size:24px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:20px;}
+.article-divider{width:48px;height:3px;background:linear-gradient(90deg,var(--mint),var(--sky));border-radius:2px;margin-bottom:24px;}
+.article-desc{font-size:14px;color:var(--text2);margin-bottom:20px;padding:12px 16px;background:var(--bg);border-radius:8px;border-left:3px solid var(--mint);}
+.article-body{font-size:15px;color:var(--text);line-height:1.9;white-space:pre-wrap;word-break:break-word;}
+.article-image{width:100%;border-radius:12px;margin-bottom:24px;object-fit:cover;max-height:400px;}
+.article-link{display:inline-flex;align-items:center;gap:6px;margin-top:24px;padding:10px 20px;background:var(--mint);color:#fff;border-radius:20px;font-size:13px;font-weight:700;text-decoration:none;transition:background .2s;}
+.article-link:hover{background:var(--mint-d);}
 
 /* ローディング */
-.loading{text-align:center;padding:80px 20px;color:var(--text3);}
-.loading-spinner{
-  width:36px;height:36px;border:3px solid var(--border);
-  border-top-color:var(--coral);border-radius:50%;
-  animation:spin .8s linear infinite;margin:0 auto 16px;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* エラー */
-.error{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;}
-
-/* アイキャッチクリック可能 */
-.article-eyecatch{cursor:zoom-in;}
-
-/* ライトボックス */
-.lightbox{
-  display:none;position:fixed;inset:0;z-index:1000;
-  background:rgba(0,0,0,.92);
-  align-items:center;justify-content:center;padding:20px;
-}
-.lightbox.open{display:flex;}
-.lightbox-inner{
-  position:relative;max-width:90vw;max-height:90vh;
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-}
-.lightbox-img{
-  max-width:100%;max-height:85vh;
-  border-radius:12px;object-fit:contain;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
-.lightbox-close{
-  position:fixed;top:20px;right:20px;
-  width:40px;height:40px;
-  background:rgba(255,255,255,.15);
-  border:none;border-radius:50%;
-  color:#fff;font-size:20px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .2s;z-index:1001;
-}
-.lightbox-close:hover{background:rgba(255,255,255,.3);}
-
-/* フッター */
-footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;margin-top:60px;text-align:center;position:relative;z-index:1;}
-.footer-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:10px 24px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:all .2s;margin-bottom:16px;}
-.footer-back:hover{color:#fff;border-color:rgba(255,255,255,.5);}
-.footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
+.loading{text-align:center;padding:60px;color:var(--text3);}
 </style>
 </head>
 <body>
-
-<div class="bg-balloons">
-  <div class="balloon b1"></div><div class="balloon b2"></div>
-  <div class="balloon b3"></div><div class="balloon b4"></div>
-</div>
-
-<!-- ライトボックス -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightbox-close">✕</button>
-  <div class="lightbox-inner">
-    <img class="lightbox-img" id="lightbox-img" src="" alt="">
-  </div>
-</div>
+<div class="bubble b1"></div>
+<div class="bubble b2"></div>
+<div class="bubble b3"></div>
+<div class="bubble b4"></div>
 
 <header>
   <div class="header-inner">
-    <a class="logo" href="index.html">
-      <div><div class="logo-pref">横浜市都筑区</div><div class="logo-name">渋沢連合自治会</div></div>
-    </a>
-    <a class="back-btn" href="topics.html">← 一覧に戻る</a>
+    <div class="logo-wrap">
+      <div class="logo-pref">横浜市都筑区</div>
+      <div class="logo-name">渋沢連合自治会</div>
+    </div>
+    <a class="back-btn" href="news.html">← お知らせ一覧</a>
   </div>
 </header>
 
 <div class="main">
-  <!-- パンくず -->
-  <div class="breadcrumb">
-    <a href="index.html">トップ</a>
-    <span>›</span>
-    <a href="topics.html">トピックス</a>
-    <span>›</span>
-    <span id="breadcrumb-title">記事</span>
-  </div>
-
-  <!-- 記事コンテンツ -->
-  <div id="article-content">
-    <div class="loading">
-      <div class="loading-spinner"></div>
-      読み込み中...
-    </div>
-  </div>
-
-  <!-- 一覧に戻るボタン -->
-  <a class="back-link" href="topics.html">← トピックス一覧に戻る</a>
+  <div id="article-content"><div class="loading">読み込み中...</div></div>
 </div>
-
-<footer>
-  <a class="footer-back" href="index.html">← トップページに戻る</a>
-  <div class="footer-copy">© Shibusawa Rengo Jichikai All Rights Reserved.</div>
-</footer>
 
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
-
-const urlParams = new URLSearchParams(window.location.search);
-const articleId = urlParams.get('id');
+const BADGE_MAP = {'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan','イベント':'nb-event','トピックス':'nb-topics'};
 
 async function loadArticle() {
+  const params = new URLSearchParams(location.search);
+  const date = params.get('date');
   const content = document.getElementById('article-content');
 
-  if (!articleId) {
-    content.innerHTML = '<div class="error">記事が見つかりませんでした。</div>';
+  if (!date) {
+    content.innerHTML = '<div class="loading">記事が見つかりません</div>';
     return;
   }
 
   try {
-    const res = await fetch(GAS_URL + '?type=topics');
+    const res = await fetch(GAS_URL + '?type=news');
     const data = await res.json();
-    const topics = data.topics || [];
-    const item = topics.find(t => String(t.id) === String(articleId));
+    const title = params.get('title');
+  const item = (data.news || []).find(n => n.date === date && (!title || n.title === title));
 
     if (!item) {
-      content.innerHTML = '<div class="error">記事が見つかりませんでした。</div>';
+      content.innerHTML = '<div class="loading">記事が見つかりません</div>';
       return;
     }
 
-    // タイトルを更新
-    document.title = `${item.title} | 渋沢連合自治会`;
-    document.getElementById('breadcrumb-title').textContent = item.title;
+    // ページタイトル更新
+    document.title = item.title + ' | 渋沢連合自治会';
 
-    // アイキャッチ画像
-    const eyecatch = item.imageUrl
-      ? `<div class="article-eyecatch" onclick="openLightbox('${item.imageUrl}','${item.title}')"><img src="${item.imageUrl}" alt="${item.title}"></div>`
-      : '';
+    const bc = BADGE_MAP[item.badge] || 'nb-info';
 
     content.innerHTML = `
-      <div class="article-header">
-        <div class="article-meta">
-          <span class="article-cat">${item.category}</span>
-          <span class="article-date">${item.date}</span>
-        </div>
+      <div class="article-card">
+        <span class="n-badge ${bc}">${item.badge}</span>
+        <div class="article-date">${item.date}</div>
         <h1 class="article-title">${item.title}</h1>
+        <div class="article-divider"></div>
+        ${item.imageUrl ? `<img class="article-image" src="${item.imageUrl}" alt="${item.title}">` : ''}
+        ${item.description ? `<div class="article-desc">${item.description}</div>` : ''}
+        ${item.body ? `<div class="article-body">${item.body}</div>` : ''}
+        ${item.url && item.url !== '#' && item.url !== 'news.html' ? `<a class="article-link" href="${item.url}" target="_blank" rel="noopener">詳細はこちら →</a>` : ''}
       </div>
-      ${eyecatch}
-      <div class="article-body">
-        <div class="body-text">${item.body || ''}</div>
-      </div>`;
-
+    `;
   } catch(e) {
-    document.getElementById('article-content').innerHTML =
-      '<div class="error">データの読み込みに失敗しました。<br>しばらくしてから再度お試しください。</div>';
+    content.innerHTML = '<div class="loading">読み込みに失敗しました</div>';
   }
 }
-
-// ライトボックス
-function openLightbox(src, alt) {
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-img').alt = alt;
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-document.getElementById('lightbox').addEventListener('click', e => {
-  if (e.target === document.getElementById('lightbox')) closeLightbox();
-});
 
 loadArticle();
 </script>

@@ -48,12 +48,12 @@ header{background:#fff;border-bottom:2px solid var(--border);box-shadow:0 2px 16
 .header-title{font-family:'Noto Serif JP',serif;font-size:18px;font-weight:700;}
 .header-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--sky-l);color:var(--sky);}
 
-.main{max-width:700px;margin:40px auto;padding:0 24px 60px;overflow-x:hidden;}
+.main{max-width:700px;margin:40px auto;padding:0 20px 60px;overflow-x:hidden;}
 .form-card{
   background:#fff;border-radius:16px;border:2px solid var(--border);
   padding:32px;box-shadow:0 2px 10px rgba(0,0,0,.04);
   display:flex;flex-direction:column;gap:24px;
-  width:100%;overflow:hidden;box-sizing:border-box;
+  width:100%;box-sizing:border-box;
 }
 @media(max-width:500px){.form-card{padding:20px 16px;}}
 .form-group{display:flex;flex-direction:column;gap:8px;}
@@ -183,15 +183,11 @@ input[type="date"]{-webkit-appearance:none;appearance:auto;width:100%;max-width:
         <div class="date-group">
           <div>
             <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">開始日</div>
-            <div style="overflow:hidden;border-radius:10px;">
-              <input class="form-input" type="date" id="start-date" autocomplete="off" style="width:100%;box-sizing:border-box;display:block;">
-            </div>
+            <input class="form-input" type="date" id="start-date" autocomplete="off">
           </div>
           <div id="end-date-wrap">
             <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">終了日</div>
-            <div style="overflow:hidden;border-radius:10px;">
-              <input class="form-input" type="date" id="end-date" autocomplete="off" style="width:100%;box-sizing:border-box;display:block;">
-            </div>
+            <input class="form-input" type="date" id="end-date" autocomplete="off">
           </div>
         </div>
       </div>

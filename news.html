@@ -193,7 +193,7 @@ function renderNews() {
     const href = item.url && item.url.startsWith('http')
       ? item.url
       : item.body
-        ? `news-article.html?date=${encodeURIComponent(item.date)}`
+        ? `news-article.html?date=${encodeURIComponent(item.date)}&title=${encodeURIComponent(item.title)}`
         : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
     return `
       <a class="notice-item" href="${href}" ${target}>        <div class="notice-left">

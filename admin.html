@@ -121,6 +121,7 @@
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
   }
   .tab-btn {
     padding: 8px 20px;
@@ -270,6 +271,132 @@
   .btn-delete:hover { background: #f44336; color: #fff; }
   button:disabled { opacity: 0.4; cursor: not-allowed; }
 
+  /* フォーム */
+  .form-wrap {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .form-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .form-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+  }
+  .form-body {
+    padding: 24px;
+  }
+  .form-group {
+    margin-bottom: 24px;
+  }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #e85d26;
+    box-shadow: 0 0 0 3px rgba(232,93,38,0.1);
+  }
+
+  .file-upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 40px 24px;
+    text-align: center;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .file-upload-area:hover {
+    border-color: #e85d26;
+    background: #fff8f0;
+  }
+  .file-upload-area.active {
+    border-color: #e85d26;
+    background: #fff8f0;
+  }
+  .file-upload-area input {
+    display: none;
+  }
+  .file-upload-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+  .file-upload-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .file-preview {
+    margin-top: 16px;
+    display: none;
+  }
+  .file-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  .file-preview-name {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    justify-content: flex-end;
+  }
+  .btn-submit {
+    padding: 10px 24px;
+    background: #e85d26;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: #d04e1a; }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-reset {
+    padding: 10px 24px;
+    background: #f5f5f5;
+    color: #666;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-reset:hover { background: #efefef; }
+
   /* トースト */
   #toast {
     position: fixed;
@@ -288,6 +415,10 @@
   #toast.show { transform: translateX(-50%) translateY(0); }
   #toast.success { background: #4caf50; }
   #toast.error { background: #f44336; }
+
+  /* タブコンテンツの非表示 */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
 </style>
 </head>
 <body>
@@ -311,17 +442,123 @@
   </div>
   <div class="main">
     <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('お知らせ', this)">📢 お知らせ</button>
-      <button class="tab-btn" onclick="switchTab('トピックス', this)">📰 トピックス</button>
-      <button class="tab-btn" onclick="switchTab('掲示板', this)">📋 掲示板</button>
+      <button class="tab-btn active" onclick="switchTab('news', this)">📢 お知らせ</button>
+      <button class="tab-btn" onclick="switchTab('topics', this)">📰 トピックス</button>
+      <button class="tab-btn" onclick="switchTab('bulletin', this)">📋 掲示板</button>
+      <button class="tab-btn" onclick="switchTab('shiryo', this)">📑 各種資料</button>
+      <button class="tab-btn" onclick="switchTab('yakuin', this)">👥 役員名簿</button>
     </div>
-    <div class="table-wrap">
-      <div class="table-header">
-        <h2 id="table-title">お知らせ一覧</h2>
-        <button class="reload-btn" onclick="loadList()">🔄 再読み込み</button>
+
+    <!-- お知らせ -->
+    <div id="news" class="tab-content active">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h2>お知らせ一覧</h2>
+          <button class="reload-btn" onclick="loadListTab('news')">🔄 再読み込み</button>
+        </div>
+        <div class="table-scroll"><div id="news-body"><div class="loading">読み込み中...</div></div></div>
       </div>
-      <div class="table-scroll"><div id="table-body"><div class="loading">読み込み中...</div></div></div>
     </div>
+
+    <!-- トピックス -->
+    <div id="topics" class="tab-content">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h2>トピックス一覧</h2>
+          <button class="reload-btn" onclick="loadListTab('topics')">🔄 再読み込み</button>
+        </div>
+        <div class="table-scroll"><div id="topics-body"><div class="loading">読み込み中...</div></div></div>
+      </div>
+    </div>
+
+    <!-- 掲示板 -->
+    <div id="bulletin" class="tab-content">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h2>掲示板一覧</h2>
+          <button class="reload-btn" onclick="loadListTab('bulletin')">🔄 再読み込み</button>
+        </div>
+        <div class="table-scroll"><div id="bulletin-body"><div class="loading">読み込み中...</div></div></div>
+      </div>
+    </div>
+
+    <!-- 各種資料 -->
+    <div id="shiryo" class="tab-content">
+      <div class="form-wrap">
+        <div class="form-header">
+          <h2>各種資料を追加</h2>
+        </div>
+        <div class="form-body">
+          <form id="shiryo-form" onsubmit="submitShiryo(event)">
+            <div class="form-group">
+              <label for="shiryo-category">カテゴリ</label>
+              <select id="shiryo-category" required>
+                <option value="">選択してください</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="shiryo-title">タイトル</label>
+              <input type="text" id="shiryo-title" placeholder="例：総会資料" required />
+            </div>
+            <div class="form-group">
+              <label>画像ファイル</label>
+              <div class="file-upload-area" onclick="document.getElementById('shiryo-file').click()">
+                <div class="file-upload-icon">📤</div>
+                <div class="file-upload-text">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
+                <input type="file" id="shiryo-file" accept="image/*" required />
+              </div>
+              <div class="file-preview" id="shiryo-preview">
+                <img id="shiryo-preview-img" src="" alt="プレビュー" />
+                <div class="file-preview-name" id="shiryo-preview-name"></div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-reset" onclick="resetShiyroForm()">リセット</button>
+              <button type="submit" class="btn-submit" id="shiryo-submit">登録</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 役員名簿 -->
+    <div id="yakuin" class="tab-content">
+      <div class="form-wrap">
+        <div class="form-header">
+          <h2>役員名簿を更新</h2>
+        </div>
+        <div class="form-body">
+          <form id="yakuin-form" onsubmit="submitYakuin(event)">
+            <div class="form-group">
+              <label for="yakuin-type">ファイル種別</label>
+              <select id="yakuin-type" required>
+                <option value="">選択してください</option>
+                <option value="yakuin">役員名簿</option>
+                <option value="kessan">決算書</option>
+                <option value="shakyo">社協名簿</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>画像ファイル</label>
+              <div class="file-upload-area" onclick="document.getElementById('yakuin-file').click()">
+                <div class="file-upload-icon">📤</div>
+                <div class="file-upload-text">ファイルをドラッグ＆ドロップ、またはクリックして選択</div>
+                <input type="file" id="yakuin-file" accept="image/*" required />
+              </div>
+              <div class="file-preview" id="yakuin-preview">
+                <img id="yakuin-preview-img" src="" alt="プレビュー" />
+                <div class="file-preview-name" id="yakuin-preview-name"></div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-reset" onclick="resetYakuinForm()">リセット</button>
+              <button type="submit" class="btn-submit" id="yakuin-submit">更新</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -330,7 +567,6 @@
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
 const PASSWORD = 'shibusawa2026';
-let currentSheet = 'お知らせ';
 let password = '';
 
 // エンター押下でログイン
@@ -344,7 +580,8 @@ function login() {
     password = pw;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-screen').style.display = 'block';
-    loadList();
+    loadListTab('news');
+    loadShiyroCategories();
   } else {
     document.getElementById('login-error').style.display = 'block';
   }
@@ -358,34 +595,57 @@ function logout() {
   document.getElementById('login-error').style.display = 'none';
 }
 
-function switchTab(sheet, btn) {
-  currentSheet = sheet;
+function switchTab(tabId, btn) {
+  // タブボタンの状態を更新
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('table-title').textContent = sheet + '一覧';
-  loadList();
-}
 
-async function loadList() {
-  document.getElementById('table-body').innerHTML = '<div class="loading">読み込み中...</div>';
-  try {
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent(currentSheet)}`);
-    const data = await res.json();
-    renderTable(data.list || []);
-  } catch(e) {
-    document.getElementById('table-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
+  // タブコンテンツを切り替え
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+
+  // リストを読み込む
+  if (tabId === 'news' || tabId === 'topics' || tabId === 'bulletin') {
+    loadListTab(tabId);
   }
 }
 
-function renderTable(list) {
+async function loadListTab(tabId) {
+  const sheetMap = {
+    'news': 'お知らせ',
+    'topics': 'トピックス',
+    'bulletin': '掲示板'
+  };
+  const bodyId = tabId + '-body';
+  const sheet = sheetMap[tabId];
+
+  document.getElementById(bodyId).innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent(sheet)}`);
+    const data = await res.json();
+    renderTable(data.list || [], tabId);
+  } catch(e) {
+    document.getElementById(bodyId).innerHTML = '<div class="empty">データの取得に失敗しました</div>';
+  }
+}
+
+function renderTable(list, tabId) {
+  const bodyId = tabId + '-body';
+  const sheetMap = {
+    'news': 'お知らせ',
+    'topics': 'トピックス',
+    'bulletin': '掲示板'
+  };
+  const sheet = sheetMap[tabId];
+
   if (list.length === 0) {
-    document.getElementById('table-body').innerHTML = '<div class="empty">データがありません</div>';
+    document.getElementById(bodyId).innerHTML = '<div class="empty">データがありません</div>';
     return;
   }
 
   let html = '<table>';
 
-  if (currentSheet === 'お知らせ') {
+  if (sheet === 'お知らせ') {
     html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>バッジ</th><th>状態</th><th>操作</th></tr>';
     list.forEach(item => {
       const row = item.row;
@@ -402,13 +662,13 @@ function renderTable(list) {
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
           ${isHidden
-            ? `<button class="btn-show" onclick="showItem(${row})">公開</button>`
-            : `<button class="btn-hide" onclick="hideItem(${row})">非公開</button>`}
-          <button class="btn-delete" onclick="deleteItem(${row}, '${esc(title)}')">削除</button>
+            ? `<button class="btn-show" onclick="toggleVisibility('お知らせ', ${row}, true)">公開</button>`
+            : `<button class="btn-hide" onclick="toggleVisibility('お知らせ', ${row}, false)">非公開</button>`}
+          <button class="btn-delete" onclick="deleteItem('お知らせ', ${row}, '${esc(title)}')">削除</button>
         </div></td>
       </tr>`;
     });
-  } else if (currentSheet === 'トピックス') {
+  } else if (sheet === 'トピックス') {
     html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>カテゴリ</th><th>状態</th><th>操作</th></tr>';
     list.forEach(item => {
       const row = item.row;
@@ -425,13 +685,13 @@ function renderTable(list) {
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
           ${isHidden
-            ? `<button class="btn-show" onclick="showItem(${row})">公開</button>`
-            : `<button class="btn-hide" onclick="hideItem(${row})">非公開</button>`}
-          <button class="btn-delete" onclick="deleteItem(${row}, '${esc(title)}')">削除</button>
+            ? `<button class="btn-show" onclick="toggleVisibility('トピックス', ${row}, true)">公開</button>`
+            : `<button class="btn-hide" onclick="toggleVisibility('トピックス', ${row}, false)">非公開</button>`}
+          <button class="btn-delete" onclick="deleteItem('トピックス', ${row}, '${esc(title)}')">削除</button>
         </div></td>
       </tr>`;
     });
-  } else if (currentSheet === '掲示板') {
+  } else if (sheet === '掲示板') {
     html += '<tr><th>行</th><th>タイトル</th><th>種別</th><th>掲示開始</th><th>状態</th><th>操作</th></tr>';
     list.forEach(item => {
       const row = item.row;
@@ -448,53 +708,206 @@ function renderTable(list) {
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
           ${isHidden
-            ? `<button class="btn-show" onclick="showItem(${row})">公開</button>`
-            : `<button class="btn-hide" onclick="hideItem(${row})">非公開</button>`}
-          <button class="btn-delete" onclick="deleteItem(${row}, '${esc(title)}')">削除</button>
+            ? `<button class="btn-show" onclick="toggleVisibility('掲示板', ${row}, true)">公開</button>`
+            : `<button class="btn-hide" onclick="toggleVisibility('掲示板', ${row}, false)">非公開</button>`}
+          <button class="btn-delete" onclick="deleteItem('掲示板', ${row}, '${esc(title)}')">削除</button>
         </div></td>
       </tr>`;
     });
   }
 
   html += '</table>';
-  document.getElementById('table-body').innerHTML = html;
+  document.getElementById(bodyId).innerHTML = html;
 }
 
-async function hideItem(row) {
-  if (!confirm('この項目を非公開にしますか？')) return;
-  await postAction('admin_hide', row);
-}
-
-async function showItem(row) {
-  await postAction('admin_show', row);
-}
-
-async function deleteItem(row, title) {
-  if (!confirm(`「${title}」を完全に削除しますか？\nこの操作は元に戻せません。`)) return;
-  await postAction('admin_delete', row);
-}
-
-async function postAction(type, row) {
+async function toggleVisibility(sheet, row, show) {
+  const action = show ? 'admin_show' : 'admin_hide';
   try {
     const res = await fetch(GAS_URL, {
       method: 'POST',
       body: JSON.stringify({
-        type,
-        sheet: currentSheet,
+        type: action,
+        sheet,
         row,
         password
       })
     });
     const data = await res.json();
     if (data.success) {
-      showToast(type === 'admin_delete' ? '削除しました' : type === 'admin_hide' ? '非公開にしました' : '公開しました', 'success');
-      loadList();
+      showToast(show ? '公開しました' : '非公開にしました', 'success');
+      loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin');
     } else {
       showToast('エラー: ' + data.error, 'error');
     }
   } catch(e) {
     showToast('通信エラーが発生しました', 'error');
   }
+}
+
+async function deleteItem(sheet, row, title) {
+  if (!confirm(`「${title}」を完全に削除しますか？\nこの操作は元に戻せません。`)) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'admin_delete',
+        sheet,
+        row,
+        password
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('削除しました', 'success');
+      loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin');
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+  }
+}
+
+// 各種資料フォーム
+async function loadShiyroCategories() {
+  try {
+    const res = await fetch(`${GAS_URL}?type=get_shiryo_categories`);
+    const data = await res.json();
+    const select = document.getElementById('shiryo-category');
+    (data.categories || []).forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat;
+      select.appendChild(opt);
+    });
+  } catch(e) {
+    console.error('Failed to load categories:', e);
+  }
+}
+
+document.getElementById('shiryo-file').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('shiryo-preview-img').src = ev.target.result;
+      document.getElementById('shiryo-preview-name').textContent = file.name;
+      document.getElementById('shiryo-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+async function submitShiryo(e) {
+  e.preventDefault();
+  const category = document.getElementById('shiryo-category').value;
+  const title = document.getElementById('shiryo-title').value;
+  const file = document.getElementById('shiryo-file').files[0];
+
+  if (!file) {
+    showToast('ファイルを選択してください', 'error');
+    return;
+  }
+
+  document.getElementById('shiryo-submit').disabled = true;
+  showToast('アップロード中...', '');
+
+  try {
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const base64 = ev.target.result.split(',')[1];
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'upload_shiryo',
+          category,
+          title,
+          fileBase64: base64,
+          fileName: file.name,
+          password
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('登録しました', 'success');
+        resetShiyroForm();
+      } else {
+        showToast('エラー: ' + data.error, 'error');
+      }
+      document.getElementById('shiryo-submit').disabled = false;
+    };
+    reader.readAsDataURL(file);
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+    document.getElementById('shiryo-submit').disabled = false;
+  }
+}
+
+function resetShiyroForm() {
+  document.getElementById('shiryo-form').reset();
+  document.getElementById('shiryo-preview').style.display = 'none';
+}
+
+// 役員名簿フォーム
+document.getElementById('yakuin-file').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      document.getElementById('yakuin-preview-img').src = ev.target.result;
+      document.getElementById('yakuin-preview-name').textContent = file.name;
+      document.getElementById('yakuin-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+async function submitYakuin(e) {
+  e.preventDefault();
+  const fileType = document.getElementById('yakuin-type').value;
+  const file = document.getElementById('yakuin-file').files[0];
+
+  if (!file) {
+    showToast('ファイルを選択してください', 'error');
+    return;
+  }
+
+  document.getElementById('yakuin-submit').disabled = true;
+  showToast('アップロード中...', '');
+
+  try {
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const base64 = ev.target.result.split(',')[1];
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          type: 'upload_yakuin',
+          fileType,
+          fileBase64: base64,
+          fileName: file.name,
+          password
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('更新しました', 'success');
+        resetYakuinForm();
+      } else {
+        showToast('エラー: ' + data.error, 'error');
+      }
+      document.getElementById('yakuin-submit').disabled = false;
+    };
+    reader.readAsDataURL(file);
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+    document.getElementById('yakuin-submit').disabled = false;
+  }
+}
+
+function resetYakuinForm() {
+  document.getElementById('yakuin-form').reset();
+  document.getElementById('yakuin-preview').style.display = 'none';
 }
 
 function formatDate(val) {

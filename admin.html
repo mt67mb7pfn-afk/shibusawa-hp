@@ -359,6 +359,18 @@
     border-radius: 8px;
     border: 1px solid #ddd;
   }
+  .thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    display: block;
+  }
+  .thumb-wrap {
+    display: flex;
+    gap: 4px;
+  }
   .file-preview-name {
     margin-top: 8px;
     font-size: 12px;
@@ -646,7 +658,7 @@ function renderTable(list, tabId) {
   let html = '<table>';
 
   if (sheet === 'お知らせ') {
-    html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>バッジ</th><th>状態</th><th>操作</th></tr>';
+    html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>バッジ</th><th>画像</th><th>状態</th><th>操作</th></tr>';
     list.forEach(item => {
       const row = item.row;
       const d = item.data;
@@ -654,11 +666,14 @@ function renderTable(list, tabId) {
       const title = d[1] || '';
       const badge = d[2] || '';
       const isHidden = d[5] === true;
+      const imageUrl = d[6] || '';
+      const thumbHtml = imageUrl ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">` : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
         <td class="date-cell">${date}</td>
         <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
         <td><span class="badge">${esc(badge)}</span></td>
+        <td>${thumbHtml}</td>
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
           ${isHidden
@@ -669,7 +684,7 @@ function renderTable(list, tabId) {
       </tr>`;
     });
   } else if (sheet === 'トピックス') {
-    html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>カテゴリ</th><th>状態</th><th>操作</th></tr>';
+    html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>カテゴリ</th><th>画像</th><th>状態</th><th>操作</th></tr>';
     list.forEach(item => {
       const row = item.row;
       const d = item.data;
@@ -677,11 +692,14 @@ function renderTable(list, tabId) {
       const category = d[2] || '';
       const title = d[3] || '';
       const isHidden = d[6] === true;
+      const imageUrl = d[5] || '';
+      const thumbHtml = imageUrl ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">` : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
         <td class="date-cell">${date}</td>
         <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
         <td><span class="badge">${esc(category)}</span></td>
+        <td>${thumbHtml}</td>
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
           ${isHidden
@@ -692,7 +710,7 @@ function renderTable(list, tabId) {
       </tr>`;
     });
   } else if (sheet === '掲示板') {
-    html += '<tr><th>行</th><th>タイトル</th><th>種別</th><th>掲示開始</th><th>状態</th><th>操作</th></tr>';
+    html += '<tr><th>行</th><th>タイトル</th><th>種別</th><th>掲示開始</th><th>画像</th><th>状態</th><th>操作</th></tr>';
     list.forEach(item => {
       const row = item.row;
       const d = item.data;
@@ -700,11 +718,16 @@ function renderTable(list, tabId) {
       const type = d[2] || '';
       const startDate = d[3] ? formatDate(d[3]) : '';
       const isHidden = d[8] === true;
+      const images = [d[5], d[6], d[7]].filter(u => u);
+      const thumbHtml = images.length
+        ? `<div class="thumb-wrap">${images.map(u => `<img class="thumb" src="${esc(u)}" alt="画像">`).join('')}</div>`
+        : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
         <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
         <td><span class="badge">${esc(type)}</span></td>
         <td class="date-cell">${startDate}</td>
+        <td>${thumbHtml}</td>
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
           ${isHidden

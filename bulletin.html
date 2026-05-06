@@ -261,7 +261,7 @@ const TYPE_CLASS = {
 
 async function loadBulletin() {
   try {
-    const res = await fetch(GAS_URL + '?type=bulletin');
+    const res = await fetch('/data/bulletin.json');
     const data = await res.json();
     allBulletin = data.bulletin || [];
     renderBulletin();

@@ -232,7 +232,7 @@ async function loadArticle() {
   }
 
   try {
-    const res = await fetch(GAS_URL + '?type=topics');
+    const res = await fetch('/data/topics.json');
     const data = await res.json();
     const topics = data.topics || [];
     const item = topics.find(t => String(t.id) === String(articleId));

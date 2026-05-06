@@ -103,7 +103,7 @@ async function loadArticle() {
   }
 
   try {
-    const res = await fetch(GAS_URL + '?type=news');
+    const res = await fetch('/data/news.json');
     const data = await res.json();
     const title = params.get('title');
     const item = (data.news || []).find(n => n.date === date && (!title || n.title === title));

@@ -201,7 +201,7 @@ let gridData = { teirekai: [], shakyo: [], kiyaku: [] };
 
 async function loadData() {
   try {
-    const res = await fetch(`${GAS_URL}?type=shiryo`);
+    const res = await fetch('/data/shiryo.json');
     const data = await res.json();
     const items = data.shiryo || [];
 

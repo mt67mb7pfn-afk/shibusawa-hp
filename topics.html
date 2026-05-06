@@ -252,7 +252,7 @@ if (urlFilter) {
 
 async function loadTopics() {
   try {
-    const res = await fetch(GAS_URL + '?type=topics');
+    const res = await fetch('/data/topics.json');
     const data = await res.json();
     allTopics = data.topics || [];
     renderTopics();

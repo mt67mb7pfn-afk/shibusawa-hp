@@ -539,8 +539,8 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
   try{
     const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const [newsRes, bulletinRes] = await Promise.all([
-      fetch(GAS_URL+'?type=news'),
-      fetch(GAS_URL+'?type=bulletin')
+      fetch('/data/news.json'),
+      fetch('/data/bulletin.json')
     ]);
     const newsData = await newsRes.json();
     const bulletinData = await bulletinRes.json();
@@ -588,7 +588,7 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
 }
   async function loadTopics(){
   try{
-    const res=await fetch(GAS_URL+'?type=topics');
+    const res=await fetch('/data/topics.json');
     const data=await res.json();
     if(!data.topics||data.topics.length===0)return;
     const grid=document.getElementById('topics-grid');

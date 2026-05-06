@@ -1,0 +1,26 @@
+{
+  "news": [
+    {
+      "date": "2026.05.02",
+      "day": "02",
+      "month": "May 2026",
+      "title": "お知らせテスト１",
+      "badge": "お知らせ",
+      "url": "news.html",
+      "description": "お知らせテスト１",
+      "imageUrl": "https://lh3.googleusercontent.com/d/17Ch-cA7Zn20tQV6Au8O2g6u_Yh1h5qzE",
+      "body": "お知らせテスト１"
+    },
+    {
+      "date": "2026.05.02",
+      "day": "02",
+      "month": "May 2026",
+      "title": "トピクステスト１",
+      "badge": "トピックス",
+      "url": "topics.html",
+      "description": "",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1H7G76SYfYf0xGNWCPm_evb18L5H-Hpa4",
+      "body": ""
+    }
+  ]
+}

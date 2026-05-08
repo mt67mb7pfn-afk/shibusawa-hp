@@ -354,6 +354,12 @@ function showResult(msg, type) {
   el.className = `result ${type}`;
   el.style.display = 'block';
   el.scrollIntoView({behavior: 'smooth'});
+  if (type === 'success') {
+    setTimeout(() => {
+      el.style.display = 'none';
+      el.textContent = '';
+    }, 5000);
+  }
 }
 
 function resetForm() {

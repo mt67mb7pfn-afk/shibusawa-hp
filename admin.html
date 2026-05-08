@@ -371,6 +371,97 @@
     display: flex;
     gap: 4px;
   }
+  .btn-edit {
+    padding: 4px 10px;
+    background: #4dabf7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-edit:hover { background: #339af0; }
+
+  /* 編集モーダル */
+  .edit-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .edit-overlay.open { display: flex; }
+  .edit-modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .edit-modal h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #1a1a2e;
+  }
+  .edit-field {
+    margin-bottom: 16px;
+  }
+  .edit-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .edit-field input,
+  .edit-field select,
+  .edit-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  .edit-field textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  .edit-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .edit-actions .btn-cancel {
+    padding: 10px 24px;
+    background: #f0f0f0;
+    color: #555;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .edit-actions .btn-save {
+    padding: 10px 28px;
+    background: #4dabf7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .edit-actions .btn-save:hover { background: #339af0; }
+  .edit-actions .btn-save:disabled { opacity: .6; cursor: not-allowed; }
   .file-preview-name {
     margin-top: 8px;
     font-size: 12px;
@@ -576,6 +667,18 @@
 
 <div id="toast"></div>
 
+<!-- 編集モーダル -->
+<div class="edit-overlay" id="edit-overlay" onclick="closeEditOnOverlay(event)">
+  <div class="edit-modal">
+    <h2 id="edit-modal-title">内容を編集</h2>
+    <div id="edit-fields"></div>
+    <div class="edit-actions">
+      <button class="btn-cancel" onclick="closeEdit()">キャンセル</button>
+      <button class="btn-save" id="edit-save-btn" onclick="submitEdit()">保存する</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
 const PASSWORD = 'shibusawa2026';
@@ -662,6 +765,7 @@ function renderTable(list, tabId) {
     list.forEach(item => {
       const row = item.row;
       const d = item.data;
+      storeEditData(tabId, row, d);
       const date = d[0] ? formatDate(d[0]) : '';
       const title = d[1] || '';
       const badge = d[2] || '';
@@ -676,6 +780,7 @@ function renderTable(list, tabId) {
         <td>${thumbHtml}</td>
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
+          <button class="btn-edit" onclick="openEdit('news', ${row})">編集</button>
           ${isHidden
             ? `<button class="btn-show" onclick="toggleVisibility('お知らせ', ${row}, true)">公開</button>`
             : `<button class="btn-hide" onclick="toggleVisibility('お知らせ', ${row}, false)">非公開</button>`}
@@ -688,6 +793,7 @@ function renderTable(list, tabId) {
     list.forEach(item => {
       const row = item.row;
       const d = item.data;
+      storeEditData(tabId, row, d);
       const date = d[1] ? formatDate(d[1]) : '';
       const category = d[2] || '';
       const title = d[3] || '';
@@ -702,6 +808,7 @@ function renderTable(list, tabId) {
         <td>${thumbHtml}</td>
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
+          <button class="btn-edit" onclick="openEdit('topics', ${row})">編集</button>
           ${isHidden
             ? `<button class="btn-show" onclick="toggleVisibility('トピックス', ${row}, true)">公開</button>`
             : `<button class="btn-hide" onclick="toggleVisibility('トピックス', ${row}, false)">非公開</button>`}
@@ -714,6 +821,7 @@ function renderTable(list, tabId) {
     list.forEach(item => {
       const row = item.row;
       const d = item.data;
+      storeEditData(tabId, row, d);
       const title = d[1] || '';
       const type = d[2] || '';
       const startDate = d[3] ? formatDate(d[3]) : '';
@@ -730,6 +838,7 @@ function renderTable(list, tabId) {
         <td>${thumbHtml}</td>
         <td>${isHidden ? '<span class="badge hidden">非公開</span>' : '<span class="badge visible">公開中</span>'}</td>
         <td><div class="action-btns">
+          <button class="btn-edit" onclick="openEdit('bulletin', ${row})">編集</button>
           ${isHidden
             ? `<button class="btn-show" onclick="toggleVisibility('掲示板', ${row}, true)">公開</button>`
             : `<button class="btn-hide" onclick="toggleVisibility('掲示板', ${row}, false)">非公開</button>`}
@@ -938,6 +1047,142 @@ function formatDate(val) {
   const d = new Date(val);
   if (isNaN(d)) return String(val).slice(0, 10);
   return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+}
+
+// ============================================================
+//  編集機能
+// ============================================================
+const editItemsData = {}; // { tabId: { row: data[] } }
+
+function storeEditData(tabId, row, data) {
+  if (!editItemsData[tabId]) editItemsData[tabId] = {};
+  editItemsData[tabId][row] = data;
+}
+
+function toInputDate(val) {
+  if (!val) return '';
+  const d = new Date(val);
+  if (isNaN(d)) return '';
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+let editState = { tabId: null, row: null };
+
+function openEdit(tabId, row) {
+  const d = editItemsData[tabId]?.[row];
+  if (!d) { showToast('データの取得に失敗しました', 'error'); return; }
+
+  editState = { tabId, row };
+  const sheetNames = { news: 'お知らせ', topics: 'トピックス', bulletin: '掲示板' };
+  document.getElementById('edit-modal-title').textContent = `【${sheetNames[tabId]}】内容を編集`;
+
+  let fields = '';
+  if (tabId === 'news') {
+    fields = `
+      <div class="edit-field"><label>日付</label><input type="date" id="ef-date" value="${toInputDate(d[0])}"></div>
+      <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[1])}"></div>
+      <div class="edit-field"><label>バッジ</label>
+        <select id="ef-badge">
+          ${['お知らせ','回覧','イベント','NEW','トピックス'].map(b => `<option value="${b}" ${d[2]===b?'selected':''}>${b}</option>`).join('')}
+        </select>
+      </div>
+      <div class="edit-field"><label>リンクURL</label><input type="text" id="ef-url" value="${esc(d[3])}"></div>
+      <div class="edit-field"><label>説明文</label><textarea id="ef-description">${esc(d[4])}</textarea></div>
+      <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[7])}</textarea></div>
+      <div class="edit-field"><label>画像URL</label><input type="text" id="ef-imageUrl" value="${esc(d[6])}"></div>
+    `;
+  } else if (tabId === 'topics') {
+    fields = `
+      <div class="edit-field"><label>日付</label><input type="date" id="ef-date" value="${toInputDate(d[1])}"></div>
+      <div class="edit-field"><label>カテゴリ</label>
+        <select id="ef-category">
+          ${['地域活動','行事・イベント','防災','お知らせ','その他'].map(c => `<option value="${c}" ${d[2]===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[3])}"></div>
+      <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[4])}</textarea></div>
+      <div class="edit-field"><label>画像URL</label><input type="text" id="ef-imageUrl" value="${esc(d[5])}"></div>
+    `;
+  } else if (tabId === 'bulletin') {
+    fields = `
+      <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[1])}"></div>
+      <div class="edit-field"><label>種別</label>
+        <select id="ef-type">
+          ${['短期','中期','常設'].map(t => `<option value="${t}" ${d[2]===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="edit-field"><label>掲示開始日</label><input type="date" id="ef-startDate" value="${toInputDate(d[3])}"></div>
+      <div class="edit-field"><label>掲示終了日</label><input type="date" id="ef-endDate" value="${toInputDate(d[4])}"></div>
+      <div class="edit-field"><label>画像URL①</label><input type="text" id="ef-img1" value="${esc(d[5])}"></div>
+      <div class="edit-field"><label>画像URL②</label><input type="text" id="ef-img2" value="${esc(d[6])}"></div>
+      <div class="edit-field"><label>画像URL③</label><input type="text" id="ef-img3" value="${esc(d[7])}"></div>
+    `;
+  }
+
+  document.getElementById('edit-fields').innerHTML = fields;
+  document.getElementById('edit-overlay').classList.add('open');
+}
+
+function closeEdit() {
+  document.getElementById('edit-overlay').classList.remove('open');
+  editState = { tabId: null, row: null };
+}
+
+function closeEditOnOverlay(e) {
+  if (e.target === document.getElementById('edit-overlay')) closeEdit();
+}
+
+async function submitEdit() {
+  const { tabId, row } = editState;
+  if (!tabId || !row) return;
+
+  const btn = document.getElementById('edit-save-btn');
+  btn.disabled = true;
+  btn.textContent = '保存中...';
+
+  const sheetNames = { news: 'お知らせ', topics: 'トピックス', bulletin: '掲示板' };
+  let payload = { type: `edit_${tabId}`, row, password, sheet: sheetNames[tabId] };
+
+  if (tabId === 'news') {
+    payload.date = document.getElementById('ef-date').value;
+    payload.title = document.getElementById('ef-title').value;
+    payload.badge = document.getElementById('ef-badge').value;
+    payload.url = document.getElementById('ef-url').value;
+    payload.description = document.getElementById('ef-description').value;
+    payload.body = document.getElementById('ef-body').value;
+    payload.imageUrl = document.getElementById('ef-imageUrl').value;
+  } else if (tabId === 'topics') {
+    payload.date = document.getElementById('ef-date').value;
+    payload.category = document.getElementById('ef-category').value;
+    payload.title = document.getElementById('ef-title').value;
+    payload.body = document.getElementById('ef-body').value;
+    payload.imageUrl = document.getElementById('ef-imageUrl').value;
+  } else if (tabId === 'bulletin') {
+    payload.title = document.getElementById('ef-title').value;
+    payload.bulletinType = document.getElementById('ef-type').value;
+    payload.startDate = document.getElementById('ef-startDate').value;
+    payload.endDate = document.getElementById('ef-endDate').value;
+    payload.imageUrl1 = document.getElementById('ef-img1').value;
+    payload.imageUrl2 = document.getElementById('ef-img2').value;
+    payload.imageUrl3 = document.getElementById('ef-img3').value;
+  }
+
+  try {
+    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    if (data.success) {
+      showToast('保存しました', 'success');
+      closeEdit();
+      loadListTab(tabId);
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '保存する';
+  }
 }
 
 function esc(str) {

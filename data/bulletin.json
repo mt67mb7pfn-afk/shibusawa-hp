@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 6,
+      "title": "緑道ハレバレ会さんと行く　渋沢ウォーク",
+      "type": "短期",
+      "startDate": "2026.05.09",
+      "endDate": "2026.06.22",
+      "images": [
+        "https://lh3.googleusercontent.com/d/17NXYhDAcqjoDTSNvL1_MCU5x1e59cE3s"
+      ]
+    },
+    {
       "id": 1,
       "title": "掲示物テスト",
       "type": "短期",

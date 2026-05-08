@@ -114,7 +114,7 @@
   }
   .logout-btn:hover { background: #f5f5f5; }
 
-  .main { padding: 24px; max-width: 900px; margin: 0 auto; }
+  .main { padding: 24px; max-width: 1150px; margin: 0 auto; }
 
   /* タブ */
   .tabs {
@@ -1059,6 +1059,52 @@ function storeEditData(tabId, row, data) {
   editItemsData[tabId][row] = data;
 }
 
+function imgUploadField(id, currentUrl, label='画像') {
+  const cur = currentUrl
+    ? `<img src="${esc(currentUrl)}" style="max-width:120px;max-height:80px;border-radius:6px;border:1px solid #ddd;display:block;margin-bottom:8px">`
+    : `<p style="color:#bbb;font-size:12px;margin-bottom:8px">現在の画像なし</p>`;
+  return `
+    <div class="edit-field">
+      <label>${label}</label>
+      ${cur}
+      <input type="file" id="${id}-file" accept="image/*" onchange="previewEditImage(this,'${id}-preview')">
+      <img id="${id}-preview" style="max-width:100%;max-height:120px;margin-top:8px;border-radius:6px;display:none">
+      <input type="hidden" id="${id}-url" value="${esc(currentUrl||'')}">
+      <p style="font-size:11px;color:#888;margin-top:4px">新しいファイルを選択すると画像が置き換わります</p>
+    </div>`;
+}
+
+function previewEditImage(input, previewId) {
+  const preview = document.getElementById(previewId);
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+async function getImgPayload(id, b64Key, nameKey, mimeKey, urlKey) {
+  const file = document.getElementById(id + '-file')?.files[0];
+  const result = {};
+  if (file) {
+    result[b64Key] = await toBase64Edit(file);
+    result[nameKey] = file.name;
+    result[mimeKey] = file.type;
+  } else {
+    result[urlKey] = document.getElementById(id + '-url')?.value || '';
+  }
+  return result;
+}
+
+function toBase64Edit(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 function toInputDate(val) {
   if (!val) return '';
   const d = new Date(val);
@@ -1089,7 +1135,7 @@ function openEdit(tabId, row) {
       <div class="edit-field"><label>リンクURL</label><input type="text" id="ef-url" value="${esc(d[3])}"></div>
       <div class="edit-field"><label>説明文</label><textarea id="ef-description">${esc(d[4])}</textarea></div>
       <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[7])}</textarea></div>
-      <div class="edit-field"><label>画像URL</label><input type="text" id="ef-imageUrl" value="${esc(d[6])}"></div>
+      ${imgUploadField('ef-img', d[6])}
     `;
   } else if (tabId === 'topics') {
     fields = `
@@ -1101,7 +1147,7 @@ function openEdit(tabId, row) {
       </div>
       <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[3])}"></div>
       <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[4])}</textarea></div>
-      <div class="edit-field"><label>画像URL</label><input type="text" id="ef-imageUrl" value="${esc(d[5])}"></div>
+      ${imgUploadField('ef-img', d[5])}
     `;
   } else if (tabId === 'bulletin') {
     fields = `
@@ -1113,9 +1159,9 @@ function openEdit(tabId, row) {
       </div>
       <div class="edit-field"><label>掲示開始日</label><input type="date" id="ef-startDate" value="${toInputDate(d[3])}"></div>
       <div class="edit-field"><label>掲示終了日</label><input type="date" id="ef-endDate" value="${toInputDate(d[4])}"></div>
-      <div class="edit-field"><label>画像URL①</label><input type="text" id="ef-img1" value="${esc(d[5])}"></div>
-      <div class="edit-field"><label>画像URL②</label><input type="text" id="ef-img2" value="${esc(d[6])}"></div>
-      <div class="edit-field"><label>画像URL③</label><input type="text" id="ef-img3" value="${esc(d[7])}"></div>
+      ${imgUploadField('ef-img1', d[5], '画像①')}
+      ${imgUploadField('ef-img2', d[6], '画像②')}
+      ${imgUploadField('ef-img3', d[7], '画像③')}
     `;
   }
 
@@ -1150,21 +1196,21 @@ async function submitEdit() {
     payload.url = document.getElementById('ef-url').value;
     payload.description = document.getElementById('ef-description').value;
     payload.body = document.getElementById('ef-body').value;
-    payload.imageUrl = document.getElementById('ef-imageUrl').value;
+    Object.assign(payload, await getImgPayload('ef-img', 'imageBase64', 'imageName', 'imageMime', 'imageUrl'));
   } else if (tabId === 'topics') {
     payload.date = document.getElementById('ef-date').value;
     payload.category = document.getElementById('ef-category').value;
     payload.title = document.getElementById('ef-title').value;
     payload.body = document.getElementById('ef-body').value;
-    payload.imageUrl = document.getElementById('ef-imageUrl').value;
+    Object.assign(payload, await getImgPayload('ef-img', 'imageBase64', 'imageName', 'imageMime', 'imageUrl'));
   } else if (tabId === 'bulletin') {
     payload.title = document.getElementById('ef-title').value;
     payload.bulletinType = document.getElementById('ef-type').value;
     payload.startDate = document.getElementById('ef-startDate').value;
     payload.endDate = document.getElementById('ef-endDate').value;
-    payload.imageUrl1 = document.getElementById('ef-img1').value;
-    payload.imageUrl2 = document.getElementById('ef-img2').value;
-    payload.imageUrl3 = document.getElementById('ef-img3').value;
+    Object.assign(payload, await getImgPayload('ef-img1', 'imageBase64_1', 'imageName_1', 'imageMime_1', 'imageUrl1'));
+    Object.assign(payload, await getImgPayload('ef-img2', 'imageBase64_2', 'imageName_2', 'imageMime_2', 'imageUrl2'));
+    Object.assign(payload, await getImgPayload('ef-img3', 'imageBase64_3', 'imageName_3', 'imageMime_3', 'imageUrl3'));
   }
 
   try {

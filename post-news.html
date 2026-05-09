@@ -252,7 +252,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
 
   // 管理画面からの遷移時は自動ログイン
-  const saved = sessionStorage.getItem('adminPassword');
+  const saved = localStorage.getItem('adminPassword');
   if (saved === PASSWORD) {
     enteredPassword = saved;
     document.getElementById('pw-screen').style.display = 'none';

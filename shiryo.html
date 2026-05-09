@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>各種資料 | 渋沢連合自治会</title>
+<title id="page-title">各種資料 | 渋沢連合自治会</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -125,16 +125,29 @@
 <div class="header">
   <div class="header-left">
     <a href="/" class="header-back">← ホーム</a>
-    <div class="header-title">各種資料</div>
+    <div class="header-title" id="header-title">各種資料</div>
   </div>
 </div>
 
 <div class="main">
   <div class="page-intro">
-    <p>渋沢連合自治会の各種資料を掲載しています。</p>
+    <p id="page-intro-text">渋沢連合自治会の各種資料を掲載しています。</p>
   </div>
 
-  <div class="section">
+  <div class="section" id="section-yotei">
+    <div class="section-header">
+      <div class="section-icon icon-blue">📅</div>
+      <div>
+        <div class="section-title">行事予定表</div>
+        <div class="section-meta">渋沢連合自治会 年間スケジュール</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="img-grid loading-area" id="grid-yotei"><div class="loading">読み込み中...</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="section-teirekai">
     <div class="section-header">
       <div class="section-icon icon-blue">📋</div>
       <div>
@@ -147,7 +160,7 @@
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="section-shakyo">
     <div class="section-header">
       <div class="section-icon icon-green">📝</div>
       <div>
@@ -160,7 +173,7 @@
     </div>
   </div>
 
-  <div class="section">
+  <div class="section" id="section-kiyaku">
     <div class="section-header">
       <div class="section-icon icon-amber">📜</div>
       <div>
@@ -190,14 +203,30 @@
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
 
 const CATEGORY_MAP = {
+  '行事予定表': 'yotei',
   '連合定例会資料': 'teirekai',
   '社協議事録': 'shakyo',
   '連合自治会規約': 'kiyaku'
 };
 
+// URLパラメーターでカテゴリフィルター
+const urlParams = new URLSearchParams(window.location.search);
+const filterCategory = urlParams.get('category');
+
+if (filterCategory === '行事予定表') {
+  document.getElementById('page-title').textContent = '行事予定表 | 渋沢連合自治会';
+  document.getElementById('header-title').textContent = '行事予定表';
+  document.getElementById('page-intro-text').textContent = '渋沢連合自治会の年間行事予定表です。';
+  document.getElementById('section-teirekai').style.display = 'none';
+  document.getElementById('section-shakyo').style.display = 'none';
+  document.getElementById('section-kiyaku').style.display = 'none';
+} else {
+  document.getElementById('section-yotei').style.display = 'none';
+}
+
 let lbImages = [];
 let lbIndex = 0;
-let gridData = { teirekai: [], shakyo: [], kiyaku: [] };
+let gridData = { yotei: [], teirekai: [], shakyo: [], kiyaku: [] };
 
 async function loadData() {
   try {
@@ -212,6 +241,7 @@ async function loadData() {
       }
     });
 
+    renderGrid('grid-yotei', gridData.yotei);
     renderGrid('grid-teirekai', gridData.teirekai);
     renderGrid('grid-shakyo', gridData.shakyo);
     renderGrid('grid-kiyaku', gridData.kiyaku);

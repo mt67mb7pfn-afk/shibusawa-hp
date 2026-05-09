@@ -577,7 +577,7 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
 
     list.innerHTML=combined.map(item=>{
       const bc=BADGE_MAP[item.badge]||'nb-info';
-      const href = item.url && item.url.startsWith('http')
+      const href = item.url && item.url !== '#'
         ? item.url
         : item.body
           ? `news-article.html?date=${encodeURIComponent(item.date)}&title=${encodeURIComponent(item.title)}`

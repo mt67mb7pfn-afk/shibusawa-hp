@@ -563,7 +563,7 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
         title: item.title,
         badge: '掲示板',
         url: 'bulletin.html',
-        imageUrl: item.image1 || '',
+        imageUrl: (item.images && item.images[0]) || '',
         _sortDate: d
       };
     });

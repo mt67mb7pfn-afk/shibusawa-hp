@@ -597,6 +597,10 @@
               <label for="shiryo-category">カテゴリ</label>
               <select id="shiryo-category" required>
                 <option value="">選択してください</option>
+                <option value="行事予定表">行事予定表</option>
+                <option value="連合定例会資料">連合定例会資料</option>
+                <option value="社協議事録">社協議事録</option>
+                <option value="連合自治会規約">連合自治会規約</option>
               </select>
             </div>
             <div class="form-group">
@@ -696,7 +700,7 @@ function login() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-screen').style.display = 'block';
     loadListTab('news');
-    loadShiyroCategories();
+    // loadShiyroCategories(); // カテゴリは固定オプションに変更
   } else {
     document.getElementById('login-error').style.display = 'block';
   }

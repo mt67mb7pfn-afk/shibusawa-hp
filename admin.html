@@ -722,6 +722,7 @@ function login() {
   const pw = document.getElementById('pw-input').value;
   if (pw === PASSWORD) {
     password = pw;
+    sessionStorage.setItem('adminPassword', pw);
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-screen').style.display = 'block';
     loadListTab('news');
@@ -733,6 +734,7 @@ function login() {
 
 function logout() {
   password = '';
+  sessionStorage.removeItem('adminPassword');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('admin-screen').style.display = 'none';
   document.getElementById('pw-input').value = '';

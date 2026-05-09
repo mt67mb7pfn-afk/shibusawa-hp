@@ -244,6 +244,14 @@ let enteredPassword = '';
 // 今日の日付をデフォルト設定
 window.addEventListener('DOMContentLoaded', () => {
   updateDateFields();
+
+  // 管理画面からの遷移時は自動ログイン
+  const saved = sessionStorage.getItem('adminPassword');
+  if (saved === PASSWORD) {
+    enteredPassword = saved;
+    document.getElementById('pw-screen').style.display = 'none';
+    document.getElementById('main-screen').style.display = 'block';
+  }
 });
 
 // 種別変更で終了日フィールドの表示切替

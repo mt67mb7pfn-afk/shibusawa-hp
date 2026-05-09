@@ -136,6 +136,8 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .notice-title{font-size:14px;line-height:1.6;color:var(--text);flex:1;}
 .notice-arr{color:var(--border);font-size:16px;transition:color .2s,transform .2s;}
 .notice-item:hover .notice-arr{color:var(--mint);transform:translateX(4px);}
+.notice-thumb{width:72px;height:54px;border-radius:8px;object-fit:cover;flex-shrink:0;}
+@media(max-width:480px){.notice-thumb{display:none;}}
 
 /* よく使うページ */
 .quick-section{background:linear-gradient(135deg,#f0fdf8,#e8f4ff);border-radius:28px;padding:32px;margin-bottom:44px;border:2px solid var(--border);}
@@ -575,13 +577,18 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
 
     list.innerHTML=combined.map(item=>{
       const bc=BADGE_MAP[item.badge]||'nb-info';
-      const href = item.url && item.url !== '#'
+      const href = item.url && item.url.startsWith('http')
         ? item.url
-        : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
-      const target = item.badge === '回覧' ? 'target="_blank" rel="noopener"' : '';
+        : item.body
+          ? `news-article.html?date=${encodeURIComponent(item.date)}&title=${encodeURIComponent(item.title)}`
+          : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
+      const target = (item.url && item.url.startsWith('http')) || item.badge === '回覧' ? 'target="_blank" rel="noopener"' : '';
+      const thumb = item.imageUrl
+        ? `<img class="notice-thumb" src="${item.imageUrl}" alt="" loading="lazy" onerror="this.style.display='none'">`
+        : '';
       return `<a class="notice-item" href="${href}" ${target}>
         <div class="notice-left"><div class="notice-day">${item.day}</div><div class="notice-month">${item.month}</div><span class="n-badge ${bc}">${item.badge}</span></div>
-        <div class="notice-body"><div class="notice-title">${item.title}</div><div class="notice-arr">›</div></div>
+        <div class="notice-body"><div class="notice-title">${item.title}</div>${thumb}<div class="notice-arr">›</div></div>
       </a>`;
     }).join('');
   }catch(e){console.log('お知らせ読み込みエラー:',e);}

@@ -538,6 +538,102 @@
   /* タブコンテンツの非表示 */
   .tab-content { display: none; }
   .tab-content.active { display: block; }
+
+  /* 承認待ちカード */
+  .pending-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    padding: 20px;
+  }
+  .pending-card {
+    border: 1px solid #f0f0f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .pending-card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background: #f5f5f5;
+  }
+  .pending-card-img-empty {
+    width: 100%;
+    height: 180px;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    font-size: 13px;
+  }
+  .pending-card-inner { padding: 16px; }
+  .pending-card-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .pending-card-date { font-size: 12px; color: #888; }
+  .pending-card-inner input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+  }
+  .pending-card-inner input[type="text"]:focus { border-color: #e85d26; }
+  .pending-card-inner textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    min-height: 80px;
+    resize: vertical;
+    font-family: inherit;
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .pending-card-inner textarea:focus { border-color: #e85d26; }
+  .pending-card-actions { display: flex; gap: 8px; }
+  .btn-approve {
+    flex: 1;
+    padding: 8px;
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-approve:hover { background: #43a047; }
+  .btn-approve:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-reject {
+    flex: 1;
+    padding: 8px;
+    background: #fff;
+    color: #f44336;
+    border: 1px solid #f44336;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-reject:hover { background: #f44336; color: #fff; }
+  .btn-reject:disabled { opacity: 0.4; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -566,6 +662,8 @@
       <button class="tab-btn" onclick="switchTab('bulletin', this)">📋 掲示板</button>
       <button class="tab-btn" onclick="switchTab('shiryo', this)">📑 各種資料</button>
       <button class="tab-btn" onclick="switchTab('yakuin', this)">🔐 役員名簿等</button>
+      <button class="tab-btn" onclick="switchTab('pending', this)">📝 承認待ち</button>
+      <button class="tab-btn" onclick="switchTab('gallery', this)">🖼 ギャラリー管理</button>
     </div>
 
     <!-- お知らせ -->
@@ -691,6 +789,28 @@
       </div>
     </div>
 
+    <!-- 承認待ち -->
+    <div id="pending" class="tab-content">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h2>承認待ち投稿一覧</h2>
+          <button class="reload-btn" onclick="loadPendingPosts()">🔄 再読み込み</button>
+        </div>
+        <div id="pending-body"><div class="loading">読み込み中...</div></div>
+      </div>
+    </div>
+
+    <!-- ギャラリー管理 -->
+    <div id="gallery" class="tab-content">
+      <div class="table-wrap">
+        <div class="table-header">
+          <h2>掲載済み記事一覧</h2>
+          <button class="reload-btn" onclick="loadGallery()">🔄 再読み込み</button>
+        </div>
+        <div class="table-scroll"><div id="gallery-body"><div class="loading">読み込み中...</div></div></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -722,7 +842,7 @@ function login() {
   const pw = document.getElementById('pw-input').value;
   if (pw === PASSWORD) {
     password = pw;
-    localStorage.setItem('adminPassword', pw);
+    try { localStorage.setItem('adminPassword', pw); } catch(_) {}
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-screen').style.display = 'block';
     loadListTab('news');
@@ -753,6 +873,10 @@ function switchTab(tabId, btn) {
   // リストを読み込む
   if (tabId === 'news' || tabId === 'topics' || tabId === 'bulletin') {
     loadListTab(tabId);
+  } else if (tabId === 'pending') {
+    loadPendingPosts();
+  } else if (tabId === 'gallery') {
+    loadGallery();
   }
 }
 
@@ -1150,7 +1274,7 @@ function openEdit(tabId, row) {
   if (!d) { showToast('データの取得に失敗しました', 'error'); return; }
 
   editState = { tabId, row };
-  const sheetNames = { news: 'お知らせ', topics: 'トピックス', bulletin: '掲示板' };
+  const sheetNames = { news: 'お知らせ', topics: 'トピックス', bulletin: '掲示板', gallery: 'ギャラリー' };
   document.getElementById('edit-modal-title').textContent = `【${sheetNames[tabId]}】内容を編集`;
 
   let fields = '';
@@ -1193,6 +1317,12 @@ function openEdit(tabId, row) {
       ${imgUploadField('ef-img1', d[5], '画像①')}
       ${imgUploadField('ef-img2', d[6], '画像②')}
       ${imgUploadField('ef-img3', d[7], '画像③')}
+    `;
+  } else if (tabId === 'gallery') {
+    // お知らせシート列順: d[0]=日付 d[1]=タイトル d[2]=バッジ d[3]=URL d[4]=説明文 d[5]=非公開 d[6]=画像URL d[7]=本文
+    fields = `
+      <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[1])}"></div>
+      <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[7])}</textarea></div>
     `;
   }
 
@@ -1242,6 +1372,18 @@ async function submitEdit() {
     Object.assign(payload, await getImgPayload('ef-img1', 'imageBase64_1', 'imageName_1', 'imageMime_1', 'imageUrl1'));
     Object.assign(payload, await getImgPayload('ef-img2', 'imageBase64_2', 'imageName_2', 'imageMime_2', 'imageUrl2'));
     Object.assign(payload, await getImgPayload('ef-img3', 'imageBase64_3', 'imageName_3', 'imageMime_3', 'imageUrl3'));
+  } else if (tabId === 'gallery') {
+    // edit_gallery はGAS未実装のためedit_newsで代替し、他フィールドは元の値を保持
+    const orig = editItemsData['gallery'][row];
+    payload.type = 'edit_news';
+    payload.sheet = 'お知らせ';
+    payload.date = toInputDate(orig[0]);
+    payload.title = document.getElementById('ef-title').value;
+    payload.badge = orig[2];
+    payload.url = orig[3] || '';
+    payload.description = orig[4] || '';
+    payload.body = document.getElementById('ef-body').value;
+    payload.imageUrl = orig[6] || '';
   }
 
   try {
@@ -1259,6 +1401,199 @@ async function submitEdit() {
   } finally {
     btn.disabled = false;
     btn.textContent = '保存する';
+  }
+}
+
+// ============================================================
+//  住民投稿承認
+// ============================================================
+async function loadPendingPosts() {
+  document.getElementById('pending-body').innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('承認待ち')}`);
+    const data = await res.json();
+    renderPendingPosts(data.list || []);
+  } catch(e) {
+    document.getElementById('pending-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
+  }
+}
+
+function renderPendingPosts(list) {
+  if (list.length === 0) {
+    document.getElementById('pending-body').innerHTML = '<div class="empty">承認待ちの投稿はありません</div>';
+    return;
+  }
+
+  // 承認待ちシート列順: 管理ID・投稿者UID・タイトル・本文・カテゴリ・画像URL・投稿日時・ステータス
+  let html = '<div class="pending-grid">';
+  list.forEach(item => {
+    const d = item.data;
+    const pendingId = d[0];
+    const title = d[2] || '';
+    const body = d[3] || '';
+    const category = d[4] || '';
+    const imageUrl = d[5] || '';
+    const postedAt = d[6] ? formatDate(d[6]) : '';
+
+    const imgHtml = imageUrl
+      ? `<img class="pending-card-img" src="${esc(imageUrl)}" alt="投稿画像">`
+      : `<div class="pending-card-img-empty">画像なし</div>`;
+
+    html += `
+      <div class="pending-card" id="pending-card-${esc(pendingId)}">
+        ${imgHtml}
+        <div class="pending-card-inner">
+          <div class="pending-card-meta">
+            <span class="badge">${esc(category)}</span>
+            <span class="pending-card-date">${postedAt}</span>
+          </div>
+          <input type="text" id="ptitle-${esc(pendingId)}" value="${esc(title)}" placeholder="タイトル">
+          <textarea id="pbody-${esc(pendingId)}" placeholder="本文">${esc(body)}</textarea>
+          <div class="pending-card-actions">
+            <button class="btn-approve" id="papprove-${esc(pendingId)}" onclick="approvePost('${esc(pendingId)}')">✓ 承認</button>
+            <button class="btn-reject" id="preject-${esc(pendingId)}" onclick="rejectPost('${esc(pendingId)}')">✗ 却下</button>
+          </div>
+        </div>
+      </div>`;
+  });
+  html += '</div>';
+  document.getElementById('pending-body').innerHTML = html;
+}
+
+async function approvePost(pendingId) {
+  const title = document.getElementById(`ptitle-${pendingId}`).value.trim();
+  const body = document.getElementById(`pbody-${pendingId}`).value;
+  if (!title) { showToast('タイトルを入力してください', 'error'); return; }
+
+  const approveBtn = document.getElementById(`papprove-${pendingId}`);
+  const rejectBtn = document.getElementById(`preject-${pendingId}`);
+  approveBtn.disabled = true;
+  rejectBtn.disabled = true;
+  approveBtn.textContent = '処理中...';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'approve_post', pendingId, title, body, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('承認しました', 'success');
+      loadPendingPosts();
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+      approveBtn.disabled = false;
+      rejectBtn.disabled = false;
+      approveBtn.textContent = '✓ 承認';
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+    approveBtn.disabled = false;
+    rejectBtn.disabled = false;
+    approveBtn.textContent = '✓ 承認';
+  }
+}
+
+async function rejectPost(pendingId) {
+  if (!confirm('この投稿を却下しますか？')) return;
+
+  const approveBtn = document.getElementById(`papprove-${pendingId}`);
+  const rejectBtn = document.getElementById(`preject-${pendingId}`);
+  approveBtn.disabled = true;
+  rejectBtn.disabled = true;
+  rejectBtn.textContent = '処理中...';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'reject_post', pendingId, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('却下しました', 'success');
+      loadPendingPosts();
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+      approveBtn.disabled = false;
+      rejectBtn.disabled = false;
+      rejectBtn.textContent = '✗ 却下';
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+    approveBtn.disabled = false;
+    rejectBtn.disabled = false;
+    rejectBtn.textContent = '✗ 却下';
+  }
+}
+
+// ============================================================
+//  ギャラリー管理（掲載済み記事）
+// ============================================================
+async function loadGallery() {
+  document.getElementById('gallery-body').innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    // 承認済み投稿はお知らせシートにbadge='地域の話題'で登録される
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('お知らせ')}`);
+    const data = await res.json();
+    const galleryList = (data.list || []).filter(item => item.data[2] === '地域の話題');
+    renderGallery(galleryList);
+  } catch(e) {
+    document.getElementById('gallery-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
+  }
+}
+
+function renderGallery(list) {
+  if (list.length === 0) {
+    document.getElementById('gallery-body').innerHTML = '<div class="empty">掲載済みの記事はありません</div>';
+    return;
+  }
+
+  // お知らせシート列順: 日付・タイトル・バッジ・リンクURL・説明文・非公開・画像URL・本文
+  list.forEach(item => storeEditData('gallery', item.row, item.data));
+
+  let html = '<table>';
+  html += '<tr><th>行</th><th>日付</th><th>タイトル</th><th>画像</th><th>操作</th></tr>';
+  list.forEach(item => {
+    const row = item.row;
+    const d = item.data;
+    const date = d[0] ? formatDate(d[0]) : '';
+    const title = d[1] || '';
+    const imageUrl = d[6] || '';
+    const thumbHtml = imageUrl
+      ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">`
+      : '<span style="color:#bbb;font-size:11px">なし</span>';
+
+    html += `<tr>
+      <td style="color:#bbb;font-size:12px">${row}</td>
+      <td class="date-cell">${date}</td>
+      <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
+      <td>${thumbHtml}</td>
+      <td><div class="action-btns">
+        <button class="btn-edit" onclick="openEdit('gallery', ${row})">編集</button>
+        <button class="btn-delete" onclick="deleteGallery(${row}, '${esc(title)}')">削除</button>
+      </div></td>
+    </tr>`;
+  });
+  html += '</table>';
+  document.getElementById('gallery-body').innerHTML = html;
+}
+
+async function deleteGallery(row, title) {
+  if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'delete_gallery', row, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('削除しました', 'success');
+      loadGallery();
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
   }
 }
 

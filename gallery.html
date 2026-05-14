@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>みんなの投稿 | 渋沢連合自治会</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@700&family=DM+Sans:wght@700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== 既存サイトと共通の変数・リセット ===== */
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --amber:#ffd43b;--amber-l:#fff9db;
+  --lavender:#b197fc;--lavender-l:#f3f0ff;
+  --peach:#ffa94d;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#ffffff;--border:#e8e8f0;
+  --r:20px;--r-sm:12px;
+  --shadow:0 4px 24px rgba(78,203,141,.12);
+  --shadow2:0 8px 40px rgba(78,203,141,.20);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+
+/* ===== 背景バルーン（既存と同じ） ===== */
+.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.balloon{position:absolute;border-radius:50%;opacity:.18;animation:balloonDrift linear infinite;filter:blur(1px);}
+.b1{width:180px;height:180px;background:radial-gradient(circle,var(--mint),var(--sky));top:8%;left:2%;animation-duration:22s;}
+.b2{width:120px;height:120px;background:radial-gradient(circle,var(--coral),var(--peach));top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
+.b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:55%;left:1%;animation-duration:20s;animation-delay:-8s;}
+.b4{width:150px;height:150px;background:radial-gradient(circle,var(--lavender),var(--sky));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
+.b5{width:70px;height:70px;background:radial-gradient(circle,var(--mint),var(--lavender));top:40%;left:50%;animation-duration:18s;animation-delay:-3s;}
+@keyframes balloonDrift{
+  0%{transform:translateY(0) translateX(0) scale(1);}
+  25%{transform:translateY(-20px) translateX(12px) scale(1.04);}
+  50%{transform:translateY(-8px) translateX(-8px) scale(.97);}
+  75%{transform:translateY(-28px) translateX(6px) scale(1.02);}
+  100%{transform:translateY(0) translateX(0) scale(1);}
+}
+
+/* ===== HEADER（既存と同じ） ===== */
+header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);}
+.header-inner{max-width:1080px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;gap:16px;}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.logo-pref{font-size:10px;color:var(--text3);letter-spacing:.06em;}
+.logo-name{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:700;color:var(--text);letter-spacing:.04em;line-height:1.2;}
+nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
+.nav-a{color:var(--text2);font-size:12px;font-weight:700;padding:7px 11px;border-radius:8px;transition:background .18s,color .18s;white-space:nowrap;}
+.nav-a:hover,.nav-a.active{background:var(--mint-l);color:var(--mint-d);}
+
+/* ===== ページヘッダー ===== */
+.page-header{position:relative;z-index:1;max-width:1080px;margin:40px auto 0;padding:0 24px;}
+.page-badge{display:inline-flex;align-items:center;gap:6px;background:var(--mint-l);color:var(--mint-d);font-size:11px;font-weight:700;letter-spacing:.12em;padding:5px 14px;border-radius:20px;margin-bottom:16px;}
+.page-badge::before{content:'📷';}
+.page-title{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3.5vw,36px);font-weight:700;color:var(--text);letter-spacing:.04em;margin-bottom:10px;}
+.page-title span{background:linear-gradient(135deg,var(--mint),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-desc{font-size:14px;color:var(--text2);line-height:1.85;max-width:560px;}
+
+/* ===== 投稿案内バナー ===== */
+.post-banner-wrap{position:relative;z-index:1;max-width:1080px;margin:28px auto 0;padding:0 24px;}
+.post-banner{background:linear-gradient(135deg,var(--mint-d),var(--sky));border-radius:var(--r);padding:20px 28px;display:flex;align-items:center;gap:20px;box-shadow:0 8px 32px rgba(78,203,141,.3);}
+.post-banner-icon{font-size:40px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,.15));}
+.post-banner-body{flex:1;}
+.post-banner-title{color:#fff;font-size:15px;font-weight:700;margin-bottom:4px;}
+.post-banner-desc{color:rgba(255,255,255,.88);font-size:12px;line-height:1.6;}
+.post-banner-steps{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.post-step{background:rgba(255,255,255,.2);border-radius:20px;padding:4px 12px;font-size:11px;color:#fff;font-weight:500;display:flex;align-items:center;gap:5px;}
+.post-step-num{background:#fff;color:var(--mint-d);width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.post-banner-line{display:flex;align-items:center;gap:8px;background:#06c755;color:#fff;font-size:12px;font-weight:700;padding:10px 18px;border-radius:12px;flex-shrink:0;box-shadow:0 4px 14px rgba(6,199,85,.4);transition:transform .2s;}
+.post-banner-line:hover{transform:translateY(-2px);}
+@media(max-width:640px){
+  .post-banner{flex-direction:column;text-align:center;}
+  .post-banner-steps{justify-content:center;}
+  .post-banner-line{width:100%;justify-content:center;}
+}
+
+/* ===== 掲載注意書き ===== */
+.notice-wrap{position:relative;z-index:1;max-width:1080px;margin:12px auto 0;padding:0 24px;}
+.notice-box{background:#fff;border:1.5px solid var(--border);border-left:4px solid var(--sky);border-radius:var(--r-sm);padding:12px 16px;display:flex;align-items:flex-start;gap:10px;}
+.notice-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.notice-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.notice-text{font-size:11px;color:var(--text3);line-height:1.7;}
+
+/* ===== フィルター・ソート ===== */
+.controls{position:relative;z-index:1;max-width:1080px;margin:28px auto 0;padding:0 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.filter-group{display:flex;gap:6px;flex-wrap:wrap;}
+.filter-btn{background:#fff;border:1.5px solid var(--border);color:var(--text2);font-size:12px;font-weight:700;padding:7px 16px;border-radius:20px;cursor:pointer;transition:all .18s;font-family:'Noto Sans JP',sans-serif;}
+.filter-btn:hover{border-color:var(--mint);color:var(--mint-d);}
+.filter-btn.active{background:var(--mint);border-color:var(--mint);color:#fff;}
+.controls-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.count-label{font-size:12px;color:var(--text3);}
+.count-num{font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;color:var(--mint-d);}
+
+/* ===== ギャラリーグリッド ===== */
+.gallery-wrap{position:relative;z-index:1;max-width:1080px;margin:24px auto 0;padding:0 24px 60px;}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;
+}
+/* 最初のカードを大きく */
+.gallery-grid .g-card:first-child{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  max-height:340px;
+}
+.gallery-grid .g-card:first-child .g-img{
+  border-radius:var(--r) 0 0 var(--r);
+  max-height:340px;
+}
+.gallery-grid .g-card:first-child .g-body{
+  border-radius:0 var(--r) var(--r) 0;
+  padding:28px 28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.gallery-grid .g-card:first-child .g-title{
+  font-size:18px;
+  line-height:1.4;
+}
+@media(max-width:640px){
+  .gallery-grid .g-card:first-child{grid-column:1;display:block;max-height:none;}
+  .gallery-grid .g-card:first-child .g-img{border-radius:var(--r) var(--r) 0 0;max-height:220px;}
+  .gallery-grid .g-card:first-child .g-body{border-radius:0 0 var(--r) var(--r);}
+}
+
+/* ===== カード ===== */
+.g-card{
+  background:#fff;
+  border-radius:var(--r);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .22s,box-shadow .22s;
+  cursor:pointer;
+}
+.g-card:hover{transform:translateY(-4px);box-shadow:var(--shadow2);}
+.g-img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+  display:block;
+  background:linear-gradient(135deg,var(--mint-l),var(--sky-l));
+  position:relative;
+}
+.g-img-placeholder{
+  width:100%;
+  height:200px;
+  background:linear-gradient(135deg,var(--mint-l) 0%,var(--sky-l) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  opacity:.5;
+}
+.g-body{padding:16px 18px 18px;}
+.g-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.g-category{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 10px;border-radius:20px;background:var(--mint-l);color:var(--mint-d);}
+.g-date{font-size:11px;color:var(--text3);margin-left:auto;}
+.g-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:8px;}
+.g-text{font-size:12px;color:var(--text2);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.g-footer{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.g-poster{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px;}
+.g-poster::before{content:'👤';font-size:10px;}
+.g-new{display:inline-block;background:var(--coral-l);color:var(--coral);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:auto;}
+
+/* ===== 空状態 ===== */
+.empty-state{text-align:center;padding:80px 24px;color:var(--text3);}
+.empty-icon{font-size:48px;margin-bottom:16px;}
+.empty-text{font-size:14px;line-height:1.8;}
+
+/* ===== ローディング ===== */
+.loading{display:flex;justify-content:center;align-items:center;padding:80px 24px;gap:8px;}
+.loading-dot{width:10px;height:10px;border-radius:50%;background:var(--mint);animation:loadingPulse 1.2s ease-in-out infinite;}
+.loading-dot:nth-child(2){animation-delay:.2s;background:var(--sky);}
+.loading-dot:nth-child(3){animation-delay:.4s;background:var(--lavender);}
+@keyframes loadingPulse{0%,100%{transform:scale(1);opacity:.4;}50%{transform:scale(1.4);opacity:1;}}
+
+/* ===== モーダル ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,26,46,.7);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .25s;}
+.modal-overlay.open{opacity:1;pointer-events:auto;}
+.modal{background:#fff;border-radius:24px;overflow:hidden;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(20px) scale(.97);transition:transform .25s;}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);}
+.modal-img{width:100%;max-height:360px;object-fit:cover;display:block;background:var(--mint-l);}
+.modal-img-placeholder{width:100%;height:200px;background:linear-gradient(135deg,var(--mint-l),var(--sky-l));display:flex;align-items:center;justify-content:center;font-size:64px;opacity:.4;}
+.modal-body{padding:24px 28px 32px;}
+.modal-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.modal-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.4;}
+.modal-text{font-size:14px;color:var(--text2);line-height:1.85;}
+.modal-footer{display:flex;align-items:center;justify-content:space-between;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.modal-close{background:var(--bg);border:none;color:var(--text2);font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .18s;}
+.modal-close:hover{background:var(--border);}
+
+/* ===== FOOTER（既存と同じ） ===== */
+footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32px 24px;text-align:center;margin-top:40px;}
+.footer-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.45);}
+
+/* ===== カードフェードイン ===== */
+.g-card{opacity:0;transform:translateY(16px);transition:opacity .4s,transform .4s;}
+.g-card.visible{opacity:1;transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- 背景バルーン -->
+<div class="bg-balloons" aria-hidden="true">
+  <div class="balloon b1"></div>
+  <div class="balloon b2"></div>
+  <div class="balloon b3"></div>
+  <div class="balloon b4"></div>
+  <div class="balloon b5"></div>
+</div>
+
+<!-- ヘッダー -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">
+      <div>
+        <div class="logo-pref">横浜市都筑区</div>
+        <div class="logo-name">渋沢連合自治会</div>
+      </div>
+    </a>
+    <nav>
+      <a href="index.html" class="nav-a">ホーム</a>
+      <a href="topics.html" class="nav-a">お知らせ</a>
+      <a href="gallery.html" class="nav-a active">みんなの投稿</a>
+      <a href="shiryo.html" class="nav-a">資料</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ページヘッダー -->
+<div class="page-header">
+  <div class="page-badge">みんなの投稿</div>
+  <h1 class="page-title">地域の<span>いいとこ</span>、集めました</h1>
+  <p class="page-desc">住民のみなさんがLINEで投稿してくれた写真や話題をご紹介します。あなたも気軽に投稿してみてください！</p>
+</div>
+
+<!-- 投稿案内バナー -->
+<div class="post-banner-wrap">
+  <div class="post-banner">
+    <div class="post-banner-icon">📷</div>
+    <div class="post-banner-body">
+      <div class="post-banner-title">あなたも投稿できます</div>
+      <div class="post-banner-desc">写真だけでも、ひとこと添えてもOK。公式LINEに送るだけで掲載審査を行います。</div>
+      <div class="post-banner-steps">
+        <div class="post-step"><div class="post-step-num">1</div>LINEを友だち追加</div>
+        <div class="post-step"><div class="post-step-num">2</div>「#投稿」と送る</div>
+        <div class="post-step"><div class="post-step-num">3</div>写真を送るだけ</div>
+      </div>
+    </div>
+    <a href="https://line.me/R/ti/p/@shibusawa" class="post-banner-line" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 2C6.48 2 2 6.02 2 11c0 3.07 1.6 5.78 4.08 7.5L5 22l4.27-1.43C10.38 20.83 11.18 21 12 21c5.52 0 10-4.02 10-9S17.52 2 12 2z"/></svg>
+      友だち追加
+    </a>
+  </div>
+</div>
+
+<!-- 掲載基準の注意書き -->
+<div class="notice-wrap">
+  <div class="notice-box">
+    <span class="notice-icon">ℹ️</span>
+    <div class="notice-body">
+      <div class="notice-title">掲載について</div>
+      <div class="notice-text">投稿いただいた内容はすべて管理者が確認のうえ掲載を判断します。以下に該当する場合は掲載されないことがあります。個人や建物が特定できる写真 ／ 他の方が不快に感じる恐れのある内容 ／ 自治会の趣旨と関係のない内容。あらかじめご了承ください。</div>
+    </div>
+  </div>
+</div>
+
+<!-- フィルター -->
+<div class="controls">
+  <div class="filter-group" id="filterGroup">
+    <button class="filter-btn active" data-cat="all">すべて</button>
+  </div>
+  <div class="controls-right">
+    <span class="count-label">全</span>
+    <span class="count-num" id="countNum">0</span>
+    <span class="count-label">件</span>
+  </div>
+</div>
+
+<!-- ギャラリー -->
+<div class="gallery-wrap">
+  <div class="loading" id="loading">
+    <div class="loading-dot"></div>
+    <div class="loading-dot"></div>
+    <div class="loading-dot"></div>
+  </div>
+  <div class="gallery-grid" id="galleryGrid" style="display:none"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <div class="empty-icon">📭</div>
+    <div class="empty-text">まだ投稿がありません。<br>最初の投稿者になってみませんか？</div>
+  </div>
+</div>
+
+<!-- モーダル -->
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-label="投稿詳細">
+  <div class="modal" id="modal">
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- フッター -->
+<footer>
+  <div class="footer-name">渋沢連合自治会</div>
+  <div class="footer-copy">© 2025 渋沢連合自治会 All rights reserved.</div>
+</footer>
+
+<script>
+// ===== 状態 =====
+let allArticles = [];
+let currentCat = 'all';
+
+// ===== 日付フォーマット =====
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+function isWithinDays(dateStr, days) {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return false;
+  return (Date.now() - d.getTime()) < days * 86400000;
+}
+
+// ===== データ取得 =====
+// news.json から badge='地域の話題' の記事だけ抽出
+async function fetchArticles() {
+  try {
+    const res = await fetch('/data/news.json');
+    const data = await res.json();
+    const news = data.news || [];
+    return news
+      .filter(n => n.badge === '地域の話題')
+      .map(n => {
+        const dateStr = n.date.replace(/\./g, '-'); // "2026.05.10" → "2026-05-10"
+        return {
+          title:    n.title,
+          body:     n.body || n.description || '',
+          category: '地域の話題',
+          imageUrl: n.imageUrl || '',
+          date:     dateStr,
+          isNew:    isWithinDays(dateStr, 7)
+        };
+      });
+  } catch {
+    return [];
+  }
+}
+
+// ===== カード生成 =====
+function createCard(article) {
+  const card = document.createElement('div');
+  card.className = 'g-card';
+  card.dataset.cat = article.category;
+
+  const imgHtml = article.imageUrl
+    ? `<img class="g-img" src="${article.imageUrl}" alt="${article.title}" loading="lazy">`
+    : `<div class="g-img-placeholder">📷</div>`;
+
+  card.innerHTML = `
+    ${imgHtml}
+    <div class="g-body">
+      <div class="g-meta">
+        <span class="g-category">${article.category}</span>
+        <span class="g-date">${formatDate(article.date)}</span>
+      </div>
+      <div class="g-title">${article.title}</div>
+      <div class="g-text">${article.body}</div>
+      <div class="g-footer">
+        <span class="g-poster">住民の方</span>
+        ${article.isNew ? '<span class="g-new">NEW</span>' : ''}
+      </div>
+    </div>
+  `;
+
+  card.addEventListener('click', () => openModal(article));
+  return card;
+}
+
+// ===== レンダリング =====
+function renderGallery(articles) {
+  const grid = document.getElementById('galleryGrid');
+  const empty = document.getElementById('emptyState');
+  const countNum = document.getElementById('countNum');
+
+  const filtered = currentCat === 'all'
+    ? articles
+    : articles.filter(a => a.category === currentCat);
+
+  countNum.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
+  grid.innerHTML = '';
+
+  filtered.forEach((article, i) => {
+    const card = createCard(article);
+    grid.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 60 * i);
+  });
+}
+
+// ===== モーダル =====
+function openModal(article) {
+  const content = document.getElementById('modalContent');
+  const overlay = document.getElementById('modalOverlay');
+
+  const imgHtml = article.imageUrl
+    ? `<img class="modal-img" src="${article.imageUrl}" alt="${article.title}">`
+    : `<div class="modal-img-placeholder">📷</div>`;
+
+  content.innerHTML = `
+    ${imgHtml}
+    <div class="modal-body">
+      <div class="modal-meta">
+        <span class="g-category">${article.category}</span>
+        <span class="g-date" style="font-size:12px;color:var(--text3);margin-left:8px">${formatDate(article.date)}</span>
+      </div>
+      <div class="modal-title">${article.title}</div>
+      <div class="modal-text">${article.body}</div>
+      <div class="modal-footer">
+        <span class="g-poster">住民の方</span>
+        <button class="modal-close" onclick="closeModal()">閉じる</button>
+      </div>
+    </div>
+  `;
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ===== フィルター =====
+document.getElementById('filterGroup').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  renderGallery(allArticles);
+});
+
+// モーダル外クリックで閉じる
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// ESCキーで閉じる
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// ===== 初期化 =====
+(async () => {
+  const loading = document.getElementById('loading');
+  const grid = document.getElementById('galleryGrid');
+
+  allArticles = await fetchArticles();
+
+  loading.style.display = 'none';
+  renderGallery(allArticles);
+})();
+</script>
+</body>
+</html>

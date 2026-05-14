@@ -194,6 +194,14 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .modal-close{background:var(--bg);border:none;color:var(--text2);font-size:13px;font-weight:700;padding:10px 20px;border-radius:10px;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .18s;}
 .modal-close:hover{background:var(--border);}
 
+/* ===== ライトボックス ===== */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;cursor:zoom-out;}
+.lightbox.open{opacity:1;pointer-events:auto;}
+.lightbox img{max-width:94vw;max-height:94vh;object-fit:contain;border-radius:8px;transform:scale(.95);transition:transform .25s;}
+.lightbox.open img{transform:scale(1);}
+.lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;font-weight:700;cursor:pointer;line-height:1;opacity:.8;transition:opacity .15s;}
+.lightbox-close:hover{opacity:1;}
+
 /* ===== FOOTER（既存と同じ） ===== */
 footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32px 24px;text-align:center;margin-top:40px;}
 .footer-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
@@ -295,6 +303,12 @@ footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32p
     <div class="empty-icon">📭</div>
     <div class="empty-text">まだ投稿がありません。<br>最初の投稿者になってみませんか？</div>
   </div>
+</div>
+
+<!-- ライトボックス -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">&times;</span>
+  <img id="lightboxImg" src="" alt="">
 </div>
 
 <!-- モーダル -->
@@ -418,7 +432,7 @@ function openModal(article) {
   const overlay = document.getElementById('modalOverlay');
 
   const imgHtml = article.imageUrl
-    ? `<img class="modal-img" src="${article.imageUrl}" alt="${article.title}">`
+    ? `<img class="modal-img" src="${article.imageUrl}" alt="${article.title}" style="cursor:zoom-in" onclick="openLightbox('${article.imageUrl}')">`
     : `<div class="modal-img-placeholder">📷</div>`;
 
   content.innerHTML = `
@@ -439,6 +453,18 @@ function openModal(article) {
 
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+}
+
+function openLightbox(url) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightboxImg').src = url;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 function closeModal() {

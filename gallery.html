@@ -46,9 +46,8 @@ header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top
 .logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .logo-pref{font-size:10px;color:var(--text3);letter-spacing:.06em;}
 .logo-name{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:700;color:var(--text);letter-spacing:.04em;line-height:1.2;}
-nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
-.nav-a{color:var(--text2);font-size:12px;font-weight:700;padding:7px 11px;border-radius:8px;transition:background .18s,color .18s;white-space:nowrap;}
-.nav-a:hover,.nav-a.active{background:var(--mint-l);color:var(--mint-d);}
+.back-btn{margin-left:auto;color:var(--text2);font-size:12px;font-weight:700;padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);transition:background .18s,color .18s;white-space:nowrap;}
+.back-btn:hover{background:var(--mint-l);color:var(--mint-d);border-color:var(--mint);}
 
 /* ===== ページヘッダー ===== */
 .page-header{position:relative;z-index:1;max-width:1080px;margin:40px auto 0;padding:0 24px;}
@@ -232,12 +231,7 @@ footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32p
         <div class="logo-name">渋沢連合自治会</div>
       </div>
     </a>
-    <nav>
-      <a href="index.html" class="nav-a">ホーム</a>
-      <a href="topics.html" class="nav-a">お知らせ</a>
-      <a href="gallery.html" class="nav-a active">みんなの投稿</a>
-      <a href="shiryo.html" class="nav-a">資料</a>
-    </nav>
+    <a href="index.html" class="back-btn">← ホームに戻る</a>
   </div>
 </header>
 
@@ -274,7 +268,7 @@ footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32p
     <span class="notice-icon">ℹ️</span>
     <div class="notice-body">
       <div class="notice-title">掲載について</div>
-      <div class="notice-text">投稿いただいた内容はすべて管理者が確認のうえ掲載を判断します。以下に該当する場合は掲載されないことがあります。個人や建物が特定できる写真 ／ 他の方が不快に感じる恐れのある内容 ／ 自治会の趣旨と関係のない内容。あらかじめご了承ください。</div>
+      <div class="notice-text">投稿いただいた内容はすべて管理者が確認のうえ掲載を判断します。以下に該当する場合は掲載されないことがあります。個人や建物が特定できる写真 ／ 他の方が不快に感じる恐れのある内容 ／ 自治会の趣旨と関係のない内容。なお、上記に該当しない場合でも、管理者の判断により掲載を見送ることがあります。あらかじめご了承ください。</div>
     </div>
   </div>
 </div>

@@ -243,6 +243,22 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .about-banner:hover .about-arr{transform:translateX(5px);}
 
 
+/* 短期掲示バー */
+.bulletin-bar{background:linear-gradient(135deg,#fff8e1,#fff3cd);border:1.5px solid var(--amber);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;display:none;}
+.bulletin-bar.has-items{display:block;}
+.bulletin-bar-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;font-weight:700;color:#e67700;}
+.bulletin-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.bulletin-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#fff;border:1.5px solid var(--amber);
+  color:var(--text);font-size:12px;font-weight:500;
+  padding:6px 12px;border-radius:20px;
+  text-decoration:none;transition:background .2s,border-color .2s;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.bulletin-chip:hover{background:var(--amber-l);border-color:#e67700;}
+.bulletin-chip-deadline{font-size:11px;color:#e67700;font-weight:700;}
+
 /* みんなの投稿 */
 .gallery-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;margin:0 -4px;}
 .gallery-scroll-wrap::-webkit-scrollbar{height:4px;}
@@ -428,6 +444,12 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
 </div>
 
 <div class="main">
+  <!-- 短期掲示バー -->
+  <div class="bulletin-bar" id="bulletin-bar">
+    <div class="bulletin-bar-head">📢 現在募集中・開催予定</div>
+    <div class="bulletin-chips" id="bulletin-chips"></div>
+  </div>
+
   <!-- お知らせ -->
   <div style="margin-top:44px">
     <div class="sec-head">
@@ -595,23 +617,34 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
       _sortDate: new Date(item.date)
     }));
 
-    const bulletinItems = (bulletinData.bulletin || []).map(item => {
-      const d = (item.startDate && item.startDate !== '') ? new Date(item.startDate.replace(/\./g, '-')) : new Date();
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const dd = String(d.getDate()).padStart(2,'0');
-      return {
-        date: `${d.getFullYear()}.${mm}.${dd}`,
-        day: dd,
-        month: months[d.getMonth()] + ' ' + d.getFullYear(),
-        title: item.title,
-        badge: '掲示板',
-        url: 'bulletin.html',
-        imageUrl: (item.images && item.images[0]) || '',
-        _sortDate: d
-      };
-    });
+    const today = new Date(); today.setHours(0,0,0,0);
+    const bulletinItems = (bulletinData.bulletin || [])
+      .filter(item => {
+        if (item.type !== '短期') return false;
+        if (item.hidden) return false;
+        const start = item.startDate ? new Date(item.startDate.replace(/\./g, '-')) : null;
+        const end   = item.endDate   ? new Date(item.endDate.replace(/\./g, '-'))   : null;
+        if (start && start > today) return false;
+        if (end   && end   < today) return false;
+        return true;
+      })
+      .map(item => {
+        const d = new Date(item.startDate.replace(/\./g, '-'));
+        const mm = String(d.getMonth()+1).padStart(2,'0');
+        const dd = String(d.getDate()).padStart(2,'0');
+        return {
+          date: `${d.getFullYear()}.${mm}.${dd}`,
+          day: dd,
+          month: months[d.getMonth()] + ' ' + d.getFullYear(),
+          title: item.title,
+          badge: '掲示板',
+          url: 'bulletin.html',
+          imageUrl: (item.images && item.images[0]) || '',
+          _sortDate: d
+        };
+      });
 
-    const combined = [...newsItems, ...bulletinItems]
+    const combined = newsItems
       .sort((a,b) => b._sortDate - a._sortDate)
       .slice(0, 5);
 
@@ -688,6 +721,41 @@ setTimeout(() => {
     topicsGrid.innerHTML = '<div style="text-align:center;padding:20px;color:#999;font-size:13px;grid-column:1/-1;">読み込みに失敗しました。<br><button onclick="location.reload()" style="margin-top:8px;padding:6px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;">再読み込み</button></div>';
   }
 }, 10000);
+
+// 短期掲示バー
+(async () => {
+  try {
+    const res = await fetch('/data/bulletin.json');
+    const json = await res.json();
+    const today = new Date(); today.setHours(0,0,0,0);
+    const items = (json.bulletin || []).filter(item => {
+      if (item.type !== '短期') return false;
+      if (item.hidden) return false;
+      const start = item.startDate ? new Date(item.startDate.replace(/\./g, '-')) : null;
+      const end   = item.endDate   ? new Date(item.endDate.replace(/\./g, '-'))   : null;
+      if (start && start > today) return false;
+      if (end   && end   < today) return false;
+      return true;
+    }).sort((a, b) => {
+      const ea = a.endDate ? new Date(a.endDate.replace(/\./g, '-')) : new Date('9999-12-31');
+      const eb = b.endDate ? new Date(b.endDate.replace(/\./g, '-')) : new Date('9999-12-31');
+      return ea - eb;
+    });
+
+    if (items.length === 0) return;
+
+    const bar   = document.getElementById('bulletin-bar');
+    const chips = document.getElementById('bulletin-chips');
+    chips.innerHTML = items.map(item => {
+      const end = item.endDate ? item.endDate.replace(/\./g, '/') : '';
+      return `<a class="bulletin-chip" href="bulletin.html">
+        ${item.title}
+        ${end ? `<span class="bulletin-chip-deadline">〜${end}</span>` : ''}
+      </a>`;
+    }).join('');
+    bar.classList.add('has-items');
+  } catch(e) {}
+})();
 
 // みんなの投稿（横スクロール）
 (async () => {

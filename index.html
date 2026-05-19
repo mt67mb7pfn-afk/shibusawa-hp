@@ -701,7 +701,8 @@ setTimeout(() => {
   const wrap = document.getElementById('gallery-scroll');
   try {
     const res = await fetch('/data/news.json');
-    const all = await res.json();
+    const json = await res.json();
+    const all = Array.isArray(json) ? json : (json.news || []);
     const posts = all
       .filter(n => n.badge === '地域の話題' && !n.hidden)
       .slice(0, 10);
@@ -712,10 +713,9 @@ setTimeout(() => {
     }
 
     wrap.innerHTML = posts.map(p => {
-      const d = new Date(p.date);
-      const dateStr = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+      const dateStr = (p.date || '').replace(/\./g, '/');
       const imgHtml = p.imageUrl
-        ? `<img class="gallery-card-img" src="${p.imageUrl}" alt="${p.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'gallery-card-img-placeholder\\'>📷</div>'">`
+        ? `<img class="gallery-card-img" src="${p.imageUrl}" alt="${p.title}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'gallery-card-img-placeholder\\'>📷</div>')">`
         : `<div class="gallery-card-img-placeholder">📷</div>`;
       return `<a class="gallery-card" href="gallery.html">
         ${imgHtml}

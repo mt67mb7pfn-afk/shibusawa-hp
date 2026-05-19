@@ -244,20 +244,20 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 
 
 /* 短期掲示バー */
-.bulletin-bar{background:linear-gradient(135deg,#fff8e1,#fff3cd);border:1.5px solid var(--amber);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;display:none;}
+.bulletin-bar{background:var(--mint-l);border:1.5px solid var(--mint);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;display:none;}
 .bulletin-bar.has-items{display:block;}
-.bulletin-bar-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;font-weight:700;color:#e67700;}
+.bulletin-bar-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--mint-d);}
 .bulletin-chips{display:flex;flex-wrap:wrap;gap:8px;}
 .bulletin-chip{
   display:inline-flex;align-items:center;gap:6px;
-  background:#fff;border:1.5px solid var(--amber);
+  background:#fff;border:1.5px solid var(--mint);
   color:var(--text);font-size:12px;font-weight:500;
   padding:6px 12px;border-radius:20px;
   text-decoration:none;transition:background .2s,border-color .2s;
   box-shadow:0 1px 4px rgba(0,0,0,.06);
 }
-.bulletin-chip:hover{background:var(--amber-l);border-color:#e67700;}
-.bulletin-chip-deadline{font-size:11px;color:#e67700;font-weight:700;}
+.bulletin-chip:hover{background:#fff;border-color:var(--mint-d);}
+.bulletin-chip-deadline{font-size:11px;color:var(--mint-d);font-weight:700;}
 
 /* みんなの投稿 */
 .gallery-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;margin:0 -4px;}

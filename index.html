@@ -452,7 +452,7 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
 <div class="main">
   <!-- 短期掲示バー -->
   <div class="bulletin-bar" id="bulletin-bar">
-    <div class="bulletin-ticker-label">📢 募集中</div>
+    <div class="bulletin-ticker-label">📋 掲示板</div>
     <div class="bulletin-ticker-track">
       <div class="bulletin-ticker-inner" id="bulletin-ticker-inner"></div>
     </div>
@@ -770,7 +770,7 @@ setTimeout(() => {
 
     // テキスト量に応じてアニメーション速度を調整（1文字あたり約0.3秒）
     const totalLen = items.reduce((s, i) => s + i.title.length, 0);
-    const duration = Math.max(5, totalLen * 0.08);
+    const duration = Math.max(8, totalLen * 0.18);
     ticker.style.animationDuration = duration + 's';
 
     bar.classList.add('has-items');

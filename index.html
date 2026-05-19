@@ -757,11 +757,9 @@ setTimeout(() => {
     const bar    = document.getElementById('bulletin-bar');
     const ticker = document.getElementById('bulletin-ticker-inner');
 
-    const itemHtml = items.map((item, i) => {
-      const end = item.endDate ? item.endDate.replace(/\./g, '/') : '';
+    const itemHtml = items.map(item => {
       return `<a class="bulletin-chip" href="bulletin.html">
         <span class="bulletin-chip-title">${item.title}</span>
-        ${end ? `<span class="bulletin-chip-deadline">〜${end}</span>` : ''}
       </a><span class="bulletin-chip-sep">✦</span>`;
     }).join('');
 

@@ -244,22 +244,26 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 
 
 /* 短期掲示バー */
-.bulletin-bar{background:var(--mint-l);border:1.5px solid var(--mint);border-radius:var(--r);padding:10px 16px;margin-bottom:20px;display:none;overflow:hidden;}
+.bulletin-bar{background:var(--mint-l);border:1.5px solid var(--mint);border-radius:var(--r);padding:10px 16px;margin-bottom:20px;display:none;}
 .bulletin-bar.has-items{display:flex;align-items:center;gap:12px;}
 .bulletin-ticker-label{font-size:11px;font-weight:700;color:var(--mint-d);white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;}
 .bulletin-ticker-label::after{content:'';display:block;width:1.5px;height:14px;background:var(--mint);margin-left:4px;}
-.bulletin-ticker-track{flex:1;overflow:hidden;position:relative;}
-.bulletin-ticker-inner{display:flex;gap:0;animation:ticker linear infinite;}
+.bulletin-ticker-track{flex:1;overflow:hidden;}
+.bulletin-ticker-inner{
+  display:flex;width:max-content;
+  animation-name:ticker;animation-timing-function:linear;animation-iteration-count:infinite;
+  will-change:transform;
+}
 @keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 .bulletin-chip{
   display:inline-flex;align-items:center;gap:8px;
   color:var(--text);font-size:12px;font-weight:500;
-  white-space:nowrap;padding:0 24px 0 0;
+  white-space:nowrap;padding:0 32px 0 0;
   text-decoration:none;flex-shrink:0;
 }
 .bulletin-chip:hover .bulletin-chip-title{text-decoration:underline;}
 .bulletin-chip-deadline{font-size:11px;color:var(--mint-d);font-weight:700;}
-.bulletin-chip-sep{color:var(--mint);padding-right:24px;font-size:14px;}
+.bulletin-chip-sep{color:var(--mint);padding-right:32px;font-size:14px;}
 
 /* みんなの投稿 */
 .gallery-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;margin:0 -4px;}
@@ -766,7 +770,7 @@ setTimeout(() => {
 
     // テキスト量に応じてアニメーション速度を調整（1文字あたり約0.3秒）
     const totalLen = items.reduce((s, i) => s + i.title.length, 0);
-    const duration = Math.max(6, totalLen * 0.15);
+    const duration = Math.max(5, totalLen * 0.08);
     ticker.style.animationDuration = duration + 's';
 
     bar.classList.add('has-items');

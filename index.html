@@ -241,6 +241,23 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .about-arr{margin-left:auto;color:var(--peach);font-size:26px;flex-shrink:0;transition:transform .2s;}
 .about-banner:hover .about-arr{transform:translateX(5px);}
 
+/* 消防団バナー */
+.shobodan-banner{display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,#1a1a1a,#3d0f00,#7a1a00);border-radius:var(--r);padding:22px 28px;margin-bottom:44px;text-decoration:none;color:inherit;box-shadow:0 6px 28px rgba(200,60,0,.28);transition:transform .2s,box-shadow .2s;border:2px solid rgba(255,120,50,.25);}
+.shobodan-banner:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(200,60,0,.38);}
+.shobodan-left{display:flex;align-items:center;gap:16px;flex:1;min-width:0;}
+.shobodan-flame{font-size:44px;flex-shrink:0;animation:flamePulse 2s ease-in-out infinite;}
+@keyframes flamePulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+.shobodan-label{font-size:10px;font-weight:700;letter-spacing:.14em;color:rgba(255,180,80,.9);margin-bottom:3px;}
+.shobodan-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;}
+.shobodan-desc{font-size:12px;color:rgba(255,255,255,.7);line-height:1.6;}
+.shobodan-cta{background:linear-gradient(135deg,#e8550a,#ff8c42);color:#fff;font-size:13px;font-weight:700;padding:12px 22px;border-radius:12px;white-space:nowrap;flex-shrink:0;box-shadow:0 4px 14px rgba(232,85,10,.4);transition:transform .2s;}
+.shobodan-banner:hover .shobodan-cta{transform:scale(1.05);}
+@media(max-width:600px){
+  .shobodan-banner{flex-wrap:wrap;padding:18px;}
+  .shobodan-cta{width:100%;text-align:center;}
+  .shobodan-desc{display:none;}
+}
+
 /* フッター */
 .footer-wrap{margin-top:40px;}
 footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 24px 24px;}
@@ -330,7 +347,7 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
   <a class="nav-a" href="https://bousai.city.yokohama.lg.jp/K_PUB_VF_CityInfo?city=S15" target="_blank" rel="noopener">防災情報</a>
   <a class="nav-a" href="shiryo.html">各種資料</a>
   <a class="nav-a" href="https://mt67mb7pfn-afk.github.io/shibusawa-jichikai/" target="_blank" rel="noopener">自治会について</a>
-  <a class="nav-a nav-contact" href="#">✉ お問い合わせ</a>
+  <a class="nav-a nav-contact" href="contact.html">✉ お問い合わせ</a>
 </div>
   <div class="bg-balloons">
   <div class="balloon b1"></div><div class="balloon b2"></div><div class="balloon b3"></div>
@@ -353,6 +370,7 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
       <a class="nav-a" href="https://bousai.city.yokohama.lg.jp/K_PUB_VF_CityInfo?city=S15" target="_blank" rel="noopener">防災情報</a>
       <a class="nav-a" href="shiryo.html">各種資料</a>
       <a class="nav-a" href="https://mt67mb7pfn-afk.github.io/shibusawa-jichikai/" target="_blank" rel="noopener">自治会について</a>
+      <a class="nav-a nav-contact" href="contact.html">✉ お問い合わせ</a>
     </nav>
     <!-- ハンバーガー -->
     <button class="hamburger" id="hamburger" aria-label="メニュー">
@@ -452,6 +470,19 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
       <a class="quick-card" href="members.html"><div class="quick-icon-wrap qi-mint">🔒</div><div class="quick-label">役員名簿・決算書</div><div class="quick-sub">パスワード制限あり</div></a>
     </div>
   </div>
+  <!-- 消防団募集バナー -->
+  <a class="shobodan-banner" href="shobodan.html">
+    <div class="shobodan-left">
+      <span class="shobodan-flame">🔥</span>
+      <div>
+        <div class="shobodan-label">都筑消防団 TSUZUKI FIRE CORPS</div>
+        <div class="shobodan-title">消防団員 募集中！</div>
+        <div class="shobodan-desc">わたしの街はわたしが守る — 仕事・学業を続けながら地域に貢献しませんか？</div>
+      </div>
+    </div>
+    <div class="shobodan-cta">詳しく見る ›</div>
+  </a>
+
   <!-- 防災 + リンク -->
   <div class="two-col">
     <div>
@@ -516,7 +547,7 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
 <a class="footer-nav-a" href="news.html">お知らせ</a>
 <a class="footer-nav-a" href="topics.html">トピックス</a>
 <a class="footer-nav-a" href="bulletin.html">掲示板</a>
-<a class="footer-nav-a" href="#">お問い合わせ</a>
+<a class="footer-nav-a" href="contact.html">お問い合わせ</a>
       </div>
       <div>
         <div class="footer-nav-title">INFORMATION</div>

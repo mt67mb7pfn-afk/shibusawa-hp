@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CKG1QC45P9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-CKG1QC45P9');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ | 渋沢連合自治会</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --amber:#ffd43b;--amber-l:#fff9db;
+  --lavender:#b197fc;--lavender-l:#f3f0ff;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+
+/* 背景バルーン */
+.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.balloon{position:absolute;border-radius:50%;opacity:.15;animation:balloonDrift linear infinite;filter:blur(1px);}
+.b1{width:180px;height:180px;background:radial-gradient(circle,var(--mint),var(--sky));top:8%;left:2%;animation-duration:22s;}
+.b2{width:120px;height:120px;background:radial-gradient(circle,var(--coral),#ffa94d);top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
+.b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:60%;left:1%;animation-duration:20s;animation-delay:-8s;}
+.b4{width:150px;height:150px;background:radial-gradient(circle,var(--lavender),var(--sky));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
+@keyframes balloonDrift{
+  0%{transform:translateY(0) scale(1);}
+  50%{transform:translateY(-24px) scale(1.03);}
+  100%{transform:translateY(0) scale(1);}
+}
+
+/* HEADER */
+header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.06);}
+.header-inner{max-width:800px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:14px;}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-img{width:40px;height:40px;border-radius:10px;object-fit:cover;box-shadow:0 3px 10px rgba(78,203,141,.3);}
+.logo-pref{font-size:10px;color:var(--text3);}
+.logo-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--text);}
+.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--mint-d);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--mint-l);transition:background .2s;}
+.back-btn:hover{background:var(--mint);color:#fff;}
+
+/* MAIN */
+.main{max-width:640px;margin:40px auto 80px;padding:0 24px;position:relative;z-index:1;}
+.page-title{font-family:'Noto Serif JP',serif;font-size:26px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.page-sub{font-size:13px;color:var(--text3);margin-bottom:12px;}
+.page-divider{width:48px;height:3px;background:linear-gradient(90deg,var(--mint),var(--sky));border-radius:2px;margin-bottom:32px;}
+
+/* フォームカード */
+.form-card{background:#fff;border-radius:var(--r);border:2px solid var(--border);padding:32px;box-shadow:0 4px 24px rgba(78,203,141,.08);}
+
+.form-group{margin-bottom:22px;}
+.form-label{display:block;font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;}
+.form-label .required{display:inline-block;background:linear-gradient(135deg,var(--coral),#e03131);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+.form-label .optional{display:inline-block;background:var(--border);color:var(--text3);font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:middle;}
+
+.form-input, .form-textarea{
+  width:100%;padding:12px 16px;
+  border:2px solid var(--border);border-radius:var(--r);
+  font-family:'Noto Sans JP',sans-serif;font-size:14px;color:var(--text);
+  background:#fff;transition:border-color .2s,box-shadow .2s;outline:none;
+}
+.form-input:focus, .form-textarea:focus{
+  border-color:var(--mint);
+  box-shadow:0 0 0 3px rgba(78,203,141,.15);
+}
+.form-input::placeholder, .form-textarea::placeholder{color:var(--text3);}
+.form-textarea{resize:vertical;min-height:140px;line-height:1.7;}
+
+/* 注意書き */
+.form-note{background:var(--mint-l);border-radius:var(--r);padding:14px 18px;margin-bottom:28px;font-size:12px;color:var(--mint-d);line-height:1.8;}
+.form-note strong{display:block;margin-bottom:4px;}
+
+/* 送信ボタン */
+.submit-btn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--mint),var(--mint-d));
+  color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:700;
+  border:none;border-radius:var(--r);cursor:pointer;
+  box-shadow:0 6px 20px rgba(78,203,141,.4);
+  transition:transform .2s,box-shadow .2s,opacity .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(78,203,141,.5);}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* スピナー */
+.spinner{
+  width:18px;height:18px;border:2px solid rgba(255,255,255,.4);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
+}
+.submit-btn.loading .spinner{display:block;}
+.submit-btn.loading .btn-text{display:none;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* 完了画面 */
+.success-screen{
+  display:none;text-align:center;padding:40px 20px;
+}
+.success-icon{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--mint),var(--mint-d));
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 20px;
+  box-shadow:0 8px 24px rgba(78,203,141,.4);
+}
+.success-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;margin-bottom:10px;}
+.success-sub{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:28px;}
+.home-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,var(--mint),var(--mint-d));
+  color:#fff;font-size:14px;font-weight:700;
+  padding:12px 28px;border-radius:20px;
+  box-shadow:0 4px 14px rgba(78,203,141,.35);
+  transition:transform .2s;
+}
+.home-btn:hover{transform:translateY(-2px);}
+
+/* エラーメッセージ */
+.error-msg{
+  display:none;background:var(--coral-l);border:1.5px solid var(--coral);
+  border-radius:var(--r);padding:12px 16px;
+  font-size:13px;color:#c92a2a;margin-top:16px;
+}
+
+/* フッター */
+footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;margin-top:60px;text-align:center;position:relative;z-index:1;}
+.footer-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:10px 24px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:all .2s;margin-bottom:16px;}
+.footer-back:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
+</style>
+</head>
+<body>
+
+<div class="bg-balloons">
+  <div class="balloon b1"></div><div class="balloon b2"></div>
+  <div class="balloon b3"></div><div class="balloon b4"></div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <img class="logo-img" src="images/logo.png" onerror="this.style.display='none'" alt="">
+      <div>
+        <div class="logo-pref">神奈川県秦野市</div>
+        <div class="logo-name">渋沢連合自治会</div>
+      </div>
+    </a>
+    <a class="back-btn" href="index.html">← ホームへ</a>
+  </div>
+</header>
+
+<main class="main">
+  <h1 class="page-title">✉ お問い合わせ</h1>
+  <p class="page-sub">ご質問・ご意見・ご要望はこちらからお送りください</p>
+  <div class="page-divider"></div>
+
+  <div class="form-card">
+
+    <!-- 完了画面 -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">✓</div>
+      <div class="success-title">送信が完了しました</div>
+      <div class="success-sub">
+        お問い合わせいただきありがとうございます。<br>
+        内容を確認のうえ、担当者よりご連絡いたします。<br>
+        （お返事までに数日かかる場合があります）
+      </div>
+      <a class="home-btn" href="index.html">🏠 ホームに戻る</a>
+    </div>
+
+    <!-- フォーム本体 -->
+    <form id="contact-form">
+      <div class="form-note">
+        <strong>📋 ご記入にあたって</strong>
+        電話番号またはメールアドレスのどちらか一方は必ずご記入ください。ご入力いただいた情報は、お問い合わせへの返答以外の目的では使用いたしません。
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="name">
+          お名前<span class="required">必須</span>
+        </label>
+        <input class="form-input" type="text" id="name" name="name"
+          placeholder="例：渋沢 太郎" required autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">
+          電話番号<span class="optional">任意</span>
+        </label>
+        <input class="form-input" type="tel" id="phone" name="phone"
+          placeholder="例：0463-00-0000" autocomplete="tel">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">
+          メールアドレス<span class="optional">任意</span>
+        </label>
+        <input class="form-input" type="email" id="email" name="email"
+          placeholder="例：example@gmail.com" autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="message">
+          お問い合わせ内容<span class="required">必須</span>
+        </label>
+        <textarea class="form-textarea" id="message" name="message"
+          placeholder="ご質問・ご要望・ご意見などをご記入ください" required></textarea>
+      </div>
+
+      <button class="submit-btn" type="submit" id="submit-btn">
+        <span class="btn-text">✉ 送信する</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="error-msg" id="error-msg">
+        送信に失敗しました。しばらく時間をおいて再度お試しいただくか、直接自治会事務局までご連絡ください。
+      </div>
+    </form>
+
+  </div>
+</main>
+
+<footer>
+  <a class="footer-back" href="index.html">← ホームに戻る</a>
+  <div class="footer-copy">© 渋沢連合自治会</div>
+</footer>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
+
+document.getElementById('contact-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const name    = document.getElementById('name').value.trim();
+  const phone   = document.getElementById('phone').value.trim();
+  const email   = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  // 電話・メールどちらかチェック
+  if (!phone && !email) {
+    document.getElementById('error-msg').textContent =
+      '電話番号またはメールアドレスのどちらか一方を入力してください。';
+    document.getElementById('error-msg').style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  document.getElementById('error-msg').style.display = 'none';
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'contact_form', name, phone, email, message })
+    });
+    const json = await res.json();
+
+    if (json.success) {
+      document.getElementById('contact-form').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+    } else {
+      throw new Error(json.error || 'error');
+    }
+  } catch (err) {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    document.getElementById('error-msg').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>

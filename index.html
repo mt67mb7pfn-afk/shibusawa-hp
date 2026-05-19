@@ -602,6 +602,8 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
 
 const GAS_URL='https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
 const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan','イベント':'nb-event','トピックス':'nb-topics'};
+  const parseLocalDate = s => { const [y,m,d] = s.split(/[.\-]/); return new Date(+y, +m-1, +d); };
+
   async function loadNews(){
   try{
     const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -622,14 +624,14 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
       .filter(item => {
         if (item.type !== '短期') return false;
         if (item.hidden) return false;
-        const start = item.startDate ? new Date(item.startDate.replace(/\./g, '-')) : null;
-        const end   = item.endDate   ? new Date(item.endDate.replace(/\./g, '-'))   : null;
+        const start = item.startDate ? parseLocalDate(item.startDate) : null;
+        const end   = item.endDate   ? parseLocalDate(item.endDate)   : null;
         if (start && start > today) return false;
         if (end   && end   < today) return false;
         return true;
       })
       .map(item => {
-        const d = new Date(item.startDate.replace(/\./g, '-'));
+        const d = parseLocalDate(item.startDate);
         const mm = String(d.getMonth()+1).padStart(2,'0');
         const dd = String(d.getDate()).padStart(2,'0');
         return {
@@ -731,14 +733,14 @@ setTimeout(() => {
     const items = (json.bulletin || []).filter(item => {
       if (item.type !== '短期') return false;
       if (item.hidden) return false;
-      const start = item.startDate ? new Date(item.startDate.replace(/\./g, '-')) : null;
-      const end   = item.endDate   ? new Date(item.endDate.replace(/\./g, '-'))   : null;
+      const start = item.startDate ? parseLocalDate(item.startDate) : null;
+      const end   = item.endDate   ? parseLocalDate(item.endDate)   : null;
       if (start && start > today) return false;
       if (end   && end   < today) return false;
       return true;
     }).sort((a, b) => {
-      const ea = a.endDate ? new Date(a.endDate.replace(/\./g, '-')) : new Date('9999-12-31');
-      const eb = b.endDate ? new Date(b.endDate.replace(/\./g, '-')) : new Date('9999-12-31');
+      const ea = a.endDate ? parseLocalDate(a.endDate) : new Date('9999-12-31');
+      const eb = b.endDate ? parseLocalDate(b.endDate) : new Date('9999-12-31');
       return ea - eb;
     });
 

@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 8,
+      "title": "2026　6月14日（日）ログハウスまつり",
+      "type": "短期",
+      "startDate": "2026.05.19",
+      "endDate": "2026.06.15",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1Gs4S2lHbZkGUitRw9eoyc0ezcjF7zg96"
+      ]
+    },
+    {
       "id": 6,
       "title": "※参加者募集　緑道ハレバレ会さんと行く　渋沢ウォーク",
       "type": "短期",

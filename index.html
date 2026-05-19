@@ -242,6 +242,28 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .about-banner:hover .about-arr{transform:translateX(5px);}
 
 
+/* みんなの投稿 */
+.gallery-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;margin:0 -4px;}
+.gallery-scroll-wrap::-webkit-scrollbar{height:4px;}
+.gallery-scroll-wrap::-webkit-scrollbar-track{background:var(--border);border-radius:2px;}
+.gallery-scroll-wrap::-webkit-scrollbar-thumb{background:var(--mint);border-radius:2px;}
+.gallery-scroll{display:flex;gap:14px;padding:4px 4px 4px;}
+.gallery-card{
+  flex:0 0 200px;background:#fff;border-radius:var(--r);
+  border:2px solid var(--border);overflow:hidden;
+  text-decoration:none;color:inherit;
+  box-shadow:0 2px 10px rgba(0,0,0,.04);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.gallery-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(78,203,141,.18);border-color:var(--mint);}
+.gallery-card-img{width:100%;height:130px;object-fit:cover;background:var(--mint-l);display:block;}
+.gallery-card-img-placeholder{width:100%;height:130px;background:linear-gradient(135deg,var(--mint-l),var(--sky-l));display:flex;align-items:center;justify-content:center;font-size:36px;}
+.gallery-card-body{padding:10px 12px 12px;}
+.gallery-card-date{font-size:10px;color:var(--text3);margin-bottom:4px;}
+.gallery-card-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.gallery-more-btn{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13px;font-weight:700;color:var(--mint-d);background:var(--mint-l);padding:9px 20px;border-radius:20px;transition:background .2s,color .2s;}
+.gallery-more-btn:hover{background:var(--mint);color:#fff;}
+
 /* フッター */
 .footer-wrap{margin-top:40px;}
 footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 24px 24px;}
@@ -454,6 +476,22 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
       <a class="quick-card" href="members.html"><div class="quick-icon-wrap qi-mint">🔒</div><div class="quick-label">役員名簿・決算書</div><div class="quick-sub">パスワード制限あり</div></a>
     </div>
   </div>
+  <!-- みんなの投稿 -->
+  <div style="margin-top:44px;margin-bottom:44px;">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:linear-gradient(135deg,var(--lavender),#7950f2);color:#fff;">GALLERY</span>
+      <div class="sec-title">みんなの投稿</div>
+      <a href="gallery.html" class="sec-more">投稿一覧 ›</a>
+    </div>
+    <div class="sec-bar" style="background:linear-gradient(90deg,var(--lavender),var(--sky));"></div>
+    <div class="gallery-scroll-wrap">
+      <div class="gallery-scroll" id="gallery-scroll">
+        <div style="padding:24px;text-align:center;color:#999;width:100%">読み込み中...</div>
+      </div>
+    </div>
+    <a class="gallery-more-btn" href="gallery.html">📷 投稿をもっと見る ›</a>
+  </div>
+
   <!-- 防災 + リンク -->
   <div class="two-col">
     <div>
@@ -657,6 +695,40 @@ setTimeout(() => {
     topicsGrid.innerHTML = '<div style="text-align:center;padding:20px;color:#999;font-size:13px;grid-column:1/-1;">読み込みに失敗しました。<br><button onclick="location.reload()" style="margin-top:8px;padding:6px 16px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;">再読み込み</button></div>';
   }
 }, 10000);
+
+// みんなの投稿（横スクロール）
+(async () => {
+  const wrap = document.getElementById('gallery-scroll');
+  try {
+    const res = await fetch('/data/news.json');
+    const all = await res.json();
+    const posts = all
+      .filter(n => n.badge === '地域の話題' && !n.hidden)
+      .slice(0, 10);
+
+    if (posts.length === 0) {
+      wrap.innerHTML = '<div style="padding:24px;color:#999;font-size:13px;">まだ投稿がありません</div>';
+      return;
+    }
+
+    wrap.innerHTML = posts.map(p => {
+      const d = new Date(p.date);
+      const dateStr = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+      const imgHtml = p.imageUrl
+        ? `<img class="gallery-card-img" src="${p.imageUrl}" alt="${p.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'gallery-card-img-placeholder\\'>📷</div>'">`
+        : `<div class="gallery-card-img-placeholder">📷</div>`;
+      return `<a class="gallery-card" href="gallery.html">
+        ${imgHtml}
+        <div class="gallery-card-body">
+          <div class="gallery-card-date">${dateStr}</div>
+          <div class="gallery-card-title">${p.title}</div>
+        </div>
+      </a>`;
+    }).join('');
+  } catch(e) {
+    wrap.innerHTML = '<div style="padding:24px;color:#999;font-size:13px;">読み込みに失敗しました</div>';
+  }
+})();
 </script>
 </body>
 </html>

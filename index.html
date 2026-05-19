@@ -770,7 +770,7 @@ setTimeout(() => {
 
     // テキスト量に応じてアニメーション速度を調整（1文字あたり約0.3秒）
     const totalLen = items.reduce((s, i) => s + i.title.length, 0);
-    const duration = Math.max(8, totalLen * 0.18);
+    const duration = Math.max(10, totalLen * 0.28);
     ticker.style.animationDuration = duration + 's';
 
     bar.classList.add('has-items');

@@ -779,12 +779,9 @@ setTimeout(() => {
 (async () => {
   const wrap = document.getElementById('gallery-scroll');
   try {
-    const res = await fetch('/data/news.json');
+    const res = await fetch('/data/gallery.json');
     const json = await res.json();
-    const all = Array.isArray(json) ? json : (json.news || []);
-    const posts = all
-      .filter(n => n.badge === '地域の話題' && !n.hidden)
-      .slice(0, 10);
+    const posts = (Array.isArray(json) ? json : (json.gallery || [])).slice(0, 10);
 
     if (posts.length === 0) {
       wrap.innerHTML = '<div style="padding:24px;color:#999;font-size:13px;">まだ投稿がありません</div>';

@@ -1319,10 +1319,10 @@ function openEdit(tabId, row) {
       ${imgUploadField('ef-img3', d[7], '画像③')}
     `;
   } else if (tabId === 'gallery') {
-    // お知らせシート列順: d[0]=日付 d[1]=タイトル d[2]=バッジ d[3]=URL d[4]=説明文 d[5]=非公開 d[6]=画像URL d[7]=本文
+    // ギャラリーシート列順: d[0]=管理ID d[1]=投稿日時 d[2]=タイトル d[3]=本文 d[4]=画像URL d[5]=投稿者UID d[6]=非公開
     fields = `
-      <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[1])}"></div>
-      <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[7])}</textarea></div>
+      <div class="edit-field"><label>タイトル</label><input type="text" id="ef-title" value="${esc(d[2])}"></div>
+      <div class="edit-field"><label>本文</label><textarea id="ef-body" style="min-height:160px">${esc(d[3])}</textarea></div>
     `;
   }
 
@@ -1373,17 +1373,12 @@ async function submitEdit() {
     Object.assign(payload, await getImgPayload('ef-img2', 'imageBase64_2', 'imageName_2', 'imageMime_2', 'imageUrl2'));
     Object.assign(payload, await getImgPayload('ef-img3', 'imageBase64_3', 'imageName_3', 'imageMime_3', 'imageUrl3'));
   } else if (tabId === 'gallery') {
-    // edit_gallery はGAS未実装のためedit_newsで代替し、他フィールドは元の値を保持
+    // ギャラリーシート列順: 管理ID(0)・投稿日時(1)・タイトル(2)・本文(3)・画像URL(4)・投稿者UID(5)・非公開(6)
     const orig = editItemsData['gallery'][row];
-    payload.type = 'edit_news';
-    payload.sheet = 'お知らせ';
-    payload.date = toInputDate(orig[0]);
+    payload.type = 'edit_gallery';
     payload.title = document.getElementById('ef-title').value;
-    payload.badge = orig[2];
-    payload.url = orig[3] || '';
-    payload.description = orig[4] || '';
     payload.body = document.getElementById('ef-body').value;
-    payload.imageUrl = orig[6] || '';
+    payload.imageUrl = orig[4] || '';
   }
 
   try {
@@ -1532,11 +1527,9 @@ async function rejectPost(pendingId) {
 async function loadGallery() {
   document.getElementById('gallery-body').innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    // 承認済み投稿はお知らせシートにbadge='地域の話題'で登録される
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('お知らせ')}`);
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('ギャラリー')}`);
     const data = await res.json();
-    const galleryList = (data.list || []).filter(item => item.data[2] === '地域の話題');
-    renderGallery(galleryList);
+    renderGallery(data.list || []);
   } catch(e) {
     document.getElementById('gallery-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
   }
@@ -1548,7 +1541,7 @@ function renderGallery(list) {
     return;
   }
 
-  // お知らせシート列順: 日付・タイトル・バッジ・リンクURL・説明文・非公開・画像URL・本文
+  // ギャラリーシート列順: 管理ID・投稿日時・タイトル・本文・画像URL・投稿者UID・非公開
   list.forEach(item => storeEditData('gallery', item.row, item.data));
 
   let html = '<table>';
@@ -1556,9 +1549,9 @@ function renderGallery(list) {
   list.forEach(item => {
     const row = item.row;
     const d = item.data;
-    const date = d[0] ? formatDate(d[0]) : '';
-    const title = d[1] || '';
-    const imageUrl = d[6] || '';
+    const date = d[1] ? formatDate(d[1]) : '';  // B列: 投稿日時
+    const title = d[2] || '';                    // C列: タイトル
+    const imageUrl = d[4] || '';                 // E列: 画像URL
     const thumbHtml = imageUrl
       ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">`
       : '<span style="color:#bbb;font-size:11px">なし</span>';

@@ -753,9 +753,18 @@
 
     <!-- 役員名簿 -->
     <div id="yakuin" class="tab-content">
+      <!-- 現在のファイル一覧 -->
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <div class="table-header">
+          <h2>現在の登録ファイル</h2>
+          <button class="reload-btn" onclick="loadYakuinList()">🔄 再読み込み</button>
+        </div>
+        <div id="yakuin-list-body"><div class="loading">読み込み中...</div></div>
+      </div>
+      <!-- アップロードフォーム -->
       <div class="form-wrap">
         <div class="form-header">
-          <h2>役員名簿を更新</h2>
+          <h2>ファイルを追加</h2>
         </div>
         <div class="form-body">
           <form id="yakuin-form" onsubmit="submitYakuin(event)">
@@ -782,7 +791,7 @@
             </div>
             <div class="form-actions">
               <button type="button" class="btn-reset" onclick="resetYakuinForm()">リセット</button>
-              <button type="submit" class="btn-submit" id="yakuin-submit">更新</button>
+              <button type="submit" class="btn-submit" id="yakuin-submit">追加</button>
             </div>
           </form>
         </div>
@@ -877,6 +886,8 @@ function switchTab(tabId, btn) {
     loadPendingPosts();
   } else if (tabId === 'gallery') {
     loadGallery();
+  } else if (tabId === 'yakuin') {
+    loadYakuinList();
   }
 }
 
@@ -1135,6 +1146,56 @@ function resetShiyroForm() {
   document.getElementById('shiryo-preview').style.display = 'none';
 }
 
+// 役員名簿ファイル一覧
+async function loadYakuinList() {
+  const body = document.getElementById('yakuin-list-body');
+  body.innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch('/data/members.json?t=' + Date.now());
+    const data = await res.json();
+    const labelMap = { yakuin: '役員名簿', kessan: '決算書', shakyo: '社協名簿' };
+    let html = '<table><tr><th>種別</th><th>ファイル名</th><th>プレビュー</th><th>操作</th></tr>';
+    ['yakuin','kessan','shakyo'].forEach(type => {
+      const files = data[type] || [];
+      if (files.length === 0) {
+        html += `<tr><td>${labelMap[type]}</td><td colspan="3" style="color:#bbb;font-size:12px">登録なし</td></tr>`;
+      } else {
+        files.forEach(f => {
+          html += `<tr>
+            <td>${labelMap[type]}</td>
+            <td style="font-size:12px">${f.src.replace('/','')}</td>
+            <td><img src="${f.src}?t=${Date.now()}" style="height:48px;border-radius:4px;object-fit:cover;" onerror="this.style.display='none'"></td>
+            <td><button class="btn-delete" onclick="deleteYakuin('${type}',${f.num},'${f.src.replace('/','').replace(/\.[^.]+$/,'')}')">削除</button></td>
+          </tr>`;
+        });
+      }
+    });
+    html += '</table>';
+    body.innerHTML = html;
+  } catch(e) {
+    body.innerHTML = '<div class="empty">読み込みに失敗しました</div>';
+  }
+}
+
+async function deleteYakuin(fileType, num, fileName) {
+  if (!confirm(`「${fileName}」を削除しますか？\nこの操作は元に戻せません。`)) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'delete_yakuin', fileType, num, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('削除しました', 'success');
+      loadYakuinList();
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+  }
+}
+
 // 役員名簿フォーム
 document.getElementById('yakuin-file').addEventListener('change', (e) => {
   const file = e.target.files[0];
@@ -1178,8 +1239,9 @@ async function submitYakuin(e) {
       });
       const data = await res.json();
       if (data.success) {
-        showToast('更新しました', 'success');
+        showToast('追加しました', 'success');
         resetYakuinForm();
+        loadYakuinList();
       } else {
         showToast('エラー: ' + data.error, 'error');
       }

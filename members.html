@@ -235,22 +235,7 @@
 <script>
 const PASSWORD = 'sy1234';
 
-// ========================================
-// 画像リスト（年次更新時はここを編集）
-// 枚数が増えた場合は { src: 'yakuin_2.jpg', label: '役員名簿 2枚目' } を追加
-// ========================================
-const IMAGES = {
-  yakuin: [
-    { src: 'yakuin_1.jpg', label: '役員名簿' }
-  ],
-  kessan: [
-    { src: 'kessan_1.png', label: '決算書' }
-  ],
-  shakyo: [
-    { src: 'shakyo_1.png', label: '社協役員・理事名簿' }
-  ]
-};
-
+let IMAGES = { yakuin: [], kessan: [], shakyo: [] };
 let lbImages = [];
 let lbIndex = 0;
 
@@ -263,7 +248,7 @@ function login() {
   if (pw === PASSWORD) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-screen').style.display = 'block';
-    renderGrids();
+    loadAndRender();
   } else {
     document.getElementById('login-error').style.display = 'block';
     document.getElementById('pw-input').value = '';
@@ -278,7 +263,19 @@ function logout() {
   document.getElementById('login-error').style.display = 'none';
 }
 
-function renderGrids() {
+async function loadAndRender() {
+  try {
+    const res = await fetch('/data/members.json?t=' + Date.now());
+    const data = await res.json();
+    IMAGES.yakuin = data.yakuin || [];
+    IMAGES.kessan = data.kessan || [];
+    IMAGES.shakyo = data.shakyo || [];
+  } catch(e) {
+    // JSONが読めない場合は既存ファイルにフォールバック
+    IMAGES.yakuin = [{ src: '/yakuin_1.jpg', label: '役員名簿', num: 1 }];
+    IMAGES.kessan = [{ src: '/kessan_1.png', label: '決算書', num: 1 }];
+    IMAGES.shakyo = [{ src: '/shakyo_1.png', label: '社協役員・理事名簿', num: 1 }];
+  }
   renderGrid('grid-yakuin', IMAGES.yakuin);
   renderGrid('grid-kessan', IMAGES.kessan);
   renderGrid('grid-shakyo', IMAGES.shakyo);
@@ -286,6 +283,10 @@ function renderGrids() {
 
 function renderGrid(gridId, images) {
   const grid = document.getElementById(gridId);
+  if (images.length === 0) {
+    grid.innerHTML = '<div style="color:#999;font-size:13px;padding:16px;">登録されていません</div>';
+    return;
+  }
   grid.innerHTML = images.map((img, i) => `
     <div class="img-card" onclick="openLightbox('${gridId}', ${i})">
       <img src="${img.src}" alt="${img.label}" loading="lazy">

@@ -1221,7 +1221,13 @@ async function submitYakuin(e) {
   }
 
   document.getElementById('yakuin-submit').disabled = true;
-  showToast('アップロード中...', '');
+  showToast('アップロード中...（時間がかかる場合があります）', '');
+
+  // 60秒でタイムアウト
+  const timeoutId = setTimeout(() => {
+    document.getElementById('yakuin-submit').disabled = false;
+    showToast('タイムアウトしました。members.jsonで結果を確認してください。', 'error');
+  }, 60000);
 
   try {
     const reader = new FileReader();
@@ -1237,6 +1243,7 @@ async function submitYakuin(e) {
           password
         })
       });
+      clearTimeout(timeoutId);
       const data = await res.json();
       if (data.success) {
         showToast('追加しました', 'success');
@@ -1249,6 +1256,7 @@ async function submitYakuin(e) {
     };
     reader.readAsDataURL(file);
   } catch(e) {
+    clearTimeout(timeoutId);
     showToast('通信エラーが発生しました', 'error');
     document.getElementById('yakuin-submit').disabled = false;
   }

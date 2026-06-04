@@ -271,10 +271,9 @@ async function loadAndRender() {
     IMAGES.kessan = data.kessan || [];
     IMAGES.shakyo = data.shakyo || [];
   } catch(e) {
-    // JSONが読めない場合は既存ファイルにフォールバック
-    IMAGES.yakuin = [{ src: '/yakuin_1.jpg', label: '役員名簿', num: 1 }];
-    IMAGES.kessan = [{ src: '/kessan_1.png', label: '決算書', num: 1 }];
-    IMAGES.shakyo = [{ src: '/shakyo_1.png', label: '社協役員・理事名簿', num: 1 }];
+    IMAGES.yakuin = [];
+    IMAGES.kessan = [];
+    IMAGES.shakyo = [];
   }
   renderGrid('grid-yakuin', IMAGES.yakuin);
   renderGrid('grid-kessan', IMAGES.kessan);

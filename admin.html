@@ -710,6 +710,14 @@
 
     <!-- 各種資料 -->
     <div id="shiryo" class="tab-content">
+      <!-- 現在の資料一覧 -->
+      <div class="table-wrap" style="margin-bottom:24px;">
+        <div class="table-header">
+          <h2>登録済み資料一覧</h2>
+          <button class="reload-btn" onclick="loadShiryoList()">🔄 再読み込み</button>
+        </div>
+        <div id="shiryo-list-body"><div class="loading">読み込み中...</div></div>
+      </div>
       <div class="form-wrap">
         <div class="form-header">
           <h2>各種資料を追加</h2>
@@ -748,6 +756,7 @@
             </div>
           </form>
         </div>
+      </div>
       </div>
     </div>
 
@@ -888,6 +897,8 @@ function switchTab(tabId, btn) {
     loadGallery();
   } else if (tabId === 'yakuin') {
     loadYakuinList();
+  } else if (tabId === 'shiryo') {
+    loadShiryoList();
   }
 }
 
@@ -1129,6 +1140,7 @@ async function submitShiryo(e) {
       if (data.success) {
         showToast('登録しました', 'success');
         resetShiyroForm();
+        loadShiryoList();
       } else {
         showToast('エラー: ' + data.error, 'error');
       }
@@ -1144,6 +1156,62 @@ async function submitShiryo(e) {
 function resetShiyroForm() {
   document.getElementById('shiryo-form').reset();
   document.getElementById('shiryo-preview').style.display = 'none';
+}
+
+// 各種資料一覧
+async function loadShiryoList() {
+  const body = document.getElementById('shiryo-list-body');
+  body.innerHTML = '<div class="loading">読み込み中...</div>';
+  try {
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('各種資料')}`);
+    const data = await res.json();
+    const list = data.list || [];
+    if (list.length === 0) {
+      body.innerHTML = '<div class="empty">登録された資料はありません</div>';
+      return;
+    }
+    let html = '<table><tr><th>行</th><th>カテゴリ</th><th>タイトル</th><th>画像</th><th>操作</th></tr>';
+    list.forEach(item => {
+      const row = item.row;
+      const d = item.data;
+      const category = d[0] || '';
+      const title = d[1] || '';
+      const imageUrl = d[2] || '';
+      const thumb = imageUrl
+        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;">`
+        : '<span style="color:#bbb;font-size:11px">なし</span>';
+      html += `<tr>
+        <td style="color:#bbb;font-size:12px">${row}</td>
+        <td style="font-size:12px">${esc(category)}</td>
+        <td class="title-cell">${esc(title)}</td>
+        <td>${thumb}</td>
+        <td><button class="btn-delete" onclick="deleteShiryo(${row}, '${esc(title)}')">削除</button></td>
+      </tr>`;
+    });
+    html += '</table>';
+    body.innerHTML = html;
+  } catch(e) {
+    body.innerHTML = '<div class="empty">読み込みに失敗しました</div>';
+  }
+}
+
+async function deleteShiryo(row, title) {
+  if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'admin_delete', sheet: '各種資料', row, password })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('削除しました', 'success');
+      loadShiryoList();
+    } else {
+      showToast('エラー: ' + data.error, 'error');
+    }
+  } catch(e) {
+    showToast('通信エラーが発生しました', 'error');
+  }
 }
 
 // 役員名簿ファイル一覧

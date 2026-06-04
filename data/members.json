@@ -11,7 +11,13 @@
       "num": 2
     }
   ],
-  "kessan": [],
+  "kessan": [
+    {
+      "src": "/kessan_1.png",
+      "label": "決算書",
+      "num": 1
+    }
+  ],
   "shakyo": [
     {
       "src": "/shakyo_1.png",

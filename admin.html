@@ -1219,24 +1219,31 @@ async function loadYakuinList() {
   const body = document.getElementById('yakuin-list-body');
   body.innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    const res = await fetch('/data/members.json?t=' + Date.now());
+    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('役員名簿等管理')}`);
     const data = await res.json();
+    const list = data.list || [];
     const labelMap = { yakuin: '役員名簿', kessan: '決算書', shakyo: '社協名簿' };
-    let html = '<table><tr><th>種別</th><th>ファイル名</th><th>プレビュー</th><th>操作</th></tr>';
-    ['yakuin','kessan','shakyo'].forEach(type => {
-      const files = data[type] || [];
-      if (files.length === 0) {
-        html += `<tr><td>${labelMap[type]}</td><td colspan="3" style="color:#bbb;font-size:12px">登録なし</td></tr>`;
-      } else {
-        files.forEach(f => {
-          html += `<tr>
-            <td>${labelMap[type]}</td>
-            <td style="font-size:12px">${f.src.replace('/','')}</td>
-            <td><img src="${f.src}?t=${Date.now()}" style="height:48px;border-radius:4px;object-fit:cover;" onerror="this.style.display='none'"></td>
-            <td><button class="btn-delete" onclick="deleteYakuin('${type}',${f.num},'${f.src.replace('/','').replace(/\.[^.]+$/,'')}')">削除</button></td>
-          </tr>`;
-        });
-      }
+    if (list.length === 0) {
+      body.innerHTML = '<div class="empty">登録されていません</div>';
+      return;
+    }
+    let html = '<table><tr><th>行</th><th>種別</th><th>タイトル</th><th>プレビュー</th><th>操作</th></tr>';
+    list.forEach(item => {
+      const row = item.row;
+      const d = item.data;
+      const type = d[0] || '';
+      const title = d[1] || '';
+      const imageUrl = d[2] || '';
+      const thumb = imageUrl
+        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;">`
+        : '<span style="color:#bbb;font-size:11px">なし</span>';
+      html += `<tr>
+        <td style="color:#bbb;font-size:12px">${row}</td>
+        <td>${esc(labelMap[type] || type)}</td>
+        <td>${esc(title)}</td>
+        <td>${thumb}</td>
+        <td><button class="btn-delete" onclick="deleteYakuin(${row}, '${esc(title)}')">削除</button></td>
+      </tr>`;
     });
     html += '</table>';
     body.innerHTML = html;
@@ -1245,12 +1252,12 @@ async function loadYakuinList() {
   }
 }
 
-async function deleteYakuin(fileType, num, fileName) {
-  if (!confirm(`「${fileName}」を削除しますか？\nこの操作は元に戻せません。`)) return;
+async function deleteYakuin(row, title) {
+  if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
   try {
     const res = await fetch(GAS_URL, {
       method: 'POST',
-      body: JSON.stringify({ type: 'delete_yakuin', fileType, num, password })
+      body: JSON.stringify({ type: 'delete_yakuin', row, password })
     });
     const data = await res.json();
     if (data.success) {

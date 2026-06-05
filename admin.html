@@ -382,10 +382,40 @@
     border-radius: 6px;
     border: 1px solid #ddd;
     display: block;
+    cursor: zoom-in;
+    transition: opacity .2s;
   }
+  .thumb:hover { opacity: .75; }
   .thumb-wrap {
     display: flex;
     gap: 4px;
+  }
+  /* ライトボックス */
+  #admin-lb {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #admin-lb.open { display: flex; }
+  #admin-lb img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  }
+  #admin-lb-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #fff;
+    font-size: 36px;
+    cursor: pointer;
+    line-height: 1;
+    font-weight: 300;
   }
   .btn-edit {
     padding: 4px 10px;
@@ -637,6 +667,11 @@
 </style>
 </head>
 <body>
+<!-- ライトボックス -->
+<div id="admin-lb" onclick="closeLightbox()">
+  <span id="admin-lb-close" onclick="closeLightbox()">×</span>
+  <img id="admin-lb-img" src="" alt="">
+</div>
 
 <!-- ログイン画面 -->
 <div id="login-screen">
@@ -948,7 +983,7 @@ function renderTable(list, tabId) {
       const badge = d[2] || '';
       const isHidden = d[5] === true;
       const imageUrl = d[6] || '';
-      const thumbHtml = imageUrl ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">` : '<span style="color:#bbb;font-size:11px">なし</span>';
+      const thumbHtml = imageUrl ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像" onclick="openLightbox(this.src, event)">` : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
         <td class="date-cell">${date}</td>
@@ -976,7 +1011,7 @@ function renderTable(list, tabId) {
       const title = d[3] || '';
       const isHidden = d[6] === true;
       const imageUrl = d[5] || '';
-      const thumbHtml = imageUrl ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">` : '<span style="color:#bbb;font-size:11px">なし</span>';
+      const thumbHtml = imageUrl ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像" onclick="openLightbox(this.src, event)">` : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
         <td class="date-cell">${date}</td>
@@ -1005,7 +1040,7 @@ function renderTable(list, tabId) {
       const isHidden = d[8] === true;
       const images = [d[5], d[6], d[7]].filter(u => u);
       const thumbHtml = images.length
-        ? `<div class="thumb-wrap">${images.map(u => `<img class="thumb" src="${esc(u)}" alt="画像">`).join('')}</div>`
+        ? `<div class="thumb-wrap">${images.map(u => `<img class="thumb" src="${esc(u)}" alt="画像" onclick="openLightbox(this.src, event)">`).join('')}</div>`
         : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
@@ -1178,7 +1213,7 @@ async function loadShiryoList() {
       const title = d[1] || '';
       const imageUrl = d[2] || '';
       const thumb = imageUrl
-        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;">`
+        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
         : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
@@ -1235,7 +1270,7 @@ async function loadYakuinList() {
       const title = d[1] || '';
       const imageUrl = d[2] || '';
       const thumb = imageUrl
-        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;">`
+        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
         : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
@@ -1576,7 +1611,7 @@ function renderPendingPosts(list) {
     const postedAt = d[6] ? formatDate(d[6]) : '';
 
     const imgHtml = imageUrl
-      ? `<img class="pending-card-img" src="${esc(imageUrl)}" alt="投稿画像">`
+      ? `<img class="pending-card-img" src="${esc(imageUrl)}" alt="投稿画像" style="cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
       : `<div class="pending-card-img-empty">画像なし</div>`;
 
     html += `
@@ -1698,7 +1733,7 @@ function renderGallery(list) {
     const title = d[2] || '';                    // C列: タイトル
     const imageUrl = d[4] || '';                 // E列: 画像URL
     const thumbHtml = imageUrl
-      ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像">`
+      ? `<img class="thumb" src="${esc(imageUrl)}" alt="画像" onclick="openLightbox(this.src, event)">`
       : '<span style="color:#bbb;font-size:11px">なし</span>';
 
     html += `<tr>
@@ -1734,6 +1769,19 @@ async function deleteGallery(row, title) {
     showToast('通信エラーが発生しました', 'error');
   }
 }
+
+function openLightbox(src, event) {
+  if (event) event.stopPropagation();
+  document.getElementById('admin-lb-img').src = src;
+  document.getElementById('admin-lb').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('admin-lb').classList.remove('open');
+  document.getElementById('admin-lb-img').src = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
 
 function esc(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

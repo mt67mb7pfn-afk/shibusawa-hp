@@ -221,16 +221,7 @@ const CATEGORY_MAP = {
 const urlParams = new URLSearchParams(window.location.search);
 const filterCategory = urlParams.get('category');
 
-if (filterCategory === '行事予定表') {
-  document.getElementById('page-title').textContent = '行事予定表 | 渋沢連合自治会';
-  document.getElementById('header-title').textContent = '行事予定表';
-  document.getElementById('page-intro-text').textContent = '渋沢連合自治会の年間行事予定表です。';
-  document.getElementById('section-teirekai').style.display = 'none';
-  document.getElementById('section-shakyo').style.display = 'none';
-  document.getElementById('section-kiyaku').style.display = 'none';
-} else {
-  document.getElementById('section-yotei').style.display = 'none';
-}
+// 行事予定表は常時表示（カテゴリフィルターは不要になったため削除）
 
 let lbImages = [];
 let lbIndex = 0;

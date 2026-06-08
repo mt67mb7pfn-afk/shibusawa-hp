@@ -348,22 +348,20 @@ function isWithinDays(dateStr, days) {
 // news.json から badge='地域の話題' の記事だけ抽出
 async function fetchArticles() {
   try {
-    const res = await fetch('/data/news.json');
+    const res = await fetch('/data/gallery.json');
     const data = await res.json();
-    const news = data.news || [];
-    return news
-      .filter(n => n.badge === '地域の話題')
-      .map(n => {
-        const dateStr = n.date.replace(/\./g, '-'); // "2026.05.10" → "2026-05-10"
-        return {
-          title:    n.title,
-          body:     n.body || n.description || '',
-          category: '地域の話題',
-          imageUrl: n.imageUrl || '',
-          date:     dateStr,
-          isNew:    isWithinDays(dateStr, 7)
-        };
-      });
+    const posts = Array.isArray(data) ? data : (data.gallery || []);
+    return posts.map(p => {
+      const dateStr = (p.date || '').replace(/\./g, '-'); // "2026.05.10" → "2026-05-10"
+      return {
+        title:    p.title || '',
+        body:     p.body || '',
+        category: '地域の話題',
+        imageUrl: p.imageUrl || '',
+        date:     dateStr,
+        isNew:    isWithinDays(dateStr, 7)
+      };
+    });
   } catch {
     return [];
   }

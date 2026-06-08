@@ -1,14 +1,6 @@
 {
   "topics": [
     {
-      "id": 1,
-      "date": "2026.05.02",
-      "category": "自治会からのお知らせ",
-      "title": "テスト投稿２",
-      "body": "テスト投稿",
-      "imageUrl": "https://lh3.googleusercontent.com/d/1fWa_mm3j9OzmvjGJskEfeoX1mEkUPdxg"
-    },
-    {
       "id": 2,
       "date": "2026.05.02",
       "category": "地域の話題",

@@ -29,27 +29,6 @@
       "images": [
         "https://lh3.googleusercontent.com/d/1dk6RlT_oL5k0ijV1v7ymu8TDgTjnbmzq"
       ]
-    },
-    {
-      "id": 2,
-      "title": "掲示板テスト２",
-      "type": "中期",
-      "startDate": "2026.05.02",
-      "endDate": "2026.07.08",
-      "images": [
-        "https://lh3.googleusercontent.com/d/15HVODgX4qZlrheLrZFEK53xuurvI54lx"
-      ]
-    },
-    {
-      "id": 3,
-      "title": "掲示板テスト３",
-      "type": "常設",
-      "startDate": "",
-      "endDate": "",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1gOVgFTixnleDzdp6iTxnofHXN5s6QS_z",
-        "https://lh3.googleusercontent.com/d/1bWDoeZ5BwWoIyGSkjDfpVqeuElcwWs9x"
-      ]
     }
   ]
 }

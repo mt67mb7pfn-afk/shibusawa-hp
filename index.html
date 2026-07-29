@@ -472,20 +472,8 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
       <a href="news.html" class="sec-more">お知らせ一覧 ›</a>
     </div>
     <div class="sec-bar sec-bar-sky"></div>
-   <div class="notice-list" id="notice-list">
-  <div style="padding:24px;text-align:center;color:#999">読み込み中...</div>
-</div>
-
-  <!-- トピックス -->
-  <div>
-    <div class="sec-head">
-      <span class="sec-tag sec-tag-coral">TOPICS</span>
-      <div class="sec-title">トピックス</div>
-      <a href="topics.html" class="sec-more">トピックス一覧 ›</a>    </div>
-    <div class="sec-bar sec-bar-coral"></div>
-    <div class="topics-grid" id="topics-grid">
-  <div style="padding:24px;text-align:center;color:#999;width:100%;grid-column:1/-1">読み込み中...</div>
-    </div>
+    <div class="notice-list" id="notice-list">
+      <div style="padding:24px;text-align:center;color:#999">読み込み中...</div>
     </div>
   </div>
 
@@ -503,6 +491,20 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
       <a class="quick-card" href="https://lin.ee/NnQmKvP" target="_blank" rel="noopener"><div class="quick-icon-wrap" style="background:#06C755;"><i class="fa-brands fa-line" style="font-size:26px;color:#fff;"></i></div><div class="quick-label">LINE投稿する</div><div class="quick-sub">写真・近況を送ろう</div></a>
     </div>
   </div>
+
+  <!-- トピックス -->
+  <div>
+    <div class="sec-head">
+      <span class="sec-tag sec-tag-coral">TOPICS</span>
+      <div class="sec-title">トピックス</div>
+      <a href="topics.html" class="sec-more">トピックス一覧 ›</a>
+    </div>
+    <div class="sec-bar sec-bar-coral"></div>
+    <div class="topics-grid" id="topics-grid">
+      <div style="padding:24px;text-align:center;color:#999;width:100%;grid-column:1/-1">読み込み中...</div>
+    </div>
+  </div>
+
   <!-- みんなの投稿 -->
   <div style="margin-top:44px;margin-bottom:44px;">
     <div class="sec-head">
@@ -619,47 +621,12 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
 
   async function loadNews(){
   try{
-    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const [newsRes, bulletinRes] = await Promise.all([
-      fetch('/data/news.json'),
-      fetch('/data/bulletin.json')
-    ]);
+    // 掲示板は独立セクションで表示しているため、ここではお知らせのみを扱う
+    const newsRes = await fetch('/data/news.json');
     const newsData = await newsRes.json();
-    const bulletinData = await bulletinRes.json();
 
-    const newsItems = (newsData.news || []).map(item => ({
-      ...item,
-      _sortDate: new Date(item.date)
-    }));
-
-    const today = new Date(); today.setHours(0,0,0,0);
-    const bulletinItems = (bulletinData.bulletin || [])
-      .filter(item => {
-        if (item.type !== '短期') return false;
-        if (item.hidden) return false;
-        const start = item.startDate ? parseLocalDate(item.startDate) : null;
-        const end   = item.endDate   ? parseLocalDate(item.endDate)   : null;
-        if (start && start > today) return false;
-        if (end   && end   < today) return false;
-        return true;
-      })
-      .map(item => {
-        const d = parseLocalDate(item.startDate);
-        const mm = String(d.getMonth()+1).padStart(2,'0');
-        const dd = String(d.getDate()).padStart(2,'0');
-        return {
-          date: `${d.getFullYear()}.${mm}.${dd}`,
-          day: dd,
-          month: months[d.getMonth()] + ' ' + d.getFullYear(),
-          title: item.title,
-          badge: '掲示板',
-          url: 'bulletin.html',
-          imageUrl: (item.images && item.images[0]) || '',
-          _sortDate: d
-        };
-      });
-
-    const combined = newsItems
+    const combined = (newsData.news || [])
+      .map(item => ({ ...item, _sortDate: new Date(item.date) }))
       .sort((a,b) => b._sortDate - a._sortDate)
       .slice(0, 5);
 

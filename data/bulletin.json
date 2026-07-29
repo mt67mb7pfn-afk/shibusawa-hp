@@ -1,23 +1,13 @@
 {
   "bulletin": [
     {
-      "id": 9,
-      "title": "盆踊り大会のお知らせ",
+      "id": 10,
+      "title": "",
       "type": "短期",
-      "startDate": "2026.06.23",
-      "endDate": "2026.06.26",
+      "startDate": "2026.07.29",
+      "endDate": "2026.08.26",
       "images": [
-        "https://lh3.googleusercontent.com/d/1VM6fRSTVoR01b3-DHSbYkAYTwPhwX_Mm"
-      ]
-    },
-    {
-      "id": 7,
-      "title": "※参加者募集　「渋沢へなちょこおやじたちの会」トークショー",
-      "type": "短期",
-      "startDate": "2026.05.09",
-      "endDate": "2026.07.05",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1dk6RlT_oL5k0ijV1v7ymu8TDgTjnbmzq"
+        "https://lh3.googleusercontent.com/d/1IqpU_1Mr982-yUJtBAgaqr5wsRLQaa4U"
       ]
     }
   ]

@@ -708,7 +708,7 @@
           <h2>お知らせ一覧</h2>
           <div style="display:flex;gap:8px;align-items:center;">
             <a class="post-btn" href="post-news.html" target="_blank">＋ 新規投稿</a>
-            <button class="reload-btn" onclick="loadListTab('news')">🔄 再読み込み</button>
+            <button class="reload-btn" onclick="loadListTab('news', true)">🔄 再読み込み</button>
           </div>
         </div>
         <div class="table-scroll"><div id="news-body"><div class="loading">読み込み中...</div></div></div>
@@ -722,7 +722,7 @@
           <h2>トピックス一覧</h2>
           <div style="display:flex;gap:8px;align-items:center;">
             <a class="post-btn" href="post-topics.html" target="_blank">＋ 新規投稿</a>
-            <button class="reload-btn" onclick="loadListTab('topics')">🔄 再読み込み</button>
+            <button class="reload-btn" onclick="loadListTab('topics', true)">🔄 再読み込み</button>
           </div>
         </div>
         <div class="table-scroll"><div id="topics-body"><div class="loading">読み込み中...</div></div></div>
@@ -736,7 +736,7 @@
           <h2>掲示板一覧</h2>
           <div style="display:flex;gap:8px;align-items:center;">
             <a class="post-btn" href="post-bulletin.html" target="_blank">＋ 新規投稿</a>
-            <button class="reload-btn" onclick="loadListTab('bulletin')">🔄 再読み込み</button>
+            <button class="reload-btn" onclick="loadListTab('bulletin', true)">🔄 再読み込み</button>
           </div>
         </div>
         <div class="table-scroll"><div id="bulletin-body"><div class="loading">読み込み中...</div></div></div>
@@ -749,7 +749,7 @@
       <div class="table-wrap" style="margin-bottom:24px;">
         <div class="table-header">
           <h2>登録済み資料一覧</h2>
-          <button class="reload-btn" onclick="loadShiryoList()">🔄 再読み込み</button>
+          <button class="reload-btn" onclick="loadShiryoList(true)">🔄 再読み込み</button>
         </div>
         <div id="shiryo-list-body"><div class="loading">読み込み中...</div></div>
       </div>
@@ -801,7 +801,7 @@
       <div class="table-wrap" style="margin-bottom:24px;">
         <div class="table-header">
           <h2>現在の登録ファイル</h2>
-          <button class="reload-btn" onclick="loadYakuinList()">🔄 再読み込み</button>
+          <button class="reload-btn" onclick="loadYakuinList(true)">🔄 再読み込み</button>
         </div>
         <div id="yakuin-list-body"><div class="loading">読み込み中...</div></div>
       </div>
@@ -847,7 +847,7 @@
       <div class="table-wrap">
         <div class="table-header">
           <h2>承認待ち投稿一覧</h2>
-          <button class="reload-btn" onclick="loadPendingPosts()">🔄 再読み込み</button>
+          <button class="reload-btn" onclick="loadPendingPosts(true)">🔄 再読み込み</button>
         </div>
         <div id="pending-body"><div class="loading">読み込み中...</div></div>
       </div>
@@ -858,7 +858,7 @@
       <div class="table-wrap">
         <div class="table-header">
           <h2>掲載済み記事一覧</h2>
-          <button class="reload-btn" onclick="loadGallery()">🔄 再読み込み</button>
+          <button class="reload-btn" onclick="loadGallery(true)">🔄 再読み込み</button>
         </div>
         <div class="table-scroll"><div id="gallery-body"><div class="loading">読み込み中...</div></div></div>
       </div>
@@ -886,6 +886,47 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkN
 const PASSWORD = 'shibusawa2026';
 let password = '';
 
+// ===== シート取得のキャッシュ =====
+// GASは1リクエストあたり約2秒かかるため、一度読んだシートは保持して
+// タブ切替では再取得しない。更新・削除の直後だけ force で取り直す。
+const ALL_SHEETS = ['お知らせ','トピックス','掲示板','各種資料','役員名簿等管理','承認待ち','ギャラリー'];
+const sheetCache = {};    // シート名 → list
+const sheetInflight = {}; // シート名 → 取得中のPromise
+const sheetGen = {};      // シート名 → リクエスト世代（古い応答で上書きしないため）
+
+function fetchSheet(sheet, force = false) {
+  if (!force && sheetCache[sheet])    return Promise.resolve(sheetCache[sheet]);
+  if (!force && sheetInflight[sheet]) return sheetInflight[sheet];
+
+  const gen = sheetGen[sheet] = (sheetGen[sheet] || 0) + 1;
+  const p = fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent(sheet)}`)
+    .then(res => res.json())
+    .then(data => {
+      const list = data.list || [];
+      if (gen === sheetGen[sheet]) {   // 最新のリクエストの結果だけ採用
+        sheetCache[sheet] = list;
+        delete sheetInflight[sheet];
+      }
+      return list;
+    })
+    .catch(err => {
+      if (gen === sheetGen[sheet]) delete sheetInflight[sheet];
+      throw err;
+    });
+
+  sheetInflight[sheet] = p;
+  return p;
+}
+
+// 全シートを並列で先読み（直列だと約18秒、並列なら約2.5秒）
+function prefetchAllSheets() {
+  ALL_SHEETS.forEach(s => fetchSheet(s).catch(() => {}));
+}
+
+function invalidateSheet(sheet) {
+  delete sheetCache[sheet];
+}
+
 // エンター押下でログイン
 document.getElementById('pw-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') login();
@@ -898,7 +939,8 @@ function login() {
     try { localStorage.setItem('adminPassword', pw); } catch(_) {}
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-screen').style.display = 'block';
-    loadListTab('news');
+    prefetchAllSheets();  // 全タブ分を裏で並列取得
+    loadListTab('news');  // 先読み中のリクエストに相乗りする
     // loadShiyroCategories(); // カテゴリは固定オプションに変更
   } else {
     document.getElementById('login-error').style.display = 'block';
@@ -907,6 +949,7 @@ function login() {
 
 function logout() {
   password = '';
+  ALL_SHEETS.forEach(invalidateSheet);
   localStorage.removeItem('adminPassword');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('admin-screen').style.display = 'none';
@@ -937,7 +980,7 @@ function switchTab(tabId, btn) {
   }
 }
 
-async function loadListTab(tabId) {
+async function loadListTab(tabId, force = false) {
   const sheetMap = {
     'news': 'お知らせ',
     'topics': 'トピックス',
@@ -946,11 +989,13 @@ async function loadListTab(tabId) {
   const bodyId = tabId + '-body';
   const sheet = sheetMap[tabId];
 
+  if (!force && sheetCache[sheet]) {   // 取得済みなら待たせずに描画
+    renderTable(sheetCache[sheet], tabId);
+    return;
+  }
   document.getElementById(bodyId).innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent(sheet)}`);
-    const data = await res.json();
-    renderTable(data.list || [], tabId);
+    renderTable(await fetchSheet(sheet, force), tabId);
   } catch(e) {
     document.getElementById(bodyId).innerHTML = '<div class="empty">データの取得に失敗しました</div>';
   }
@@ -1079,7 +1124,7 @@ async function toggleVisibility(sheet, row, show) {
     const data = await res.json();
     if (data.success) {
       showToast(show ? '公開しました' : '非公開にしました', 'success');
-      loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin');
+      loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin', true);
     } else {
       showToast('エラー: ' + data.error, 'error');
     }
@@ -1103,7 +1148,7 @@ async function deleteItem(sheet, row, title) {
     const data = await res.json();
     if (data.success) {
       showToast('削除しました', 'success');
-      loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin');
+      loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin', true);
     } else {
       showToast('エラー: ' + data.error, 'error');
     }
@@ -1175,7 +1220,7 @@ async function submitShiryo(e) {
       if (data.success) {
         showToast('登録しました', 'success');
         resetShiyroForm();
-        loadShiryoList();
+        loadShiryoList(true);
       } else {
         showToast('エラー: ' + data.error, 'error');
       }
@@ -1194,40 +1239,46 @@ function resetShiyroForm() {
 }
 
 // 各種資料一覧
-async function loadShiryoList() {
+async function loadShiryoList(force = false) {
   const body = document.getElementById('shiryo-list-body');
+  if (!force && sheetCache['各種資料']) {
+    renderShiryoList(sheetCache['各種資料']);
+    return;
+  }
   body.innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('各種資料')}`);
-    const data = await res.json();
-    const list = data.list || [];
-    if (list.length === 0) {
-      body.innerHTML = '<div class="empty">登録された資料はありません</div>';
-      return;
-    }
-    let html = '<table><tr><th>行</th><th>カテゴリ</th><th>タイトル</th><th>画像</th><th>操作</th></tr>';
-    list.forEach(item => {
-      const row = item.row;
-      const d = item.data;
-      const category = d[0] || '';
-      const title = d[1] || '';
-      const imageUrl = d[2] || '';
-      const thumb = imageUrl
-        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
-        : '<span style="color:#bbb;font-size:11px">なし</span>';
-      html += `<tr>
-        <td style="color:#bbb;font-size:12px">${row}</td>
-        <td style="font-size:12px">${esc(category)}</td>
-        <td class="title-cell">${esc(title)}</td>
-        <td>${thumb}</td>
-        <td><button class="btn-delete" onclick="deleteShiryo(${row}, '${esc(title)}')">削除</button></td>
-      </tr>`;
-    });
-    html += '</table>';
-    body.innerHTML = html;
+    renderShiryoList(await fetchSheet('各種資料', force));
   } catch(e) {
     body.innerHTML = '<div class="empty">読み込みに失敗しました</div>';
   }
+}
+
+function renderShiryoList(list) {
+  const body = document.getElementById('shiryo-list-body');
+  if (list.length === 0) {
+    body.innerHTML = '<div class="empty">登録された資料はありません</div>';
+    return;
+  }
+  let html = '<table><tr><th>行</th><th>カテゴリ</th><th>タイトル</th><th>画像</th><th>操作</th></tr>';
+  list.forEach(item => {
+    const row = item.row;
+    const d = item.data;
+    const category = d[0] || '';
+    const title = d[1] || '';
+    const imageUrl = d[2] || '';
+    const thumb = imageUrl
+      ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
+      : '<span style="color:#bbb;font-size:11px">なし</span>';
+    html += `<tr>
+      <td style="color:#bbb;font-size:12px">${row}</td>
+      <td style="font-size:12px">${esc(category)}</td>
+      <td class="title-cell">${esc(title)}</td>
+      <td>${thumb}</td>
+      <td><button class="btn-delete" onclick="deleteShiryo(${row}, '${esc(title)}')">削除</button></td>
+    </tr>`;
+  });
+  html += '</table>';
+  body.innerHTML = html;
 }
 
 async function deleteShiryo(row, title) {
@@ -1240,7 +1291,7 @@ async function deleteShiryo(row, title) {
     const data = await res.json();
     if (data.success) {
       showToast('削除しました', 'success');
-      loadShiryoList();
+      loadShiryoList(true);
     } else {
       showToast('エラー: ' + data.error, 'error');
     }
@@ -1250,41 +1301,47 @@ async function deleteShiryo(row, title) {
 }
 
 // 役員名簿ファイル一覧
-async function loadYakuinList() {
+async function loadYakuinList(force = false) {
   const body = document.getElementById('yakuin-list-body');
+  if (!force && sheetCache['役員名簿等管理']) {
+    renderYakuinList(sheetCache['役員名簿等管理']);
+    return;
+  }
   body.innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('役員名簿等管理')}`);
-    const data = await res.json();
-    const list = data.list || [];
-    const labelMap = { yakuin: '役員名簿', kessan: '決算書', shakyo: '社協名簿' };
-    if (list.length === 0) {
-      body.innerHTML = '<div class="empty">登録されていません</div>';
-      return;
-    }
-    let html = '<table><tr><th>行</th><th>種別</th><th>タイトル</th><th>プレビュー</th><th>操作</th></tr>';
-    list.forEach(item => {
-      const row = item.row;
-      const d = item.data;
-      const type = d[0] || '';
-      const title = d[1] || '';
-      const imageUrl = d[2] || '';
-      const thumb = imageUrl
-        ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
-        : '<span style="color:#bbb;font-size:11px">なし</span>';
-      html += `<tr>
-        <td style="color:#bbb;font-size:12px">${row}</td>
-        <td>${esc(labelMap[type] || type)}</td>
-        <td>${esc(title)}</td>
-        <td>${thumb}</td>
-        <td><button class="btn-delete" onclick="deleteYakuin(${row}, '${esc(title)}')">削除</button></td>
-      </tr>`;
-    });
-    html += '</table>';
-    body.innerHTML = html;
+    renderYakuinList(await fetchSheet('役員名簿等管理', force));
   } catch(e) {
     body.innerHTML = '<div class="empty">読み込みに失敗しました</div>';
   }
+}
+
+function renderYakuinList(list) {
+  const body = document.getElementById('yakuin-list-body');
+  const labelMap = { yakuin: '役員名簿', kessan: '決算書', shakyo: '社協名簿' };
+  if (list.length === 0) {
+    body.innerHTML = '<div class="empty">登録されていません</div>';
+    return;
+  }
+  let html = '<table><tr><th>行</th><th>種別</th><th>タイトル</th><th>プレビュー</th><th>操作</th></tr>';
+  list.forEach(item => {
+    const row = item.row;
+    const d = item.data;
+    const type = d[0] || '';
+    const title = d[1] || '';
+    const imageUrl = d[2] || '';
+    const thumb = imageUrl
+      ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
+      : '<span style="color:#bbb;font-size:11px">なし</span>';
+    html += `<tr>
+      <td style="color:#bbb;font-size:12px">${row}</td>
+      <td>${esc(labelMap[type] || type)}</td>
+      <td>${esc(title)}</td>
+      <td>${thumb}</td>
+      <td><button class="btn-delete" onclick="deleteYakuin(${row}, '${esc(title)}')">削除</button></td>
+    </tr>`;
+  });
+  html += '</table>';
+  body.innerHTML = html;
 }
 
 async function deleteYakuin(row, title) {
@@ -1297,7 +1354,7 @@ async function deleteYakuin(row, title) {
     const data = await res.json();
     if (data.success) {
       showToast('削除しました', 'success');
-      loadYakuinList();
+      loadYakuinList(true);
     } else {
       showToast('エラー: ' + data.error, 'error');
     }
@@ -1358,7 +1415,7 @@ async function submitYakuin(e) {
       if (data.success) {
         showToast('追加しました', 'success');
         resetYakuinForm();
-        loadYakuinList();
+        loadYakuinList(true);
       } else {
         showToast('エラー: ' + data.error, 'error');
       }
@@ -1567,7 +1624,8 @@ async function submitEdit() {
     if (data.success) {
       showToast('保存しました', 'success');
       closeEdit();
-      loadListTab(tabId);
+      if (tabId === 'gallery') loadGallery(true);
+      else loadListTab(tabId, true);
     } else {
       showToast('エラー: ' + data.error, 'error');
     }
@@ -1582,12 +1640,14 @@ async function submitEdit() {
 // ============================================================
 //  住民投稿承認
 // ============================================================
-async function loadPendingPosts() {
+async function loadPendingPosts(force = false) {
+  if (!force && sheetCache['承認待ち']) {
+    renderPendingPosts(sheetCache['承認待ち']);
+    return;
+  }
   document.getElementById('pending-body').innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('承認待ち')}`);
-    const data = await res.json();
-    renderPendingPosts(data.list || []);
+    renderPendingPosts(await fetchSheet('承認待ち', force));
   } catch(e) {
     document.getElementById('pending-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
   }
@@ -1654,7 +1714,8 @@ async function approvePost(pendingId) {
     const data = await res.json();
     if (data.success) {
       showToast('承認しました', 'success');
-      loadPendingPosts();
+      invalidateSheet('ギャラリー');  // 承認された投稿がギャラリーに移るため
+      loadPendingPosts(true);
     } else {
       showToast('エラー: ' + data.error, 'error');
       approveBtn.disabled = false;
@@ -1686,7 +1747,7 @@ async function rejectPost(pendingId) {
     const data = await res.json();
     if (data.success) {
       showToast('却下しました', 'success');
-      loadPendingPosts();
+      loadPendingPosts(true);
     } else {
       showToast('エラー: ' + data.error, 'error');
       approveBtn.disabled = false;
@@ -1704,12 +1765,14 @@ async function rejectPost(pendingId) {
 // ============================================================
 //  ギャラリー管理（掲載済み記事）
 // ============================================================
-async function loadGallery() {
+async function loadGallery(force = false) {
+  if (!force && sheetCache['ギャラリー']) {
+    renderGallery(sheetCache['ギャラリー']);
+    return;
+  }
   document.getElementById('gallery-body').innerHTML = '<div class="loading">読み込み中...</div>';
   try {
-    const res = await fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent('ギャラリー')}`);
-    const data = await res.json();
-    renderGallery(data.list || []);
+    renderGallery(await fetchSheet('ギャラリー', force));
   } catch(e) {
     document.getElementById('gallery-body').innerHTML = '<div class="empty">データの取得に失敗しました</div>';
   }
@@ -1761,7 +1824,7 @@ async function deleteGallery(row, title) {
     const data = await res.json();
     if (data.success) {
       showToast('削除しました', 'success');
-      loadGallery();
+      loadGallery(true);
     } else {
       showToast('エラー: ' + data.error, 'error');
     }

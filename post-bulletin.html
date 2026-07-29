@@ -160,8 +160,8 @@ input[type="date"]{-webkit-appearance:none;appearance:auto;width:100%;max-width:
 
       <!-- タイトル -->
       <div class="form-group">
-        <label class="form-label">タイトル <span class="required">必須</span></label>
-        <input class="form-input" type="text" id="title" placeholder="掲示物のタイトルを入力">
+        <label class="form-label">タイトル <span class="optional">任意</span></label>
+        <input class="form-input" type="text" id="title" placeholder="画像だけで伝わる場合は空欄でOK">
       </div>
 
       <!-- 種別 -->
@@ -314,12 +314,14 @@ async function submitForm() {
   const startDate = document.getElementById('start-date').value;
   const endDate = document.getElementById('end-date').value;
 
-  if (!title) {
-    showResult('タイトルは必須です', 'error');
-    return;
-  }
   if (type !== '常設' && !startDate) {
     showResult('掲示開始日を入力してください', 'error');
+    return;
+  }
+  // タイトルを任意にしたため、両方空だと中身のない掲示になってしまう
+  const hasImage = [1, 2, 3].some(i => document.getElementById(`image-${i}`).files[0]);
+  if (!title && !hasImage) {
+    showResult('タイトルか画像のどちらかは入力してください', 'error');
     return;
   }
 

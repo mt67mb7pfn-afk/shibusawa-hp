@@ -312,12 +312,12 @@ function renderBulletin() {
       sliderHtml = `
         <div class="card-slider" onclick="openLightbox(${cardIndex}, 0)">
           <div class="card-slides">
-            <div class="card-slide"><img src="${images[0]}" alt="${item.title}" loading="lazy"></div>
+            <div class="card-slide"><img src="${images[0]}" alt="${item.title || '掲示物'}" loading="lazy"></div>
           </div>
         </div>`;
     } else {
       const slidesHtml = images.map(url =>
-        `<div class="card-slide"><img src="${url}" alt="${item.title}" loading="lazy"></div>`
+        `<div class="card-slide"><img src="${url}" alt="${item.title || '掲示物'}" loading="lazy"></div>`
       ).join('');
       const dotsHtml = images.map((_, i) =>
         `<div class="slider-dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation();slideCard(${cardIndex},${i})"></div>`
@@ -340,7 +340,7 @@ function renderBulletin() {
             <span class="card-type ${typeClass}">${item.type}</span>
             <span class="card-period">${period}</span>
           </div>
-          <div class="card-title">${item.title}</div>
+          ${item.title ? `<div class="card-title">${item.title}</div>` : ''}
         </div>
       </div>`;
   }).join('');

@@ -1080,6 +1080,7 @@ function renderTable(list, tabId) {
       const d = item.data;
       storeEditData(tabId, row, d);
       const title = d[1] || '';
+      const titleLabel = title || '（タイトルなし）';  // 掲示板はタイトル任意
       const type = d[2] || '';
       const startDate = d[3] ? formatDate(d[3]) : '';
       const isHidden = d[8] === true;
@@ -1089,7 +1090,7 @@ function renderTable(list, tabId) {
         : '<span style="color:#bbb;font-size:11px">なし</span>';
       html += `<tr>
         <td style="color:#bbb;font-size:12px">${row}</td>
-        <td class="title-cell" title="${esc(title)}">${esc(title)}</td>
+        <td class="title-cell" title="${esc(titleLabel)}">${title ? esc(title) : '<span style="color:#bbb;font-size:11px">（タイトルなし）</span>'}</td>
         <td><span class="badge">${esc(type)}</span></td>
         <td class="date-cell">${startDate}</td>
         <td>${thumbHtml}</td>
@@ -1099,7 +1100,7 @@ function renderTable(list, tabId) {
           ${isHidden
             ? `<button class="btn-show" onclick="toggleVisibility('掲示板', ${row}, true)">公開</button>`
             : `<button class="btn-hide" onclick="toggleVisibility('掲示板', ${row}, false)">非公開</button>`}
-          <button class="btn-delete" onclick="deleteItem('掲示板', ${row}, '${esc(title)}')">削除</button>
+          <button class="btn-delete" onclick="deleteItem('掲示板', ${row}, '${esc(titleLabel)}')">削除</button>
         </div></td>
       </tr>`;
     });

@@ -765,13 +765,13 @@ setTimeout(() => {
     scroll.innerHTML = items.map(item => {
       const deadline = item.endDate ? `〜${item.endDate}` : '常設';
       const imgHtml  = (item.images && item.images[0])
-        ? `<img class="bulletin-thumb-img" src="${item.images[0]}" alt="${item.title}" loading="lazy">`
+        ? `<img class="bulletin-thumb-img" src="${item.images[0]}" alt="${item.title || '掲示物'}" loading="lazy">`
         : `<div class="bulletin-thumb-img-placeholder">📋</div>`;
       return `<a class="bulletin-thumb" href="bulletin.html">
         ${imgHtml}
         <div class="bulletin-thumb-body">
           <div class="bulletin-thumb-deadline">${deadline}</div>
-          <div class="bulletin-thumb-title">${item.title}</div>
+          ${item.title ? `<div class="bulletin-thumb-title">${item.title}</div>` : ''}
         </div>
       </a>`;
     }).join('');

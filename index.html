@@ -464,8 +464,8 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
     </div>
   </div>
 
-  <!-- お知らせ -->
-  <div style="margin-top:44px">
+  <!-- お知らせ（0件のときは loadNews がセクションごと隠す） -->
+  <div style="margin-top:44px" id="news-section">
     <div class="sec-head">
       <span class="sec-tag sec-tag-sky">NEWS</span>
       <div class="sec-title">最新のお知らせ</div>
@@ -632,7 +632,12 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
 
     const list=document.getElementById('notice-list');
     if(!list)return;
-    if(combined.length===0)return;
+    if(combined.length===0){
+      // 掲示板と同じく、中身がないときはセクションごと出さない
+      const sec=document.getElementById('news-section');
+      if(sec)sec.style.display='none';
+      return;
+    }
 
     list.innerHTML=combined.map(item=>{
       const bc=BADGE_MAP[item.badge]||'nb-info';

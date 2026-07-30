@@ -641,12 +641,14 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
 
     list.innerHTML=combined.map(item=>{
       const bc=BADGE_MAP[item.badge]||'nb-info';
-      const href = item.url && item.url !== '#'
-        ? item.url
+      // news.html と同じ判定。http以外のURLはGASが補完した既定値なので無視する
+      const extUrl = (item.url || '').trim().startsWith('http') ? item.url.trim() : '';
+      const href = extUrl
+        ? extUrl
         : item.body
           ? `news-article.html?date=${encodeURIComponent(item.date)}&title=${encodeURIComponent(item.title)}`
-          : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
-      const target = (item.url && item.url.startsWith('http')) || item.badge === '回覧' ? 'target="_blank" rel="noopener"' : '';
+          : 'news.html';
+      const target = extUrl ? 'target="_blank" rel="noopener"' : '';
       const thumb = item.imageUrl
         ? `<img class="notice-thumb" src="${item.imageUrl}" alt="" loading="lazy" onerror="this.style.display='none'">`
         : '';

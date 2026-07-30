@@ -74,6 +74,9 @@ header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top
   overflow:hidden;
 }
 .notice-item:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(78,203,141,.15);border-color:var(--mint);}
+/* 詳細も外部リンクも持たない記事はクリックできないので、浮き上がらせない */
+.notice-item.no-link{cursor:default;}
+.notice-item.no-link:hover{transform:none;box-shadow:0 2px 10px rgba(0,0,0,.04);border-color:var(--border);}
 .notice-left{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 16px;width:96px;background:var(--bg);border-right:2px solid var(--border);flex-shrink:0;}.notice-day{font-size:26px;font-weight:900;color:var(--mint-d);line-height:1;}
 .notice-month{font-size:10px;color:var(--text3);font-weight:500;}
 .n-badge{font-size:10px;padding:3px 0;border-radius:20px;font-weight:700;white-space:nowrap;width:68px;text-align:center;display:inline-block;}
@@ -189,15 +192,16 @@ function renderNews() {
       ? `<img class="notice-thumb" src="${item.imageUrl}" alt="" loading="lazy"
            onerror="this.style.display='none'">`
       : '';
-    const target = item.badge === '回覧' || (item.url && item.url.startsWith('http')) ? 'target="_blank" rel="noopener"' : '';
-    // リンク振り分け：外部URL→そのまま、本文あり→詳細ページ、それ以外→フィルター
-    const href = item.url && item.url.startsWith('http')
-      ? item.url
+    // 投稿フォームのURL欄は外部URL専用なので、http以外のURLはGASが補完した
+    // 既定値（news.html / topics.html）であり、投稿者の指定ではない。
+    // 外部URL → そのまま／本文あり → 詳細ページ／どちらもなし → リンクにしない
+    const extUrl = (item.url || '').trim().startsWith('http') ? item.url.trim() : '';
+    const href = extUrl
+      ? extUrl
       : item.body
         ? `news-article.html?date=${encodeURIComponent(item.date)}&title=${encodeURIComponent(item.title)}`
-        : `news.html?filter=${encodeURIComponent(item.badge||'all')}`;
-    return `
-      <a class="notice-item" href="${href}" ${target}>        <div class="notice-left">
+        : '';
+    const inner = `<div class="notice-left">
           <div class="notice-day">${item.day}</div>
           <div class="notice-month">${item.month}</div>
           <span class="n-badge ${bc}">${item.badge}</span>
@@ -208,9 +212,11 @@ function renderNews() {
             ${item.description ? `<div class="notice-desc">${item.description}</div>` : ''}
           </div>
           ${thumb}
-          <div class="notice-arr">›</div>
-        </div>
-      </a>`;
+          ${href ? '<div class="notice-arr">›</div>' : ''}
+        </div>`;
+    return href
+      ? `<a class="notice-item" href="${href}" ${extUrl ? 'target="_blank" rel="noopener"' : ''}>${inner}</a>`
+      : `<div class="notice-item no-link">${inner}</div>`;
   }).join('');
 }
 

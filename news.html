@@ -163,7 +163,8 @@ async function loadNews() {
   try {
     const res = await fetch('/data/news.json');
     const data = await res.json();
-    allNews = (data.news || []).filter(n => n.badge === 'お知らせ');
+    // バッジは記事のラベルであって掲載可否の判定ではないため、お知らせシートの内容をそのまま出す
+    allNews = data.news || [];
     renderNews();
   } catch(e) {
     document.getElementById('notice-list').innerHTML =

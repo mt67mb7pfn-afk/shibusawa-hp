@@ -52,7 +52,8 @@ a{text-decoration:none;color:inherit;}
 header,main,.main,.hero,.line-wrap,.footer-wrap,footer,.quick-section{position:relative;z-index:1;}
 
 /* HEADER */
-header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);}
+header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);transition:transform .3s ease;}
+header.header-hidden{transform:translateY(-100%);}
 .header-inner{max-width:1080px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;gap:16px;}
 .logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .logo-img{width:44px;height:44px;border-radius:12px;object-fit:cover;box-shadow:0 3px 12px rgba(78,203,141,.3);}
@@ -698,6 +699,36 @@ document.addEventListener('DOMContentLoaded',()=>{loadNews();loadTopics();});
   if(btn) btn.addEventListener('click', open);
   if(close) close.addEventListener('click', closeMenu);
   if(overlay) overlay.addEventListener('click', closeMenu);
+})();
+  // ヘッダー自動非表示（下スクロールで隠す・上スクロールで再表示）
+(function(){
+  var header = document.querySelector('header');
+  if(!header) return;
+  var lastY = window.scrollY;
+  var ticking = false;
+  var THRESHOLD = 8; // 微小なぶれで反応しないための遊び
+  function onScroll(){
+    var y = window.scrollY;
+    var diff = y - lastY;
+    var drawer = document.getElementById('nav-drawer');
+    var menuOpen = drawer && drawer.classList.contains('open');
+    if(!menuOpen){
+      if(y <= 0){
+        header.classList.remove('header-hidden');
+      }else if(Math.abs(diff) > THRESHOLD){
+        if(diff > 0) header.classList.add('header-hidden');   // 下スクロール→隠す
+        else header.classList.remove('header-hidden');         // 上スクロール→出す
+      }
+    }
+    lastY = y;
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if(!ticking){
+      window.requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  }, {passive:true});
 })();
   // 10秒後にまだ読み込み中なら再読み込みボタンを表示
 setTimeout(() => {

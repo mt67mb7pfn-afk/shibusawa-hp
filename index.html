@@ -34,20 +34,13 @@ a{text-decoration:none;color:inherit;}
 
 /* 背景バルーン */
 .bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.balloon{position:absolute;border-radius:50%;opacity:.18;animation:balloonDrift linear infinite;filter:blur(1px);}
-.b1{width:180px;height:180px;background:radial-gradient(circle,var(--mint),var(--sky));top:8%;left:2%;animation-duration:22s;}
-.b2{width:120px;height:120px;background:radial-gradient(circle,var(--coral),var(--peach));top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
-.b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:55%;left:1%;animation-duration:20s;animation-delay:-8s;}
-.b4{width:150px;height:150px;background:radial-gradient(circle,var(--lavender),var(--sky));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
-.b5{width:70px;height:70px;background:radial-gradient(circle,var(--mint),var(--lavender));top:40%;left:50%;animation-duration:18s;animation-delay:-3s;}
-.b6{width:100px;height:100px;background:radial-gradient(circle,var(--coral-l),var(--coral));top:85%;left:30%;animation-duration:30s;animation-delay:-15s;}
-.b7{width:60px;height:60px;background:radial-gradient(circle,var(--sky),var(--mint));top:15%;left:35%;animation-duration:16s;animation-delay:-7s;}
+.balloon{position:absolute;border-radius:50%;filter:blur(40px);animation:balloonDrift 40s ease-in-out infinite;}
+.b1{width:520px;height:520px;background:radial-gradient(circle,var(--mint),var(--sky));opacity:.16;top:-160px;left:-140px;animation-duration:42s;}
+.b2{width:460px;height:460px;background:radial-gradient(circle,var(--coral),var(--peach));opacity:.12;top:30%;right:-180px;animation-duration:48s;animation-delay:-14s;}
+.b3{width:420px;height:420px;background:radial-gradient(circle,var(--lavender),var(--sky));opacity:.10;bottom:-160px;left:20%;animation-duration:46s;animation-delay:-26s;}
 @keyframes balloonDrift{
-  0%{transform:translateY(0) translateX(0) scale(1);}
-  25%{transform:translateY(-20px) translateX(12px) scale(1.04);}
-  50%{transform:translateY(-8px) translateX(-8px) scale(.97);}
-  75%{transform:translateY(-28px) translateX(6px) scale(1.02);}
-  100%{transform:translateY(0) translateX(0) scale(1);}
+  0%,100%{transform:translate(0,0) scale(1);}
+  50%{transform:translate(3%,-3%) scale(1.05);}
 }
 header,main,.main,.hero,.line-wrap,.footer-wrap,footer,.quick-section{position:relative;z-index:1;}
 
@@ -390,8 +383,6 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
 </div>
   <div class="bg-balloons">
   <div class="balloon b1"></div><div class="balloon b2"></div><div class="balloon b3"></div>
-  <div class="balloon b4"></div><div class="balloon b5"></div><div class="balloon b6"></div>
-  <div class="balloon b7"></div>
 </div>
 
 <header>

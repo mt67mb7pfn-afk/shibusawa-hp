@@ -124,6 +124,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .sec-tag-coral{background:var(--coral-l);color:#d63031;}
 .sec-tag-sky{background:var(--sky-l);color:#1971c2;}
 .sec-tag-amber{background:var(--amber-l);color:#e67700;}
+.sec-tag-lavender{background:var(--lavender-l);color:#7950f2;}
 .sec-title{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:700;color:var(--text);}
 .sec-more{margin-left:auto;font-size:12px;font-weight:700;color:var(--mint-d);display:flex;align-items:center;gap:3px;transition:gap .2s;}
 .sec-more:hover{gap:7px;}
@@ -131,6 +132,8 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .sec-bar-mint{background:linear-gradient(90deg,var(--mint),var(--sky));}
 .sec-bar-coral{background:linear-gradient(90deg,var(--coral),var(--peach));}
 .sec-bar-sky{background:linear-gradient(90deg,var(--sky),var(--lavender));}
+.sec-bar-lavender{background:linear-gradient(90deg,var(--lavender),#7950f2);}
+.sec-bar-amber{background:linear-gradient(90deg,var(--amber),var(--peach));}
 
 /* お知らせ */
 .notice-list{display:flex;flex-direction:column;gap:10px;margin-bottom:44px;}
@@ -247,7 +250,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 
 /* 短期掲示バー */
 /* 掲示板サムネイル横スクロール */
-.bulletin-scroll-section{display:none;margin-bottom:20px;}
+.bulletin-scroll-section{display:none;margin-bottom:44px;}
 .bulletin-scroll-section.has-items{display:block;}
 .bulletin-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px;margin:0 -4px;}
 .bulletin-scroll-wrap::-webkit-scrollbar{height:4px;}
@@ -454,11 +457,11 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
   <!-- 掲示板サムネイル -->
   <div class="bulletin-scroll-section" id="bulletin-bar">
     <div class="sec-head">
-      <span class="sec-tag sec-tag-sky"><i class="fa-solid fa-clipboard-list"></i> 掲示板</span>
+      <span class="sec-tag sec-tag-mint"><i class="fa-solid fa-clipboard-list"></i> 掲示板</span>
       <div class="sec-title">掲示板</div>
       <a href="bulletin.html" class="sec-more">一覧 ›</a>
     </div>
-    <div class="sec-bar sec-bar-sky"></div>
+    <div class="sec-bar sec-bar-mint"></div>
     <div class="bulletin-scroll-wrap">
       <div class="bulletin-scroll" id="bulletin-ticker-inner"></div>
     </div>
@@ -480,10 +483,10 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
   <!-- よく使うページ -->
   <div class="quick-section">
     <div class="sec-head" style="margin-bottom:6px;">
-      <span class="sec-tag sec-tag-sky">QUICK</span>
+      <span class="sec-tag sec-tag-amber">QUICK</span>
       <div class="sec-title">よく使うページ</div>
     </div>
-    <div class="sec-bar sec-bar-sky"></div>
+    <div class="sec-bar sec-bar-amber"></div>
     <div class="quick-grid">
       <a class="quick-card" href="https://www.r326.com/b/main.aspx?g=Yco46wE2233pl3vIR1" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-mint"><i class="fa-solid fa-calendar-days" style="font-size:22px;color:var(--mint-d);"></i></div><div class="quick-label">自治会館予約</div><div class="quick-sub">施設の予約はこちら</div></a>
       <a class="quick-card" href="bulletin.html"><div class="quick-icon-wrap qi-coral"><i class="fa-solid fa-clipboard-list" style="font-size:22px;color:#d63031;"></i></div><div class="quick-label">掲示板</div><div class="quick-sub">チラシ・お知らせ掲示</div></a>
@@ -493,13 +496,13 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
   </div>
 
   <!-- トピックス -->
-  <div>
+  <div style="margin-bottom:44px;">
     <div class="sec-head">
-      <span class="sec-tag sec-tag-coral">TOPICS</span>
+      <span class="sec-tag sec-tag-lavender">TOPICS</span>
       <div class="sec-title">トピックス</div>
       <a href="topics.html" class="sec-more">トピックス一覧 ›</a>
     </div>
-    <div class="sec-bar sec-bar-coral"></div>
+    <div class="sec-bar sec-bar-lavender"></div>
     <div class="topics-grid" id="topics-grid">
       <div style="padding:24px;text-align:center;color:#999;width:100%;grid-column:1/-1">読み込み中...</div>
     </div>
@@ -508,11 +511,11 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
   <!-- みんなの投稿 -->
   <div style="margin-top:44px;margin-bottom:44px;">
     <div class="sec-head">
-      <span class="sec-tag" style="background:linear-gradient(135deg,var(--lavender),#7950f2);color:#fff;">GALLERY</span>
+      <span class="sec-tag sec-tag-lavender">GALLERY</span>
       <div class="sec-title">みんなの投稿</div>
       <a href="gallery.html" class="sec-more">投稿一覧 ›</a>
     </div>
-    <div class="sec-bar" style="background:linear-gradient(90deg,var(--lavender),var(--sky));"></div>
+    <div class="sec-bar sec-bar-lavender"></div>
     <div class="gallery-scroll-wrap">
       <div class="gallery-scroll" id="gallery-scroll">
         <div style="padding:24px;text-align:center;color:#999;width:100%">読み込み中...</div>
@@ -523,7 +526,7 @@ footer{background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:44px 2
   <!-- 防災 + リンク -->
   <div class="two-col">
     <div>
-      <div class="sec-head"><span class="sec-tag sec-tag-amber">SAFETY</span><div class="sec-title">防災・避難場所</div></div>
+      <div class="sec-head"><span class="sec-tag sec-tag-coral">SAFETY</span><div class="sec-title">防災・避難場所</div></div>
       <div class="sec-bar sec-bar-coral"></div>
       <div class="info-card">
         <div class="card-head card-head-coral"><span style="font-size:18px">🚨</span><div class="card-head-text">各自治会の避難場所</div></div>

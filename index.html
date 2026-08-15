@@ -67,7 +67,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 
 /* HERO */
 .hero{max-width:1080px;margin:32px auto;padding:0 24px;display:grid;grid-template-columns:5fr 7fr;gap:28px;align-items:center;}
-@media(max-width:700px){.hero{grid-template-columns:1fr;margin:20px auto;gap:20px;}}
+@media(max-width:700px){.hero{grid-template-columns:1fr;margin:0 auto 20px;gap:20px;}}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--mint-l);color:var(--mint-d);font-size:11px;font-weight:700;letter-spacing:.12em;padding:5px 14px;border-radius:20px;margin-bottom:20px;}
 .hero-badge::before{content:'✦';font-size:9px;}
 .hero-title{font-family:'Noto Serif JP',serif;font-size:clamp(24px,3.8vw,42px);font-weight:700;color:var(--text);line-height:1.25;letter-spacing:.04em;margin-bottom:14px;}
@@ -86,6 +86,14 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .hero-frame::after{content:'';position:absolute;inset:-2px;border-radius:34px;z-index:0;background:linear-gradient(120deg,#6ee7b7,#93c5fd,#a5b4fc,#fca5a5,#fde68a,#6ee7b7);background-size:300% 300%;animation:rainbowShift 8s ease-in-out infinite reverse;opacity:.7;}
 @keyframes rainbowShift{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 .hero-frame-inner{position:relative;z-index:1;border-radius:28px;overflow:hidden;aspect-ratio:4/3;box-shadow:0 12px 40px rgba(0,0,0,.15);}
+@media(max-width:700px){
+  /* 画像だけ左右のpaddingを打ち消して画面端まで広げる */
+  .hero-visual{margin:0 -24px;padding:0;}
+  .hero-bg-circle1,.hero-bg-circle2{display:none;}
+  .hero-frame{border-radius:0;aspect-ratio:4/5;}
+  .hero-frame::before,.hero-frame::after{display:none;}
+  .hero-frame-inner{position:absolute;inset:0;border-radius:0;box-shadow:none;aspect-ratio:auto;}
+}
 .hero-slides{position:absolute;inset:0;}
 .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.8s ease-in-out;}
 .hero-slide.active{opacity:1;}

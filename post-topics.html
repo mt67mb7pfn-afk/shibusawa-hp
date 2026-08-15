@@ -232,7 +232,6 @@ input[type="date"]{appearance:auto;}
 
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
-const PASSWORD = 'shibusawa2026';
 let enteredPassword = '';
 
 // 今日の日付をデフォルト設定
@@ -243,24 +242,41 @@ window.addEventListener('DOMContentLoaded', () => {
   const dd = String(today.getDate()).padStart(2, '0');
   document.getElementById('date').value = `${yyyy}-${mm}-${dd}`;
 
-  // 管理画面からの遷移時は自動ログイン
+  // 管理画面からの遷移時は自動ログイン（同じ端末に保存された値を信頼する）
   const saved = localStorage.getItem('adminPassword');
-  if (saved === PASSWORD) {
+  if (saved) {
     enteredPassword = saved;
     document.getElementById('pw-screen').style.display = 'none';
     document.getElementById('main-screen').style.display = 'block';
   }
 });
 
-// パスワード確認
-function checkPassword() {
+// パスワード確認（GASに問い合わせて正誤だけを判定してもらう）
+async function checkPassword() {
   const pw = document.getElementById('pw-input').value;
-  if (pw === PASSWORD) {
-    enteredPassword = pw;
-    document.getElementById('pw-screen').style.display = 'none';
-    document.getElementById('main-screen').style.display = 'block';
-  } else {
+  const btn = document.querySelector('.pw-btn');
+  document.getElementById('pw-error').style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '確認中...';
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'verify_password', password: pw })
+    });
+    const data = await res.json();
+    if (data.success) {
+      enteredPassword = pw;
+      document.getElementById('pw-screen').style.display = 'none';
+      document.getElementById('main-screen').style.display = 'block';
+    } else {
+      document.getElementById('pw-error').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('pw-error').textContent = '通信エラーが発生しました';
     document.getElementById('pw-error').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'ログイン';
   }
 }
 

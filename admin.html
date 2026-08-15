@@ -883,7 +883,6 @@
 
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
-const PASSWORD = 'shibusawa2026';
 let password = '';
 
 // ===== シート取得のキャッシュ =====
@@ -932,18 +931,35 @@ document.getElementById('pw-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') login();
 });
 
-function login() {
+async function login() {
   const pw = document.getElementById('pw-input').value;
-  if (pw === PASSWORD) {
-    password = pw;
-    try { localStorage.setItem('adminPassword', pw); } catch(_) {}
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    prefetchAllSheets();  // 全タブ分を裏で並列取得
-    loadListTab('news');  // 先読み中のリクエストに相乗りする
-    // loadShiyroCategories(); // カテゴリは固定オプションに変更
-  } else {
+  const btn = document.querySelector('.login-btn');
+  document.getElementById('login-error').style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '確認中...';
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'verify_password', password: pw })
+    });
+    const data = await res.json();
+    if (data.success) {
+      password = pw;
+      try { localStorage.setItem('adminPassword', pw); } catch(_) {}
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      prefetchAllSheets();  // 全タブ分を裏で並列取得
+      loadListTab('news');  // 先読み中のリクエストに相乗りする
+      // loadShiyroCategories(); // カテゴリは固定オプションに変更
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('login-error').textContent = '通信エラーが発生しました';
     document.getElementById('login-error').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'ログイン';
   }
 }
 

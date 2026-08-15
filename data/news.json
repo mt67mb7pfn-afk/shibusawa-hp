@@ -1,15 +1,3 @@
 {
-  "news": [
-    {
-      "date": "2026.06.08",
-      "day": "08",
-      "month": "Jun 2026",
-      "title": "令和８年　渋沢フェスタ＆たまり場フェスタ開催しました",
-      "badge": "トピックス",
-      "url": "topics.html",
-      "description": "",
-      "imageUrl": "https://lh3.googleusercontent.com/d/1rtuva1fEX0hfe7FSj7dAWJu4Bsqv01j_",
-      "body": ""
-    }
-  ]
+  "news": []
 }

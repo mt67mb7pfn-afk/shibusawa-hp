@@ -1,6 +1,14 @@
 {
   "gallery": [
     {
+      "id": 4,
+      "date": "2026.08.16",
+      "title": "【注意喚起】アライグマの目撃情報について",
+      "body": "先日、地域内で3匹のアライグマが目撃されました。可愛らしく見えても野生動物のため、近づいたり餌を与えたりしないよう十分ご注意ください。ゴミの管理等、皆様のご協力をお願いいたします。",
+      "imageUrl": "https://lh3.googleusercontent.com/d/16kogM_viw2TvrvFXTKBBeK37MtJwglP4",
+      "uid": "U9512a3f156c10e3eea8b6f5f372cc2f9"
+    },
+    {
       "id": 3,
       "date": "2026.05.15",
       "title": "空に架かる二重の虹",

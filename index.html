@@ -48,6 +48,9 @@ a{text-decoration:none;color:inherit;}
 .b1{width:520px;height:520px;background:radial-gradient(circle,var(--mint),var(--sky));opacity:.16;top:-160px;left:-140px;animation-duration:42s;}
 .b2{width:460px;height:460px;background:radial-gradient(circle,var(--coral),var(--peach));opacity:.12;top:30%;right:-180px;animation-duration:48s;animation-delay:-14s;}
 .b3{width:420px;height:420px;background:radial-gradient(circle,var(--lavender),var(--sky));opacity:.10;bottom:-160px;left:20%;animation-duration:46s;animation-delay:-26s;}
+@media(min-width:900px){
+  .balloon{filter:blur(15px);}
+}
 @keyframes balloonDrift{
   0%,100%{transform:translate(0,0) scale(1);}
   50%{transform:translate(3%,-3%) scale(1.05);}

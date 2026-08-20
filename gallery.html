@@ -23,49 +23,15 @@
 <meta property="og:site_name" content="渋沢連合自治会">
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@700&family=DM+Sans:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css">
 <style>
+:root{--r:20px;}
+
 /* ===== 既存サイトと共通の変数・リセット ===== */
-:root{
-  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
-  --coral:#ff6b6b;--coral-l:#fff0f0;
-  --sky:#4dabf7;--sky-l:#e8f4ff;
-  --amber:#ffd43b;--amber-l:#fff9db;
-  --lavender:#b197fc;--lavender-l:#f3f0ff;
-  --peach:#ffa94d;
-  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
-  --bg:#f8f9fe;--white:#ffffff;--border:#e8e8f0;
-  --r:20px;--r-sm:12px;
-  --shadow:0 4px 24px rgba(78,203,141,.12);
-  --shadow2:0 8px 40px rgba(78,203,141,.20);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
-a{text-decoration:none;color:inherit;}
 
 /* ===== 背景バルーン（既存と同じ） ===== */
-.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.balloon{position:absolute;border-radius:50%;opacity:.18;animation:balloonDrift linear infinite;filter:blur(1px);}
-.b1{width:180px;height:180px;background:radial-gradient(circle,var(--mint),var(--sky));top:8%;left:2%;animation-duration:22s;}
-.b2{width:120px;height:120px;background:radial-gradient(circle,var(--coral),var(--peach));top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
-.b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:55%;left:1%;animation-duration:20s;animation-delay:-8s;}
-.b4{width:150px;height:150px;background:radial-gradient(circle,var(--lavender),var(--sky));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
-.b5{width:70px;height:70px;background:radial-gradient(circle,var(--mint),var(--lavender));top:40%;left:50%;animation-duration:18s;animation-delay:-3s;}
-@keyframes balloonDrift{
-  0%{transform:translateY(0) translateX(0) scale(1);}
-  25%{transform:translateY(-20px) translateX(12px) scale(1.04);}
-  50%{transform:translateY(-8px) translateX(-8px) scale(.97);}
-  75%{transform:translateY(-28px) translateX(6px) scale(1.02);}
-  100%{transform:translateY(0) translateX(0) scale(1);}
-}
 
 /* ===== HEADER（既存と同じ） ===== */
-header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);}
-.header-inner{max-width:1080px;margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;gap:16px;}
-.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.logo-pref{font-size:10px;color:var(--text3);letter-spacing:.06em;}
-.logo-name{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:700;color:var(--text);letter-spacing:.04em;line-height:1.2;}
-.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--coral);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--coral-l);transition:background .2s;white-space:nowrap;}
-.back-btn:hover{background:var(--coral);color:#fff;}
 
 /* ===== ページヘッダー ===== */
 .page-header{position:relative;z-index:1;max-width:1080px;margin:40px auto 0;padding:0 24px;}
@@ -220,9 +186,8 @@ header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top
 .lightbox-close:hover{opacity:1;}
 
 /* ===== FOOTER（既存と同じ） ===== */
-footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32px 24px;text-align:center;margin-top:40px;}
+
 .footer-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;margin-bottom:6px;}
-.footer-copy{font-size:11px;color:rgba(255,255,255,.45);}
 
 /* ===== カードフェードイン ===== */
 .g-card{opacity:0;transform:translateY(16px);transition:opacity .4s,transform .4s;}
@@ -236,14 +201,13 @@ footer{position:relative;z-index:1;background:var(--text);color:#fff;padding:32p
   <div class="balloon b1"></div>
   <div class="balloon b2"></div>
   <div class="balloon b3"></div>
-  <div class="balloon b4"></div>
-  <div class="balloon b5"></div>
 </div>
 
 <!-- ヘッダー -->
 <header>
   <div class="header-inner">
     <a href="index.html" class="logo">
+      <img class="logo-img" src="/images/meta/apple-touch-icon.png" alt="">
       <div>
         <div class="logo-pref">横浜市都筑区</div>
         <div class="logo-name">渋沢連合自治会</div>

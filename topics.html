@@ -23,42 +23,14 @@
 <meta property="og:site_name" content="渋沢連合自治会">
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/common.css">
 <style>
-:root{
-  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
-  --coral:#ff6b6b;--coral-l:#fff0f0;
-  --sky:#4dabf7;--sky-l:#e8f4ff;
-  --amber:#ffd43b;--amber-l:#fff9db;
-  --lavender:#b197fc;--lavender-l:#f3f0ff;
-  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
-  --bg:#f8f9fe;--white:#fff;--border:#e8e8f0;
-  --r:12px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
-a{text-decoration:none;color:inherit;}
+:root{--page-w:900px;}
+
 
 /* 背景バルーン */
-.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.balloon{position:absolute;border-radius:50%;opacity:.15;animation:balloonDrift linear infinite;filter:blur(1px);}
-.b1{width:180px;height:180px;background:radial-gradient(circle,var(--coral),var(--lavender));top:8%;left:2%;animation-duration:22s;}
-.b2{width:120px;height:120px;background:radial-gradient(circle,var(--lavender),var(--sky));top:20%;right:4%;animation-duration:28s;animation-delay:-5s;}
-.b3{width:90px;height:90px;background:radial-gradient(circle,var(--amber),#ffe066);top:60%;left:1%;animation-duration:20s;animation-delay:-8s;}
-.b4{width:150px;height:150px;background:radial-gradient(circle,var(--coral),var(--mint));top:70%;right:2%;animation-duration:25s;animation-delay:-12s;}
-@keyframes balloonDrift{
-  0%{transform:translateY(0) scale(1);}
-  50%{transform:translateY(-24px) scale(1.03);}
-  100%{transform:translateY(0) scale(1);}
-}
 
 /* HEADER */
-header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.06);}
-.header-inner{max-width:900px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;gap:14px;}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-pref{font-size:10px;color:var(--text3);}
-.logo-name{font-family:'Noto Serif JP',serif;font-size:16px;font-weight:700;color:var(--text);}
-.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--coral);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--coral-l);transition:background .2s;}
-.back-btn:hover{background:var(--coral);color:#fff;}
 
 /* MAIN */
 .main{max-width:900px;margin:40px auto;padding:0 24px;position:relative;z-index:1;}
@@ -189,17 +161,14 @@ header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top
 .empty{text-align:center;padding:60px 20px;color:var(--text3);font-size:14px;}
 
 /* フッター */
-footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;margin-top:60px;text-align:center;position:relative;z-index:1;}
-.footer-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:10px 24px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:all .2s;margin-bottom:16px;}
-.footer-back:hover{color:#fff;border-color:rgba(255,255,255,.5);}
-.footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
+
 </style>
 </head>
 <body>
 
 <div class="bg-balloons">
   <div class="balloon b1"></div><div class="balloon b2"></div>
-  <div class="balloon b3"></div><div class="balloon b4"></div>
+  <div class="balloon b3"></div>
 </div>
 
 <!-- ライトボックス -->
@@ -213,6 +182,7 @@ footer{background:linear-gradient(160deg,#1a2340,#1e2b4a);padding:28px 24px;marg
 <header>
   <div class="header-inner">
     <a class="logo" href="index.html">
+      <img class="logo-img" src="/images/meta/apple-touch-icon.png" alt="">
       <div><div class="logo-pref">横浜市都筑区</div><div class="logo-name">渋沢連合自治会</div></div>
     </a>
     <a class="back-btn" href="index.html">← トップに戻る</a>

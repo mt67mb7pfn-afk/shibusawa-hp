@@ -1,0 +1,59 @@
+/* ===================================================================
+   渋沢連合自治会 共通スタイル
+   全ページで同じものは必ずここに置く。ページ固有のCSSは各HTMLの
+   <style> に書き、このファイルより後に読み込ませて上書きする。
+   =================================================================== */
+
+:root{
+  --mint:#4ecb8d;--mint-l:#e8faf2;--mint-d:#2ea86b;
+  --coral:#ff6b6b;--coral-l:#fff0f0;
+  --sky:#4dabf7;--sky-l:#e8f4ff;
+  --amber:#ffd43b;--amber-l:#fff9db;
+  --lavender:#b197fc;--lavender-l:#f3f0ff;
+  --peach:#ffa94d;
+  --text:#1a1a2e;--text2:#4a4a6a;--text3:#8888aa;
+  --bg:#f8f9fe;--white:#ffffff;--border:#e8e8f0;
+  --r:12px;--r-sm:12px;
+  --shadow:0 4px 24px rgba(78,203,141,.12);
+  --shadow2:0 8px 40px rgba(78,203,141,.20);
+  /* ページごとの本文幅。必要なページだけ各HTML側で上書きする */
+  --page-w:1080px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+
+/* ===== 背景（メッシュ風グラデーション） =====
+   スマホは円が画面に対して大きいのでblur40pxでちょうど良いが、
+   PCの広い画面では同じ値だと滲みすぎるため900px以上で弱める */
+.bg-balloons{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.balloon{position:absolute;border-radius:50%;filter:blur(40px);animation:balloonDrift 40s ease-in-out infinite;}
+.b1{width:520px;height:520px;background:radial-gradient(circle,var(--mint),var(--sky));opacity:.16;top:-160px;left:-140px;animation-duration:42s;}
+.b2{width:460px;height:460px;background:radial-gradient(circle,var(--coral),var(--peach));opacity:.12;top:30%;right:-180px;animation-duration:48s;animation-delay:-14s;}
+.b3{width:420px;height:420px;background:radial-gradient(circle,var(--lavender),var(--sky));opacity:.10;bottom:-160px;left:20%;animation-duration:46s;animation-delay:-26s;}
+@media(min-width:900px){
+  .balloon{filter:blur(15px);}
+}
+@keyframes balloonDrift{
+  0%,100%{transform:translate(0,0) scale(1);}
+  50%{transform:translate(3%,-3%) scale(1.05);}
+}
+
+/* ===== ヘッダー ===== */
+header{background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.06);transition:transform .3s ease;}
+header.header-hidden{transform:translateY(-100%);}
+.header-inner{max-width:var(--page-w);margin:0 auto;padding:0 24px;height:66px;display:flex;align-items:center;gap:16px;}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none;}
+.logo-img{width:44px;height:44px;border-radius:12px;object-fit:cover;box-shadow:0 3px 12px rgba(78,203,141,.3);}
+.logo-pref{font-size:10px;color:var(--text3);letter-spacing:.06em;}
+.logo-name{font-family:'Noto Serif JP',serif;font-size:17px;font-weight:700;color:var(--text);letter-spacing:.04em;line-height:1.2;}
+/* 「トップに戻る」は全ページ共通の同じ操作なので色も統一する */
+.back-btn{margin-left:auto;font-size:12px;font-weight:700;color:var(--mint-d);display:flex;align-items:center;gap:4px;padding:7px 14px;border-radius:20px;background:var(--mint-l);transition:background .2s,color .2s;white-space:nowrap;}
+.back-btn:hover{background:var(--mint);color:#fff;}
+
+/* ===== フッター ===== */
+footer{position:relative;z-index:1;background:linear-gradient(160deg,#1a2340 0%,#1e2b4a 100%);padding:32px 24px;text-align:center;margin-top:60px;}
+.footer-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:10px 24px;border-radius:20px;border:1.5px solid rgba(255,255,255,.2);transition:color .2s,border-color .2s;margin-bottom:16px;}
+.footer-back:hover{color:#fff;border-color:rgba(255,255,255,.5);}
+.footer-copy{font-size:11px;color:rgba(255,255,255,.3);}

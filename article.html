@@ -89,6 +89,9 @@
   white-space:pre-wrap;
   word-break:break-word;
 }
+/* common.css の a{color:inherit} でリンクが本文と同じ色になるため、記事内だけ戻す */
+.article-body a{color:var(--mint-d);text-decoration:underline;text-underline-offset:3px;font-weight:700;}
+.article-body a:hover{color:var(--mint);}
 
 /* 戻るボタン */
 .back-link{

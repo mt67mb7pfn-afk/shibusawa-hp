@@ -97,11 +97,14 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .line-title{color:#fff;font-size:14px;font-weight:700;margin-bottom:3px;}
 .line-desc{color:rgba(255,255,255,.85);font-size:12px;}
 .line-cta{background:#fff;color:#06c755;font-size:12px;font-weight:700;padding:9px 18px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
-  @media(max-width:600px){
-  .line-banner{flex-wrap:wrap;padding:16px;}
-  .line-title{font-size:13px;}
+@media(max-width:600px){
+  /* スマホでは自分の画面のQRを読み取れないため隠し、テキストとボタンを1行に収める */
+  .line-banner{flex-wrap:nowrap;padding:12px 14px;gap:12px;}
+  .line-qr{display:none;}
+  .line-lead{display:none;}
+  .line-title{font-size:13px;margin-bottom:2px;}
   .line-desc{font-size:11px;}
-  .line-cta{width:100%;text-align:center;margin-top:8px;}
+  .line-cta{width:auto;margin-top:0;padding:8px 14px;font-size:11px;}
 }
 /* MAIN */
 .main{max-width:1080px;margin:40px auto 0;padding:0 24px;}
@@ -431,8 +434,8 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
   <a class="line-banner" href="https://lin.ee/NnQmKvP" target="_blank" rel="noopener">
     <div class="line-qr"><img src="/images/meta/line-qr.jpg" alt="LINE QR"></div>
     <div class="line-content">
-      <div class="line-title">まだ登録していない方へ — LINE公式アカウント</div>
-      <div class="line-desc">友だち追加するだけ！チラシ・イベント情報をいち早くお届けします</div>
+      <div class="line-title"><span class="line-lead">まだ登録していない方へ — </span>LINE公式アカウント</div>
+      <div class="line-desc">チラシ・イベント情報を<span class="line-lead">いち早く</span>お届けします</div>
     </div>
     <div class="line-cta">友だち追加 ›</div>
   </a>

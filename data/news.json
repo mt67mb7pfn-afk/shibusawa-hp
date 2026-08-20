@@ -1,3 +1,15 @@
 {
-  "news": []
+  "news": [
+    {
+      "date": "2026.08.20",
+      "day": "20",
+      "month": "Aug 2026",
+      "title": "テスト　自治会からのお知らせ",
+      "badge": "お知らせ",
+      "url": "news.html",
+      "description": "テスト　ココにお知らせ内容が入ります。",
+      "imageUrl": "https://lh3.googleusercontent.com/d/1mcVtCthzW-UeU9lBO_mRnn1nKKayGagB",
+      "body": ""
+    }
+  ]
 }

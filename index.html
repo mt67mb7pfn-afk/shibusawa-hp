@@ -237,6 +237,14 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .about-arr{margin-left:auto;color:var(--peach);font-size:26px;flex-shrink:0;transition:transform .2s;}
 .about-banner:hover .about-arr{transform:translateX(5px);}
 
+/* 旧ホームページ案内（移行期間中のみ。役目を終えたらこのブロックごと削除する） */
+.archive-banner{background:#fff;border:2px dashed var(--border);border-radius:var(--r);padding:18px 22px;display:flex;align-items:center;gap:16px;margin-bottom:44px;text-decoration:none;color:inherit;transition:border-color .2s,background .2s;}
+.archive-banner:hover{border-color:var(--text3);background:var(--bg);}
+.archive-icon{font-size:26px;flex-shrink:0;}
+.archive-title{font-size:14px;font-weight:700;color:var(--text2);margin-bottom:3px;}
+.archive-desc{font-size:12px;color:var(--text2);}
+.archive-arr{margin-left:auto;color:var(--text3);font-size:20px;flex-shrink:0;}
+
 /* 短期掲示バー */
 /* 掲示板サムネイル横スクロール */
 .bulletin-scroll-section{display:none;margin-bottom:44px;}
@@ -559,6 +567,16 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
     <div class="about-arr">›</div>
   </a>
 
+  <!-- 旧ホームページ案内（移行期間中のみ。不要になったらこのブロックごと削除する） -->
+  <a class="archive-banner" href="https://sibusawarengou.jimdofree.com" target="_blank" rel="noopener">
+    <div class="archive-icon">🗂️</div>
+    <div>
+      <div class="archive-title">過去の情報をお探しの方へ</div>
+      <div class="archive-desc">これまでのホームページはこちらでご覧いただけます（現在は更新していません）</div>
+    </div>
+    <div class="archive-arr">›</div>
+  </a>
+
 </div>
 
 <div class="footer-wrap">
@@ -589,6 +607,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
         <a class="footer-nav-a" href="https://www.instagram.com/shibusawarengou/" target="_blank" rel="noopener">Instagram</a>
         <a class="footer-nav-a" href="https://1lo1xc7ol8x1.blog.fc2.com/" target="_blank" rel="noopener">行事写真館</a>
         <a class="footer-nav-a" href="https://www.r326.com/b/main.aspx?g=Yco46wE2233pl3vIR1" target="_blank" rel="noopener">自治会館予約</a>
+        <a class="footer-nav-a" href="https://sibusawarengou.jimdofree.com" target="_blank" rel="noopener">旧ホームページ</a>
       </div>
     </div>
     <div class="footer-copy">© Shibusawa Rengo Jichikai All Rights Reserved.</div>

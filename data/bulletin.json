@@ -31,6 +31,48 @@
       ]
     },
     {
+      "id": 14,
+      "title": "第三級アマチュア無線技士 養成課程講習会（短縮コース）",
+      "type": "短期",
+      "startDate": "",
+      "endDate": "2026.09.06",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1r5DcWXhFpguj_ngAxcrVit5u16Ga4zX7",
+        "https://lh3.googleusercontent.com/d/1c4Tl_eYufdLhAzCA9Xaca9X8OWIxlgzm"
+      ]
+    },
+    {
+      "id": 15,
+      "title": "令和8年度 横浜市総合防災訓練（10月4日・荏田南中学校）",
+      "type": "短期",
+      "startDate": "",
+      "endDate": "2026.10.04",
+      "images": [
+        "https://lh3.googleusercontent.com/d/11ArmB334V0UPTSEf5KW_nIoCyT0U0b4N"
+      ]
+    },
+    {
+      "id": 17,
+      "title": "にっぽんの伝統芸能 2026 in つづき（9月6日・ボッシュホール）",
+      "type": "短期",
+      "startDate": "",
+      "endDate": "2026.09.06",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1RclAUs1F9klH8mesXzIqvTvt_QegJaIP"
+      ]
+    },
+    {
+      "id": 23,
+      "title": "都筑野菜 朝市",
+      "type": "短期",
+      "startDate": "",
+      "endDate": "2026.09.26",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1UX8D1j8F-x2Cdm427TvST6ZXIFqdAnYw",
+        "https://lh3.googleusercontent.com/d/16WRfBVU9nA4myDpgRh5vFiQiHvg6f-Tu"
+      ]
+    },
+    {
       "id": 13,
       "title": "",
       "type": "常設",
@@ -38,6 +80,226 @@
       "endDate": "",
       "images": [
         "https://lh3.googleusercontent.com/d/1wb0GQDxY9sR8csa08xAroVCp8CqT9nlU"
+      ]
+    },
+    {
+      "id": 16,
+      "title": "フードドライブ 食品の寄付を募集しています",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "2027.02.26",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1FbcOl7iZea_-71FzelL8H_PNLt0hjKdV"
+      ]
+    },
+    {
+      "id": 18,
+      "title": "井戸端クラブ（第2・第4月曜／荏田東二丁目自治会館）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1p4-kvjKgxN4aFCTRSKLYEKB78Q8xNflv"
+      ]
+    },
+    {
+      "id": 19,
+      "title": "ほっぺ食堂（月1回日曜／渋沢自治会館）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1lm9nSAPK2YztZXggBvNeflhSiRhduoE7",
+        "https://lh3.googleusercontent.com/d/1aI53qROwB_fzxRpQhvz5TftaK-7bF8UZ"
+      ]
+    },
+    {
+      "id": 20,
+      "title": "渋沢地区社会福祉協議会 新聞",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1QACKTCvENdmWoGkkSI73MpFFqwajpG7D"
+      ]
+    },
+    {
+      "id": 21,
+      "title": "渋沢連合自治会 LINE公式アカウント 友だち募集中",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1BZ_vdBpO54yGl9ql5b9tb1T2BmZGDxcM"
+      ]
+    },
+    {
+      "id": 22,
+      "title": "今日どこいく？（0歳児〜未就学児のおでかけ情報）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1x0egqrEDE7N52UoPZWQsEyCLQE4UfFqW",
+        "https://lh3.googleusercontent.com/d/1PtVfYFn0Sfn_G-Yze3SFdwqyvmfoAnkb"
+      ]
+    },
+    {
+      "id": 24,
+      "title": "松寿会 令和8年度 事業活動計画",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1BAvjABgieNPIiK5IysA5cG0HdOXgTWiS"
+      ]
+    },
+    {
+      "id": 25,
+      "title": "道路交通法 一部改正のポイント（令和8年4月1日施行）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1xsis8dsTpU1Pst2ADNO2cqmNBTvKfCv_",
+        "https://lh3.googleusercontent.com/d/1_FbCxSGpzghjQFKuAX6n__u-IvWlr86X"
+      ]
+    },
+    {
+      "id": 26,
+      "title": "防ごう！入浴時のヒートショック",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1Ytpb5RyJEL0Sy44CajqwdgXNhBtPcHpW"
+      ]
+    },
+    {
+      "id": 27,
+      "title": "都筑天文クラブ 会員募集中（裏面は入会申込書）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1o4MpJaCGhivjabwQnFqTVEI_t-geaGAi",
+        "https://lh3.googleusercontent.com/d/1YNDC8ySRIkBsZIVtF_33H8P7VyjJkv32"
+      ]
+    },
+    {
+      "id": 28,
+      "title": "横浜市の公園は禁煙になります",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1ayhmYrV7WEO7vya_tUKREhnhng-6J5y-"
+      ]
+    },
+    {
+      "id": 29,
+      "title": "自転車の「ながらスマホ・酒気帯び運転」罰則強化",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1oQtclt--Bp0vazUumequ6ZkJQi_sRft-",
+        "https://lh3.googleusercontent.com/d/1082iz55NijTDvzRkdmJcHwnYBHNMve09"
+      ]
+    },
+    {
+      "id": 30,
+      "title": "強盗事件が各地で発生中！／闇バイトにご注意（都筑警察署）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1lLZzv3PVR7AzfBcqkVVaT8wBXXCC6eDX"
+      ]
+    },
+    {
+      "id": 31,
+      "title": "侵入犯罪に強い住まいづくりを！（警察庁）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1pf4qxwohDpvlb-P5yeEhieBYQPG3WG9K"
+      ]
+    },
+    {
+      "id": 32,
+      "title": "プラスチックごみの出し方が変わります",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1yRuo9XhUh-WkgPWG-r2YXjGbSS6igYGw",
+        "https://lh3.googleusercontent.com/d/17YXx9ZbK3Yr1rr4d1gv9d4WQDvWR5eXJ",
+        "https://lh3.googleusercontent.com/d/1kIQZ1kvLX-ZED-xTG7nttV6Oc7rRfaYo"
+      ]
+    },
+    {
+      "id": 33,
+      "title": "GREEN×EXPO 2027（2027年国際園芸博覧会）",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "2027.09.26",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1k57E5e89OkDuKpvkzmwBjPPRSyrla2jZ"
+      ]
+    },
+    {
+      "id": 34,
+      "title": "社会を明るくする運動",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1dnTUqya5f_L3zbb2KzpRRYMSky158CfP",
+        "https://lh3.googleusercontent.com/d/18pPeUAH48P_bLmhJe-QGSRkT9r6NlArq"
+      ]
+    },
+    {
+      "id": 35,
+      "title": "「ATMで還付金」は詐欺！",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1G_99rwV7dIy0YkoWBUzTjIr1FruF05Ci"
+      ]
+    },
+    {
+      "id": 36,
+      "title": "サギ撃退電話で鉄壁ディフェンス",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1gA2pXpBBkgXpzqMuvnmEwhJ7FE_0_W8d"
+      ]
+    },
+    {
+      "id": 37,
+      "title": "自宅の固定電話が危ない！無料でできる特殊詐欺対策",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1sCJvqMkXRhnYmNIo9x1OVgBQ9Pd_9i3R",
+        "https://lh3.googleusercontent.com/d/1CoVQMKKH2YUgrPR_aAVGEyN-Z0HXjaJ4"
+      ]
+    },
+    {
+      "id": 38,
+      "title": "都筑防犯速報 — 自転車盗被害が急増中",
+      "type": "常設",
+      "startDate": "",
+      "endDate": "",
+      "images": [
+        "https://lh3.googleusercontent.com/d/11OnZwl6h_mujboPEnVpvWOB3KizInlwP",
+        "https://lh3.googleusercontent.com/d/1mWznu8Y880I7KWOtHdD3LKbNAbyfM2N-"
       ]
     }
   ]

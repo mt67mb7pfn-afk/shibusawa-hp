@@ -138,6 +138,7 @@
     .header-title { font-size: 14px; }
   }
 </style>
+<script src="/common.js"></script>
 </head>
 <body>
 
@@ -271,8 +272,8 @@ function renderGrid(gridId, images) {
   }
   grid.innerHTML = images.map((img, i) => `
     <div class="img-card" onclick="openLightbox('${gridId}', ${i})">
-      <img src="${img.src}" alt="${img.label}" loading="lazy">
-      <div class="img-card-label">${img.label}</div>
+      <img src="${esc(img.src)}" alt="${esc(img.label)}" loading="lazy">
+      <div class="img-card-label">${esc(img.label)}</div>
     </div>
   `).join('');
 }

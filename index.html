@@ -25,6 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@700&family=DM+Sans:wght@700;900&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<script src="/common.js"></script>
 <style>
 :root{--r:20px;}
 
@@ -659,11 +660,11 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
           : 'news.html';
       const target = extUrl ? 'target="_blank" rel="noopener"' : '';
       const thumb = item.imageUrl
-        ? `<img class="notice-thumb" src="${item.imageUrl}" alt="" loading="lazy" onerror="this.style.display='none'">`
+        ? `<img class="notice-thumb" src="${esc(item.imageUrl)}" alt="" loading="lazy" onerror="this.style.display='none'">`
         : '';
       return `<a class="notice-item" href="${href}" ${target}>
-        <div class="notice-left"><div class="notice-day">${item.day}</div><div class="notice-month">${item.month}</div><span class="n-badge ${bc}">${item.badge}</span></div>
-        <div class="notice-body"><div class="notice-title">${item.title}</div>${thumb}<div class="notice-arr">›</div></div>
+        <div class="notice-left"><div class="notice-day">${esc(item.day)}</div><div class="notice-month">${esc(item.month)}</div><span class="n-badge ${bc}">${esc(item.badge)}</span></div>
+        <div class="notice-body"><div class="notice-title">${esc(item.title)}</div>${thumb}<div class="notice-arr">›</div></div>
       </a>`;
     }).join('');
   }catch(e){console.log('お知らせ読み込みエラー:',e);}
@@ -680,16 +681,16 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
     const items=data.topics.slice(0,3);
 
     grid.innerHTML=items.map(p=>`
-      <a class="topic-card" href="article.html?id=${p.id}">
+      <a class="topic-card" href="article.html?id=${esc(p.id)}">
         <div class="topic-img">
           ${p.imageUrl
-            ? `<img src="${p.imageUrl}" alt="${p.title}" loading="lazy">`
+            ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy">`
             : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;">📰</div>`
           }
         </div>
         <div class="topic-body">
-          <div class="topic-cat">${p.category}</div>
-          <div class="topic-title">${p.title}</div>
+          <div class="topic-cat">${esc(p.category)}</div>
+          <div class="topic-title">${esc(p.title)}</div>
         </div>
       </a>
     `).join('');
@@ -782,16 +783,16 @@ setTimeout(() => {
     const shown = items.slice(0, SHOW);
 
     scroll.innerHTML = shown.map(item => {
-      const deadline = item.endDate ? `〜${item.endDate}` : '常設';
+      const deadline = item.endDate ? `〜${esc(item.endDate)}` : '常設';
       const imgHtml  = (item.images && item.images[0])
-        ? `<img class="bulletin-thumb-img" src="${item.images[0]}" alt="${item.title || '掲示物'}" loading="lazy">`
+        ? `<img class="bulletin-thumb-img" src="${esc(item.images[0])}" alt="${esc(item.title || '掲示物')}" loading="lazy">`
         : `<div class="bulletin-thumb-img-placeholder">📋</div>`;
       // 一覧の先頭ではなく、その掲示物そのものへ飛ばす
-      return `<a class="bulletin-thumb" href="bulletin.html?id=${item.id}">
+      return `<a class="bulletin-thumb" href="bulletin.html?id=${esc(item.id)}">
         ${imgHtml}
         <div class="bulletin-thumb-body">
           <div class="bulletin-thumb-deadline">${deadline}</div>
-          ${item.title ? `<div class="bulletin-thumb-title">${item.title}</div>` : ''}
+          ${item.title ? `<div class="bulletin-thumb-title">${esc(item.title)}</div>` : ''}
         </div>
       </a>`;
     }).join('');
@@ -823,13 +824,13 @@ setTimeout(() => {
     wrap.innerHTML = posts.map(p => {
       const dateStr = (p.date || '').replace(/\./g, '/');
       const imgHtml = p.imageUrl
-        ? `<img class="gallery-card-img" src="${p.imageUrl}" alt="${p.title}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'gallery-card-img-placeholder\\'>📷</div>')">`
+        ? `<img class="gallery-card-img" src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'gallery-card-img-placeholder\\'>📷</div>')">`
         : `<div class="gallery-card-img-placeholder">📷</div>`;
       return `<a class="gallery-card" href="gallery.html">
         ${imgHtml}
         <div class="gallery-card-body">
           <div class="gallery-card-date">${dateStr}</div>
-          <div class="gallery-card-title">${p.title}</div>
+          <div class="gallery-card-title">${esc(p.title)}</div>
         </div>
       </a>`;
     }).join('');

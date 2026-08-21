@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<script src="/common.js"></script>
 <style>
 :root{--page-w:800px;}
 
@@ -167,7 +168,7 @@ function renderNews() {
   list.innerHTML = filtered.map(item => {
     const bc = BADGE_MAP[item.badge] || 'nb-info';
     const thumb = item.imageUrl
-      ? `<img class="notice-thumb" src="${item.imageUrl}" alt="" loading="lazy"
+      ? `<img class="notice-thumb" src="${esc(item.imageUrl)}" alt="" loading="lazy"
            onerror="this.style.display='none'">`
       : '';
     // 投稿フォームのURL欄は外部URL専用なので、http以外のURLはGASが補完した
@@ -180,14 +181,14 @@ function renderNews() {
         ? `news-article.html?date=${encodeURIComponent(item.date)}&title=${encodeURIComponent(item.title)}`
         : '';
     const inner = `<div class="notice-left">
-          <div class="notice-day">${item.day}</div>
-          <div class="notice-month">${item.month}</div>
-          <span class="n-badge ${bc}">${item.badge}</span>
+          <div class="notice-day">${esc(item.day)}</div>
+          <div class="notice-month">${esc(item.month)}</div>
+          <span class="n-badge ${bc}">${esc(item.badge)}</span>
         </div>
         <div class="notice-body">
           <div class="notice-content">
-            <div class="notice-title">${item.title}</div>
-            ${item.description ? `<div class="notice-desc">${item.description}</div>` : ''}
+            <div class="notice-title">${esc(item.title)}</div>
+            ${item.description ? `<div class="notice-desc">${esc(item.description)}</div>` : ''}
           </div>
           ${thumb}
           ${href ? '<div class="notice-arr">›</div>' : ''}

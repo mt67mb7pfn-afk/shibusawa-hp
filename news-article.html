@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<script src="/common.js"></script>
 <style>
 :root{--page-w:900px;}
 
@@ -121,14 +122,14 @@ async function loadArticle() {
 
     content.innerHTML = `
       <div class="article-card">
-        <span class="n-badge ${bc}">${item.badge}</span>
-        <div class="article-date">${item.date}</div>
-        <h1 class="article-title">${item.title}</h1>
+        <span class="n-badge ${bc}">${esc(item.badge)}</span>
+        <div class="article-date">${esc(item.date)}</div>
+        <h1 class="article-title">${esc(item.title)}</h1>
         <div class="article-divider"></div>
-        ${item.imageUrl ? `<img class="article-image article-eyecatch" src="${item.imageUrl}" alt="${item.title}" onclick="openLightbox(this.src)">` : ''}
-        ${item.description ? `<div class="article-desc">${item.description}</div>` : ''}
+        ${item.imageUrl ? `<img class="article-image article-eyecatch" src="${esc(item.imageUrl)}" alt="${esc(item.title)}" onclick="openLightbox(this.src)">` : ''}
+        ${item.description ? `<div class="article-desc">${esc(item.description)}</div>` : ''}
         ${item.body ? `<div class="article-body">${item.body}</div>` : ''}
-        ${item.url && item.url !== '#' && item.url !== 'news.html' ? `<a class="article-link" href="${item.url}" target="_blank" rel="noopener">詳細はこちら →</a>` : ''}
+        ${item.url && item.url !== '#' && item.url !== 'news.html' ? `<a class="article-link" href="${esc(item.url)}" target="_blank" rel="noopener">詳細はこちら →</a>` : ''}
       </div>
     `;
   } catch(e) {

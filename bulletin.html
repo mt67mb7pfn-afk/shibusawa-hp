@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<script src="/common.js"></script>
 <style>
 
 /* 背景バルーン */
@@ -275,7 +276,7 @@ function renderBulletin() {
     ? allBulletin
     : allBulletin.filter(b => b.type === currentFilter);
 
-  countEl.innerHTML = `<span>${filtered.length}</span> 件`;
+  countEl.innerHTML = `<span>${esc(filtered.length)}</span> 件`;
 
   if (filtered.length === 0) {
     grid.innerHTML = '<div class="empty">該当する掲示物はありません。</div>';
@@ -289,7 +290,7 @@ function renderBulletin() {
     const period = item.type === '常設'
       ? '常時掲示中'
       : item.endDate
-        ? `${item.startDate} 〜 ${item.endDate}`
+        ? `${esc(item.startDate)} 〜 ${esc(item.endDate)}`
         : item.startDate;
 
     // スライダーHTML
@@ -300,12 +301,12 @@ function renderBulletin() {
       sliderHtml = `
         <div class="card-slider" onclick="openLightbox(${cardIndex}, 0)">
           <div class="card-slides">
-            <div class="card-slide"><img src="${images[0]}" alt="${item.title || '掲示物'}" loading="lazy"></div>
+            <div class="card-slide"><img src="${esc(images[0])}" alt="${esc(item.title || '掲示物')}" loading="lazy"></div>
           </div>
         </div>`;
     } else {
       const slidesHtml = images.map(url =>
-        `<div class="card-slide"><img src="${url}" alt="${item.title || '掲示物'}" loading="lazy"></div>`
+        `<div class="card-slide"><img src="${url}" alt="${esc(item.title || '掲示物')}" loading="lazy"></div>`
       ).join('');
       const dotsHtml = images.map((_, i) =>
         `<div class="slider-dot ${i === 0 ? 'active' : ''}" onclick="event.stopPropagation();slideCard(${cardIndex},${i})"></div>`
@@ -321,14 +322,14 @@ function renderBulletin() {
     }
 
     return `
-      <div class="bulletin-card" data-index="${cardIndex}" data-id="${item.id}">
+      <div class="bulletin-card" data-index="${cardIndex}" data-id="${esc(item.id)}">
         ${sliderHtml}
         <div class="card-body">
           <div class="card-meta">
-            <span class="card-type ${typeClass}">${item.type}</span>
+            <span class="card-type ${typeClass}">${esc(item.type)}</span>
             <span class="card-period">${period}</span>
           </div>
-          ${item.title ? `<div class="card-title">${item.title}</div>` : ''}
+          ${item.title ? `<div class="card-title">${esc(item.title)}</div>` : ''}
         </div>
       </div>`;
   }).join('');
@@ -398,7 +399,7 @@ function openLightbox(cardIndex, imageIndex) {
 function updateLightbox() {
   document.getElementById('lightbox-img').src = lightboxImages[lightboxIndex];
   document.getElementById('lightbox-counter').textContent =
-    lightboxImages.length > 1 ? `${lightboxIndex + 1} / ${lightboxImages.length}` : '';
+    lightboxImages.length > 1 ? `${lightboxIndex + 1} / ${esc(lightboxImages.length)}` : '';
   document.getElementById('lightbox-prev').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
   document.getElementById('lightbox-next').style.display = lightboxImages.length > 1 ? 'flex' : 'none';
 }

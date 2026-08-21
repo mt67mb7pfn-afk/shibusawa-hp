@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<script src="/common.js"></script>
 <style>
 :root{--page-w:900px;}
 
@@ -258,7 +259,7 @@ function renderTopics() {
     ? allTopics
     : allTopics.filter(t => t.category === currentFilter);
 
-  countEl.innerHTML = `<span>${filtered.length}</span> 件`;
+  countEl.innerHTML = `<span>${esc(filtered.length)}</span> 件`;
 
   if (filtered.length === 0) {
     list.innerHTML = '<div class="empty">該当する記事はありません。</div>';
@@ -267,7 +268,7 @@ function renderTopics() {
 
   list.innerHTML = filtered.map(item => {
     const thumbHtml = item.imageUrl
-      ? `<img src="${item.imageUrl}" alt="${item.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-thumb\\'>📰</div>'">`
+      ? `<img src="${esc(item.imageUrl)}" alt="${esc(item.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-thumb\\'>📰</div>'">`
       : `<div class="no-thumb">📰</div>`;
 
     const excerpt = item.body
@@ -276,13 +277,13 @@ function renderTopics() {
 
     return `
       <div class="article-card">
-        <div class="article-thumb" onclick="event.stopPropagation();${item.imageUrl ? `openLightbox('${item.imageUrl}','${item.title}')` : `location.href='article.html?id=${item.id}'`}">${thumbHtml}</div>
-        <div class="article-body" onclick="location.href='article.html?id=${item.id}'">
+        <div class="article-thumb" onclick="event.stopPropagation();${item.imageUrl ? `openLightbox('${esc(item.imageUrl)}','${esc(item.title)}')` : `location.href='article.html?id=${esc(item.id)}'`}">${thumbHtml}</div>
+        <div class="article-body" onclick="location.href='article.html?id=${esc(item.id)}'">
           <div class="article-meta">
-            <span class="article-cat">${item.category}</span>
-            <span class="article-date">${item.date}</span>
+            <span class="article-cat">${esc(item.category)}</span>
+            <span class="article-date">${esc(item.date)}</span>
           </div>
-          <div class="article-title">${item.title}</div>
+          <div class="article-title">${esc(item.title)}</div>
           ${excerpt ? `<div class="article-excerpt">${excerpt}...</div>` : ''}
           <div class="article-more">続きを読む ›</div>
         </div>

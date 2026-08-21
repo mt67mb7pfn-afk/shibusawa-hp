@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@700&family=DM+Sans:wght@700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<script src="/common.js"></script>
 <style>
 :root{--r:20px;}
 
@@ -348,17 +349,17 @@ function createCard(article) {
   card.dataset.cat = article.category;
 
   const imgHtml = article.imageUrl
-    ? `<img class="g-img" src="${article.imageUrl}" alt="${article.title}" loading="lazy">`
+    ? `<img class="g-img" src="${esc(article.imageUrl)}" alt="${esc(article.title)}" loading="lazy">`
     : `<div class="g-img-placeholder">📷</div>`;
 
   card.innerHTML = `
     ${imgHtml}
     <div class="g-body">
       <div class="g-meta">
-        <span class="g-category">${article.category}</span>
+        <span class="g-category">${esc(article.category)}</span>
         <span class="g-date">${formatDate(article.date)}</span>
       </div>
-      <div class="g-title">${article.title}</div>
+      <div class="g-title">${esc(article.title)}</div>
       <div class="g-text">${article.body}</div>
       <div class="g-footer">
         <span class="g-poster">住民の方</span>
@@ -406,17 +407,17 @@ function openModal(article) {
   const overlay = document.getElementById('modalOverlay');
 
   const imgHtml = article.imageUrl
-    ? `<img class="modal-img" src="${article.imageUrl}" alt="${article.title}" style="cursor:zoom-in" onclick="openLightbox('${article.imageUrl}')">`
+    ? `<img class="modal-img" src="${esc(article.imageUrl)}" alt="${esc(article.title)}" style="cursor:zoom-in" onclick="openLightbox('${esc(article.imageUrl)}')">`
     : `<div class="modal-img-placeholder">📷</div>`;
 
   content.innerHTML = `
     ${imgHtml}
     <div class="modal-body">
       <div class="modal-meta">
-        <span class="g-category">${article.category}</span>
+        <span class="g-category">${esc(article.category)}</span>
         <span class="g-date" style="font-size:12px;color:var(--text3);margin-left:8px">${formatDate(article.date)}</span>
       </div>
-      <div class="modal-title">${article.title}</div>
+      <div class="modal-title">${esc(article.title)}</div>
       <div class="modal-text">${article.body}</div>
       <div class="modal-footer">
         <span class="g-poster">住民の方</span>

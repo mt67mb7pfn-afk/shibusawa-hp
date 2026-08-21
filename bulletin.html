@@ -56,6 +56,16 @@
 }
 
 /* 掲示カード */
+/* トップページから ?id= 付きで来たとき、その掲示物を一時的に強調する */
+.bulletin-card.highlight{
+  border-color:var(--mint);
+  box-shadow:0 0 0 4px rgba(78,203,141,.25);
+  animation:cardFade 3s ease-out forwards;
+}
+@keyframes cardFade{
+  0%,60%{border-color:var(--mint);box-shadow:0 0 0 4px rgba(78,203,141,.25);}
+  100%{border-color:var(--border);box-shadow:none;}
+}
 .bulletin-card{
   background:#fff;
   border-radius:16px;
@@ -311,7 +321,7 @@ function renderBulletin() {
     }
 
     return `
-      <div class="bulletin-card" data-index="${cardIndex}">
+      <div class="bulletin-card" data-index="${cardIndex}" data-id="${item.id}">
         ${sliderHtml}
         <div class="card-body">
           <div class="card-meta">
@@ -326,6 +336,24 @@ function renderBulletin() {
   // カードごとの画像リストをグローバルに保持
   window._bulletinFiltered = filtered;
   window._cardSlideIndex = {};
+
+  scrollToTargetCard();
+}
+
+// トップページのサムネイルから来た場合、その掲示物まで移動して知らせる。
+// 全画面表示をいきなり開くと現在地が分からなくなるため、位置を示すだけにする。
+let targetHandled = false;
+function scrollToTargetCard() {
+  if (targetHandled) return;
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) return;
+  const card = document.querySelector(`.bulletin-card[data-id="${id}"]`);
+  if (!card) return;
+  targetHandled = true;
+  requestAnimationFrame(() => {
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.add('highlight');
+  });
 }
 
 // カードスライダー制御

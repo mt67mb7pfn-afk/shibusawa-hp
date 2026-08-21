@@ -786,7 +786,8 @@ setTimeout(() => {
       const imgHtml  = (item.images && item.images[0])
         ? `<img class="bulletin-thumb-img" src="${item.images[0]}" alt="${item.title || '掲示物'}" loading="lazy">`
         : `<div class="bulletin-thumb-img-placeholder">📋</div>`;
-      return `<a class="bulletin-thumb" href="bulletin.html">
+      // 一覧の先頭ではなく、その掲示物そのものへ飛ばす
+      return `<a class="bulletin-thumb" href="bulletin.html?id=${item.id}">
         ${imgHtml}
         <div class="bulletin-thumb-body">
           <div class="bulletin-thumb-deadline">${deadline}</div>

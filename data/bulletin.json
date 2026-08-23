@@ -1,16 +1,6 @@
 {
   "bulletin": [
     {
-      "id": 39,
-      "title": "ハマっ子100円食堂 ほっぺ食堂",
-      "type": "短期",
-      "startDate": "2026.08.23",
-      "endDate": "2026.08.24",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1MdVszaKN8-pHMkGKclgSMjbbEGBhJfe3"
-      ]
-    },
-    {
       "id": 11,
       "title": "ラジオ体操",
       "type": "短期",

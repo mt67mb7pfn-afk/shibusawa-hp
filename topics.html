@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <script src="/common.js"></script>
 <style>
 :root{--page-w:900px;}
@@ -268,8 +269,8 @@ function renderTopics() {
 
   list.innerHTML = filtered.map(item => {
     const thumbHtml = item.imageUrl
-      ? `<img src="${esc(item.imageUrl)}" alt="${esc(item.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-thumb\\'>📰</div>'">`
-      : `<div class="no-thumb">📰</div>`;
+      ? `<img src="${esc(item.imageUrl)}" alt="${esc(item.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'no-thumb\\'><i class=\\'fa-regular fa-image\\'></i></div>'">`
+      : `<div class="no-thumb"><i class="fa-regular fa-image"></i></div>`;
 
     const excerpt = item.body
       ? item.body.replace(/\n/g, ' ').substring(0, 100)

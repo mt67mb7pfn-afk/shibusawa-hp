@@ -162,18 +162,19 @@
     .lock-badge { display: none; }
   }
 </style>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <script src="/common.js"></script>
 </head>
 <body>
 
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">🔒</div>
+    <div class="login-logo"><i class="fa-solid fa-lock"></i></div>
     <h1>役員名簿・決算書</h1>
     <p>渋沢連合自治会 — 閲覧制限ページ</p>
     <input type="password" id="pw-input" placeholder="パスワードを入力" />
     <button class="login-btn" onclick="login()">閲覧する</button>
-    <div class="login-error" id="login-error">⚠ パスワードが違います</div>
+    <div class="login-error" id="login-error"><i class="fa-solid fa-circle-exclamation"></i> パスワードが違います</div>
     <div class="login-note">
       このページは役員・関係者限定です。<br>
       パスワードは自治会事務局にお問い合わせください。
@@ -186,7 +187,7 @@
     <div class="header-left">
       <a href="/" class="header-back">← ホーム</a>
       <div class="header-title">役員名簿・決算書</div>
-      <span class="lock-badge">🔒 閲覧制限</span>
+      <span class="lock-badge"><i class="fa-solid fa-lock"></i> 閲覧制限</span>
     </div>
     <button class="logout-btn" onclick="logout()">ログアウト</button>
   </div>
@@ -197,7 +198,7 @@
 
     <div class="section">
       <div class="section-header">
-        <div class="section-icon icon-blue">👥</div>
+        <div class="section-icon icon-blue"><i class="fa-solid fa-users"></i></div>
         <div>
           <div class="section-title">渋沢連合自治会 役員名簿</div>
           <div class="section-meta">連合自治会 役員一覧</div>
@@ -210,7 +211,7 @@
 
     <div class="section">
       <div class="section-header">
-        <div class="section-icon icon-green">📊</div>
+        <div class="section-icon icon-green"><i class="fa-solid fa-chart-column"></i></div>
         <div>
           <div class="section-title">決算書</div>
           <div class="section-meta">渋沢連合自治会 会計決算</div>
@@ -223,7 +224,7 @@
 
     <div class="section">
       <div class="section-header">
-        <div class="section-icon icon-purple">🏛</div>
+        <div class="section-icon icon-purple"><i class="fa-solid fa-landmark"></i></div>
         <div>
           <div class="section-title">渋沢地区社協 役員・理事名簿</div>
           <div class="section-meta">渋沢地区社会福祉協議会</div>

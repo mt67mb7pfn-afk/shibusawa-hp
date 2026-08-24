@@ -24,6 +24,7 @@
 <meta name="twitter:card" content="summary">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@700&family=DM+Sans:wght@700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/common.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <script src="/common.js"></script>
 <style>
 :root{--r:20px;}
@@ -37,7 +38,7 @@
 /* ===== ページヘッダー ===== */
 .page-header{position:relative;z-index:1;max-width:1080px;margin:40px auto 0;padding:0 24px;}
 .page-badge{display:inline-flex;align-items:center;gap:6px;background:var(--mint-l);color:var(--mint-d);font-size:11px;font-weight:700;letter-spacing:.12em;padding:5px 14px;border-radius:20px;margin-bottom:16px;}
-.page-badge::before{content:'📷';}
+.page-badge::before{content:'\f03e';font-family:'Font Awesome 6 Free';font-weight:900;}
 .page-title{font-family:'Noto Serif JP',serif;font-size:clamp(22px,3.5vw,36px);font-weight:700;color:var(--text);letter-spacing:.04em;margin-bottom:10px;}
 .page-title span{background:linear-gradient(135deg,var(--mint),var(--sky));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .page-desc{font-size:14px;color:var(--text2);line-height:1.85;max-width:560px;}
@@ -45,7 +46,7 @@
 /* ===== 投稿案内バナー ===== */
 .post-banner-wrap{position:relative;z-index:1;max-width:1080px;margin:28px auto 0;padding:0 24px;}
 .post-banner{background:linear-gradient(135deg,var(--mint-d),var(--sky));border-radius:var(--r);padding:20px 28px;display:flex;align-items:center;gap:20px;box-shadow:0 8px 32px rgba(78,203,141,.3);}
-.post-banner-icon{font-size:40px;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,.15));}
+.post-banner-icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.22);color:#fff;font-size:21px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .post-banner-body{flex:1;}
 .post-banner-title{color:#fff;font-size:15px;font-weight:700;margin-bottom:4px;}
 .post-banner-desc{color:rgba(255,255,255,.88);font-size:12px;line-height:1.6;}
@@ -148,12 +149,12 @@
 .g-text{font-size:12px;color:var(--text2);line-height:1.7;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
 .g-footer{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
 .g-poster{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px;}
-.g-poster::before{content:'👤';font-size:10px;}
+.g-poster::before{content:'\f007';font-family:'Font Awesome 6 Free';font-weight:900;font-size:10px;}
 .g-new{display:inline-block;background:var(--coral-l);color:var(--coral);font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:auto;}
 
 /* ===== 空状態 ===== */
 .empty-state{text-align:center;padding:80px 24px;color:var(--text3);}
-.empty-icon{font-size:48px;margin-bottom:16px;}
+.empty-icon{font-size:40px;margin-bottom:16px;color:var(--text3);opacity:.5;}
 .empty-text{font-size:14px;line-height:1.8;}
 
 /* ===== ローディング ===== */
@@ -228,7 +229,7 @@
 <!-- 投稿案内バナー -->
 <div class="post-banner-wrap">
   <div class="post-banner">
-    <div class="post-banner-icon">📷</div>
+    <div class="post-banner-icon"><i class="fa-solid fa-camera"></i></div>
     <div class="post-banner-body">
       <div class="post-banner-title">あなたも投稿できます</div>
       <div class="post-banner-desc">公式LINEに写真を送るだけで掲載審査を行います。<br>※ 写真は1枚でお送りください。</div>
@@ -277,7 +278,7 @@
   </div>
   <div class="gallery-grid" id="galleryGrid" style="display:none"></div>
   <div class="empty-state" id="emptyState" style="display:none">
-    <div class="empty-icon">📭</div>
+    <div class="empty-icon"><i class="fa-regular fa-folder-open"></i></div>
     <div class="empty-text">まだ投稿がありません。<br>最初の投稿者になってみませんか？</div>
   </div>
 </div>
@@ -350,7 +351,7 @@ function createCard(article) {
 
   const imgHtml = article.imageUrl
     ? `<img class="g-img" src="${esc(article.imageUrl)}" alt="${esc(article.title)}" loading="lazy">`
-    : `<div class="g-img-placeholder">📷</div>`;
+    : `<div class="g-img-placeholder"><i class="fa-regular fa-image"></i></div>`;
 
   card.innerHTML = `
     ${imgHtml}
@@ -408,7 +409,7 @@ function openModal(article) {
 
   const imgHtml = article.imageUrl
     ? `<img class="modal-img" src="${esc(article.imageUrl)}" alt="${esc(article.title)}" style="cursor:zoom-in" onclick="openLightbox('${esc(article.imageUrl)}')">`
-    : `<div class="modal-img-placeholder">📷</div>`;
+    : `<div class="modal-img-placeholder"><i class="fa-regular fa-image"></i></div>`;
 
   content.innerHTML = `
     ${imgHtml}

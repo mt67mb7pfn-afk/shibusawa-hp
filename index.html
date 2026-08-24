@@ -231,7 +231,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 /* 自治会について */
 .about-banner{background:linear-gradient(135deg,var(--amber-l),#fff3bf);border:2px solid #ffe066;border-radius:var(--r);padding:28px 32px;display:flex;align-items:center;gap:22px;margin-bottom:44px;text-decoration:none;color:inherit;box-shadow:0 4px 20px rgba(255,212,59,.2);transition:transform .2s,box-shadow .2s;}
 .about-banner:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,212,59,.3);}
-.about-icon{font-size:48px;flex-shrink:0;transition:transform .3s;}
+.about-icon{width:52px;height:52px;border-radius:16px;background:#fff;color:var(--peach);font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s;}
 .about-banner:hover .about-icon{transform:scale(1.1) rotate(-5deg);}
 .about-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:5px;}
 .about-desc{font-size:13px;color:var(--text2);}
@@ -241,7 +241,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 /* 入会案内。「自治会とは」で知ってもらった流れで申し込みに進める位置に置く */
 .join-banner{background:linear-gradient(135deg,var(--mint-l),#d3f9e4);border:2px solid var(--mint);border-radius:var(--r);padding:28px 32px;display:flex;align-items:center;gap:22px;margin-bottom:44px;text-decoration:none;color:inherit;box-shadow:0 4px 20px rgba(78,203,141,.2);transition:transform .2s,box-shadow .2s;}
 .join-banner:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(78,203,141,.3);}
-.join-icon{font-size:48px;flex-shrink:0;transition:transform .3s;}
+.join-icon{width:52px;height:52px;border-radius:16px;background:#fff;color:var(--mint-d);font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .3s;}
 .join-banner:hover .join-icon{transform:scale(1.1);}
 .join-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:5px;}
 .join-desc{font-size:13px;color:var(--text2);}
@@ -252,7 +252,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 @media(max-width:700px){
   .join-banner{flex-wrap:wrap;padding:18px;gap:12px;}
   .join-main{gap:14px;width:100%;}
-  .join-icon{font-size:32px;}
+  .join-icon{width:44px;height:44px;border-radius:14px;font-size:20px;}
   .join-lead{display:none;}      /* 前置きは省き、行動につながる一文だけ残す */
   .join-title{font-size:15px;}
   .join-desc{font-size:12.5px;}
@@ -262,7 +262,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 /* 旧ホームページ案内（移行期間中のみ。役目を終えたらこのブロックごと削除する） */
 .archive-banner{background:#fff;border:2px dashed var(--border);border-radius:var(--r);padding:18px 22px;display:flex;align-items:center;gap:16px;margin-bottom:44px;text-decoration:none;color:inherit;transition:border-color .2s,background .2s;}
 .archive-banner:hover{border-color:var(--text3);background:var(--bg);}
-.archive-icon{font-size:26px;flex-shrink:0;}
+.archive-icon{width:44px;height:44px;border-radius:14px;background:var(--bg);color:var(--text3);font-size:19px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .archive-title{font-size:14px;font-weight:700;color:var(--text2);margin-bottom:3px;}
 .archive-desc{font-size:12px;color:var(--text2);}
 .archive-arr{margin-left:auto;color:var(--text3);font-size:20px;flex-shrink:0;}
@@ -546,7 +546,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
       <div class="sec-head"><span class="sec-tag sec-tag-coral">SAFETY</span><h2 class="sec-title">防災・避難場所</h2></div>
       <div class="sec-bar sec-bar-coral"></div>
       <div class="info-card">
-        <div class="card-head card-head-coral"><span style="font-size:18px">🚨</span><div class="card-head-text">各自治会の避難場所</div></div>
+        <div class="card-head card-head-coral"><span style="font-size:16px"><i class="fa-solid fa-triangle-exclamation"></i></span><div class="card-head-text">各自治会の避難場所</div></div>
         <div class="bousai-row"><div class="bousai-area">広域避難（大火災時）</div><div class="bousai-right"><div class="bousai-place">かしの木台ハイツ一帯</div><a class="bousai-school" href="https://www.city.yokohama.lg.jp/tsuzuki/kurashi/bosai_bohan/saigai/jishin/kouikihinabasyo.html" target="_blank" rel="noopener">詳細 ›</a></div></div>
         <div class="bousai-row"><div class="bousai-area">矢羽根自治会</div><div class="bousai-right"><div class="bousai-place">荏田小学校</div><a class="bousai-school" href="https://www.edu.city.yokohama.lg.jp/school/es/eda/" target="_blank" rel="noopener">学校HP ›</a></div></div>
         <div class="bousai-row"><div class="bousai-area">荏田東1・2・4丁目</div><div class="bousai-right"><div class="bousai-place">つづきの丘小学校</div><a class="bousai-school" href="https://www.edu.city.yokohama.lg.jp/school/es/tsuzukinooka/index.cfm/1,html" target="_blank" rel="noopener">学校HP ›</a></div></div>
@@ -564,7 +564,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
       <div class="sec-head"><span class="sec-tag sec-tag-sky">LINKS</span><h2 class="sec-title">関連リンク集</h2></div>
       <div class="sec-bar sec-bar-sky"></div>
       <div class="info-card">
-        <div class="card-head card-head-sky"><div class="card-head-text">🔗 渋沢連合自治会 関連サイト</div></div>
+        <div class="card-head card-head-sky"><div class="card-head-text"><i class="fa-solid fa-link"></i> 渋沢連合自治会 関連サイト</div></div>
         <a class="link-row" href="https://yabanejitikai2.jimdofree.com/" target="_blank" rel="noopener"><span class="link-dot"></span>矢羽根自治会<span class="link-arr">›</span></a>
 <a class="link-row" href="https://tuzuki-kurenkai.net/index.html" target="_blank" rel="noopener"><span class="link-dot"></span>都筑区連合町内会自治会<span class="link-arr">›</span></a>
 <a class="link-row" href="https://www.city.yokohama.lg.jp/kanko-bunka/sports/shinko/shinko/taishi.html" target="_blank" rel="noopener"><span class="link-dot"></span>スポーツ推進委員<span class="link-arr">›</span></a>
@@ -584,7 +584,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 
   <!-- 自治会について -->
   <a class="about-banner" href="https://mt67mb7pfn-afk.github.io/shibusawa-jichikai/" target="_blank" rel="noopener">
-    <div class="about-icon">🏘️</div>
+    <div class="about-icon"><i class="fa-solid fa-people-roof"></i></div>
     <div><div class="about-title">渋沢連合自治会とは</div><div class="about-desc">渋沢地区の各自治会が連携し、住みよい地域づくりを目指しています。自治会の紹介・活動内容はこちら。</div></div>
     <div class="about-arr">›</div>
   </a>
@@ -592,7 +592,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
   <!-- 入会案内。申込先は公式LINEのリッチメニューと同じGoogleフォーム -->
   <a class="join-banner" href="https://docs.google.com/forms/d/e/1FAIpQLSf9GGsm7a2QAvblB6mQ15rlGAG9JbT7oFhYcIsLv8EMHHf6tg/viewform" target="_blank" rel="noopener">
     <div class="join-main">
-      <div class="join-icon">🤝</div>
+      <div class="join-icon"><i class="fa-solid fa-user-plus"></i></div>
       <div>
         <div class="join-title">自治会への入会をお考えの方へ</div>
         <div class="join-desc"><span class="join-lead">渋沢連合自治会は5つの自治会で構成されています。</span>お申し込みいただくと、お住まいの区域の自治会長からご連絡します。</div>
@@ -603,7 +603,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 
   <!-- 旧ホームページ案内（移行期間中のみ。不要になったらこのブロックごと削除する） -->
   <a class="archive-banner" href="https://sibusawarengou.jimdofree.com" target="_blank" rel="noopener">
-    <div class="archive-icon">🗂️</div>
+    <div class="archive-icon"><i class="fa-solid fa-box-archive"></i></div>
     <div>
       <div class="archive-title">過去の情報をお探しの方へ</div>
       <div class="archive-desc">これまでのホームページはこちらでご覧いただけます（現在は更新していません）</div>
@@ -719,7 +719,7 @@ const BADGE_MAP={'NEW':'nb-new','お知らせ':'nb-info','掲示板':'nb-kairan'
         <div class="topic-img">
           ${p.imageUrl
             ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy">`
-            : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;">📰</div>`
+            : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--text3);"><i class="fa-regular fa-image"></i></div>`
           }
         </div>
         <div class="topic-body">
@@ -820,7 +820,7 @@ setTimeout(() => {
       const deadline = item.endDate ? `〜${esc(item.endDate)}` : '常設';
       const imgHtml  = (item.images && item.images[0])
         ? `<img class="bulletin-thumb-img" src="${esc(item.images[0])}" alt="${esc(item.title || '掲示物')}" loading="lazy">`
-        : `<div class="bulletin-thumb-img-placeholder">📋</div>`;
+        : `<div class="bulletin-thumb-img-placeholder"><i class="fa-regular fa-image"></i></div>`;
       // 一覧の先頭ではなく、その掲示物そのものへ飛ばす
       return `<a class="bulletin-thumb" href="bulletin.html?id=${esc(item.id)}">
         ${imgHtml}
@@ -858,8 +858,8 @@ setTimeout(() => {
     wrap.innerHTML = posts.map(p => {
       const dateStr = (p.date || '').replace(/\./g, '/');
       const imgHtml = p.imageUrl
-        ? `<img class="gallery-card-img" src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'gallery-card-img-placeholder\\'>📷</div>')">`
-        : `<div class="gallery-card-img-placeholder">📷</div>`;
+        ? `<img class="gallery-card-img" src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=\\'gallery-card-img-placeholder\\'><i class=\\'fa-regular fa-image\\'></i></div>')">`
+        : `<div class="gallery-card-img-placeholder"><i class="fa-regular fa-image"></i></div>`;
       return `<a class="gallery-card" href="gallery.html">
         ${imgHtml}
         <div class="gallery-card-body">

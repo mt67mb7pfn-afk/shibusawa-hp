@@ -1348,8 +1348,11 @@ function renderYakuinList(list) {
     const type = d[0] || '';
     const title = d[1] || '';
     const imageUrl = d[2] || '';
-    const thumb = imageUrl
-      ? `<img src="${esc(imageUrl)}" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">`
+    // 役員名簿の画像はDrive上で非公開にしたため、URLを直接は開けない。
+    // GAS経由（要パスワード）で取り寄せて差し込む。
+    const fid = (imageUrl.match(/\/d\/([A-Za-z0-9_-]+)/) || [])[1] || '';
+    const thumb = fid
+      ? `<span class="yakuin-thumb" data-fid="${esc(fid)}" style="color:#bbb;font-size:11px">…</span>`
       : '<span style="color:#bbb;font-size:11px">なし</span>';
     html += `<tr>
       <td style="color:#bbb;font-size:12px">${row}</td>
@@ -1361,6 +1364,28 @@ function renderYakuinList(list) {
   });
   html += '</table>';
   body.innerHTML = html;
+  loadYakuinThumbs();
+}
+
+// 非公開にした役員名簿の画像を、GAS経由で1枚ずつ取り寄せて表示する
+async function loadYakuinThumbs() {
+  const slots = [].slice.call(document.querySelectorAll('.yakuin-thumb[data-fid]'));
+  for (const el of slots) {
+    const fid = el.getAttribute('data-fid');
+    el.removeAttribute('data-fid');
+    try {
+      const res = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ type: 'get_member_image', password: password, fileId: fid })
+      });
+      const d = await res.json();
+      if (!d.success) throw new Error(d.error);
+      const src = 'data:' + d.mime + ';base64,' + d.data;
+      el.outerHTML = '<img src="' + src + '" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">';
+    } catch (e) {
+      el.textContent = '取得失敗';
+    }
+  }
 }
 
 async function deleteYakuin(row, title) {

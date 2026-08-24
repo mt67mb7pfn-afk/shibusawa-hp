@@ -126,6 +126,10 @@
   }
   .img-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
   .img-card img { width: 100%; height: 200px; object-fit: contain; display: block; padding: 8px; }
+  /* 画像はGAS経由で1枚ずつ取り寄せるため、届くまでの枠 */
+  .img-slot { height: 216px; display: flex; align-items: center; justify-content: center; }
+  .img-loading { font-size: 12px; color: #999; }
+  .img-fail { font-size: 12px; color: #d63031; }
   .img-card-label {
     padding: 8px 12px; font-size: 12px; color: #666;
     border-top: 1px solid #f0f0f0; text-align: center;
@@ -244,8 +248,10 @@
 </div>
 
 <script>
-const PASSWORD = 'sy1234';
+// パスワードはここに持たない。GASに送って照合する。
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
 
+let PW = '';                                   // ログイン中だけメモリに保持する
 let IMAGES = { yakuin: [], kessan: [], shakyo: [] };
 let lbImages = [];
 let lbIndex = 0;
@@ -254,41 +260,76 @@ document.getElementById('pw-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') login();
 });
 
-function login() {
-  const pw = document.getElementById('pw-input').value;
-  if (pw === PASSWORD) {
+async function login() {
+  const pw  = document.getElementById('pw-input').value;
+  const btn = document.querySelector('.login-btn');
+  document.getElementById('login-error').style.display = 'none';
+  if (btn) { btn.disabled = true; btn.textContent = '確認中...'; }
+
+  try {
+    const res  = await fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'get_members', password: pw })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error('unauthorized');
+
+    PW = pw;
+    IMAGES.yakuin = data.files.yakuin || [];
+    IMAGES.kessan = data.files.kessan || [];
+    IMAGES.shakyo = data.files.shakyo || [];
+
     document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('main-screen').style.display = 'block';
-    loadAndRender();
-  } else {
+    document.getElementById('main-screen').style.display  = 'block';
+
+    renderGrid('grid-yakuin', IMAGES.yakuin);
+    renderGrid('grid-kessan', IMAGES.kessan);
+    renderGrid('grid-shakyo', IMAGES.shakyo);
+    読み込み開始();
+
+  } catch (e) {
     document.getElementById('login-error').style.display = 'block';
     document.getElementById('pw-input').value = '';
     document.getElementById('pw-input').focus();
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '表示する'; }
   }
 }
 
 function logout() {
+  PW = '';
+  IMAGES = { yakuin: [], kessan: [], shakyo: [] };
+  ['grid-yakuin','grid-kessan','grid-shakyo'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
   document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('main-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display  = 'none';
   document.getElementById('pw-input').value = '';
   document.getElementById('login-error').style.display = 'none';
 }
 
-async function loadAndRender() {
-  try {
-    const res = await fetch('/data/members.json?t=' + Date.now());
-    const data = await res.json();
-    IMAGES.yakuin = data.yakuin || [];
-    IMAGES.kessan = data.kessan || [];
-    IMAGES.shakyo = data.shakyo || [];
-  } catch(e) {
-    IMAGES.yakuin = [];
-    IMAGES.kessan = [];
-    IMAGES.shakyo = [];
+// 画像は1枚ずつGAS経由で取り寄せる。まとめて送ると重いので順番に。
+async function 読み込み開始() {
+  const all = [].concat(IMAGES.yakuin, IMAGES.kessan, IMAGES.shakyo);
+  for (const item of all) {
+    try {
+      const res  = await fetch(GAS_URL, {
+        method: 'POST',
+        body: JSON.stringify({ type: 'get_member_image', password: PW, fileId: item.id })
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || 'failed');
+      item.src = 'data:' + data.mime + ';base64,' + data.data;
+    } catch (e) {
+      item.src = '';
+    }
+    const el = document.querySelector('[data-fid="' + item.id + '"]');
+    if (!el) continue;
+    el.innerHTML = item.src
+      ? '<img src="' + item.src + '" alt="' + esc(item.label) + '">'
+      : '<div class="img-fail">読み込めませんでした</div>';
   }
-  renderGrid('grid-yakuin', IMAGES.yakuin);
-  renderGrid('grid-kessan', IMAGES.kessan);
-  renderGrid('grid-shakyo', IMAGES.shakyo);
 }
 
 function renderGrid(gridId, images) {
@@ -299,7 +340,7 @@ function renderGrid(gridId, images) {
   }
   grid.innerHTML = images.map((img, i) => `
     <div class="img-card" onclick="openLightbox('${gridId}', ${i})">
-      <img src="${esc(img.src)}" alt="${esc(img.label)}" loading="lazy">
+      <div class="img-slot" data-fid="${esc(img.id)}"><div class="img-loading">読み込み中...</div></div>
       <div class="img-card-label">${esc(img.label)}（${i + 1}枚目）</div>
     </div>
   `).join('');
@@ -307,7 +348,8 @@ function renderGrid(gridId, images) {
 
 function openLightbox(gridId, index) {
   const key = gridId.replace('grid-', '');
-  lbImages = IMAGES[key].map(img => img.src);
+  if (!IMAGES[key][index] || !IMAGES[key][index].src) return;   // まだ読み込み中
+  lbImages = IMAGES[key].map(img => img.src || '');
   lbIndex = index;
   updateLightbox();
   document.getElementById('lightbox').classList.add('show');

@@ -64,7 +64,9 @@
 .form-note strong{display:block;margin-bottom:4px;}
 
 /* 送信ボタン */
-.submit-btn{
+.privacy-note{font-size:12px;color:#777;line-height:1.8;margin:4px 0 14px;}
+  .privacy-note a{color:#2ea86b;text-decoration:underline;text-underline-offset:2px;}
+  .submit-btn{
   width:100%;padding:16px;
   background:linear-gradient(135deg,var(--mint),var(--mint-d));
   color:#fff;font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:700;
@@ -133,7 +135,7 @@
     <a class="logo" href="index.html">
       <img class="logo-img" src="/images/meta/apple-touch-icon.png" onerror="this.style.display='none'" alt="">
       <div>
-        <div class="logo-pref">神奈川県秦野市</div>
+        <div class="logo-pref">横浜市都筑区</div>
         <div class="logo-name">渋沢連合自治会</div>
       </div>
     </a>
@@ -180,7 +182,7 @@
           電話番号<span class="optional">任意</span>
         </label>
         <input class="form-input" type="tel" id="phone" name="phone"
-          placeholder="例：0463-00-0000" autocomplete="tel">
+          placeholder="例：045-000-0000" autocomplete="tel">
       </div>
 
       <div class="form-group">
@@ -198,6 +200,11 @@
         <textarea class="form-textarea" id="message" name="message"
           placeholder="ご質問・ご要望・ご意見などをご記入ください" required></textarea>
       </div>
+
+      <p class="privacy-note">
+        ご入力いただいた内容は、お問い合わせへの回答のためにのみ利用します。
+        詳しくは<a href="privacy.html">個人情報の取り扱いについて</a>をご覧ください。
+      </p>
 
       <button class="submit-btn" type="submit" id="submit-btn">
         <span class="btn-text"><i class="fa-regular fa-paper-plane"></i> 送信する</span>

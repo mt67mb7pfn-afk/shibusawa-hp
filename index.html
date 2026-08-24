@@ -238,6 +238,21 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .about-arr{margin-left:auto;color:var(--peach);font-size:26px;flex-shrink:0;transition:transform .2s;}
 .about-banner:hover .about-arr{transform:translateX(5px);}
 
+/* 入会案内。「自治会とは」で知ってもらった流れで申し込みに進める位置に置く */
+.join-banner{background:linear-gradient(135deg,var(--mint-l),#d3f9e4);border:2px solid var(--mint);border-radius:var(--r);padding:28px 32px;display:flex;align-items:center;gap:22px;margin-bottom:44px;text-decoration:none;color:inherit;box-shadow:0 4px 20px rgba(78,203,141,.2);transition:transform .2s,box-shadow .2s;}
+.join-banner:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(78,203,141,.3);}
+.join-icon{font-size:48px;flex-shrink:0;transition:transform .3s;}
+.join-banner:hover .join-icon{transform:scale(1.1);}
+.join-title{font-size:16px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.join-desc{font-size:13px;color:var(--text2);}
+.join-cta{margin-left:auto;flex-shrink:0;background:var(--mint-d);color:#fff;font-size:13px;font-weight:700;padding:11px 22px;border-radius:20px;white-space:nowrap;transition:background .2s;}
+.join-banner:hover .join-cta{background:var(--mint);}
+@media(max-width:700px){
+  .join-banner{flex-wrap:wrap;padding:20px;gap:14px;}
+  .join-icon{font-size:36px;}
+  .join-cta{margin-left:0;width:100%;text-align:center;}
+}
+
 /* 旧ホームページ案内（移行期間中のみ。役目を終えたらこのブロックごと削除する） */
 .archive-banner{background:#fff;border:2px dashed var(--border);border-radius:var(--r);padding:18px 22px;display:flex;align-items:center;gap:16px;margin-bottom:44px;text-decoration:none;color:inherit;transition:border-color .2s,background .2s;}
 .archive-banner:hover{border-color:var(--text3);background:var(--bg);}
@@ -568,6 +583,16 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
     <div class="about-arr">›</div>
   </a>
 
+  <!-- 入会案内。申込先は公式LINEのリッチメニューと同じGoogleフォーム -->
+  <a class="join-banner" href="https://docs.google.com/forms/d/e/1FAIpQLSf9GGsm7a2QAvblB6mQ15rlGAG9JbT7oFhYcIsLv8EMHHf6tg/viewform" target="_blank" rel="noopener">
+    <div class="join-icon">🤝</div>
+    <div>
+      <div class="join-title">自治会への入会をお考えの方へ</div>
+      <div class="join-desc">渋沢連合自治会は5つの自治会で構成されています。お申し込みいただくと、お住まいの区域の自治会長からご連絡します。</div>
+    </div>
+    <div class="join-cta">入会申し込み ›</div>
+  </a>
+
   <!-- 旧ホームページ案内（移行期間中のみ。不要になったらこのブロックごと削除する） -->
   <a class="archive-banner" href="https://sibusawarengou.jimdofree.com" target="_blank" rel="noopener">
     <div class="archive-icon">🗂️</div>
@@ -593,6 +618,7 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 <a class="footer-nav-a" href="news.html">お知らせ</a>
 <a class="footer-nav-a" href="bulletin.html">掲示板</a>
 <a class="footer-nav-a" href="topics.html">トピックス</a>
+<a class="footer-nav-a" href="https://docs.google.com/forms/d/e/1FAIpQLSf9GGsm7a2QAvblB6mQ15rlGAG9JbT7oFhYcIsLv8EMHHf6tg/viewform" target="_blank" rel="noopener">入会のご案内</a>
 <a class="footer-nav-a" href="contact.html">お問い合わせ</a>
       </div>
       <div>

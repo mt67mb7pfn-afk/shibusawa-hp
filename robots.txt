@@ -1,0 +1,14 @@
+# 渋沢連合自治会 ホームページ
+# 管理画面と投稿フォームは検索結果に出さない（内部用のため）
+
+User-agent: *
+Disallow: /admin
+Disallow: /admin.html
+Disallow: /post-news
+Disallow: /post-news.html
+Disallow: /post-topics
+Disallow: /post-topics.html
+Disallow: /post-bulletin
+Disallow: /post-bulletin.html
+
+Sitemap: https://shibusawa-hp.pages.dev/sitemap.xml

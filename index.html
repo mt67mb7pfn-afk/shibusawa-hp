@@ -152,7 +152,9 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
 .quick-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--mint-l),var(--sky-l));opacity:0;transition:opacity .3s;}
 .quick-card:hover{border-color:var(--mint);box-shadow:var(--shadow);transform:translateY(-3px);}
 .quick-card:hover::before{opacity:1;}
-.quick-icon-wrap{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;transition:transform .3s;}
+.quick-icon-wrap{width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:24px;position:relative;transition:transform .3s;}
+/* スマホは2列でカードが狭く、52pxで既に幅の33%を占めるため大きくしない */
+@media(max-width:700px){.quick-icon-wrap{width:52px;height:52px;border-radius:16px;}.quick-icon-wrap i{font-size:22px !important;}.quick-icon-wrap .fa-line{font-size:26px !important;}}   /* LINEマークだけ元の比率を保つ */
 .quick-card:hover .quick-icon-wrap{transform:scale(1.15) rotate(-5deg);}
 .qi-mint{background:var(--mint-l);}
 .qi-coral{background:var(--coral-l);}
@@ -505,12 +507,12 @@ nav{display:flex;align-items:center;gap:2px;margin-left:auto;}
     </div>
     <div class="sec-bar sec-bar-amber"></div>
     <div class="quick-grid">
-      <a class="quick-card" href="https://www.r326.com/b/main.aspx?g=Yco46wE2233pl3vIR1" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-mint"><i class="fa-solid fa-calendar-days" style="font-size:22px;color:var(--mint-d);"></i></div><div class="quick-label">自治会館予約</div><div class="quick-sub">施設の予約はこちら</div></a>
-      <a class="quick-card" href="shiryo.html"><div class="quick-icon-wrap qi-coral"><i class="fa-solid fa-folder-open" style="font-size:22px;color:#d63031;"></i></div><div class="quick-label">各種資料</div><div class="quick-sub">行事予定表・議事録</div></a>
-      <a class="quick-card" href="https://1lo1xc7ol8x1.blog.fc2.com/" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-lavender"><i class="fa-solid fa-images" style="font-size:22px;color:var(--lavender);"></i></div><div class="quick-label">行事写真館</div><div class="quick-sub">FC2ブログ</div></a>
-      <a class="quick-card" href="https://lin.ee/NnQmKvP" target="_blank" rel="noopener"><div class="quick-icon-wrap" style="background:#06C755;"><i class="fa-brands fa-line" style="font-size:26px;color:#fff;"></i></div><div class="quick-label">LINE投稿する</div><div class="quick-sub">写真・近況を送ろう</div></a>
-      <a class="quick-card" href="katsudo.html"><div class="quick-icon-wrap qi-sky"><i class="fa-solid fa-calendar-check" style="font-size:22px;color:#1971c2;"></i></div><div class="quick-label">地域の定例活動</div><div class="quick-sub">毎月ひらかれる集まり</div></a>
-      <a class="quick-card" href="https://sites.google.com/view/rengoukosodate/%E3%83%9B%E3%83%BC%E3%83%A0" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-amber"><i class="fa-solid fa-map-location-dot" style="font-size:22px;color:var(--peach);"></i></div><div class="quick-label">まちのいいとこ発見</div><div class="quick-sub">子育て・おでかけ情報</div></a>
+      <a class="quick-card" href="https://www.r326.com/b/main.aspx?g=Yco46wE2233pl3vIR1" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-mint"><i class="fa-solid fa-calendar-days" style="font-size:27px;color:var(--mint-d);"></i></div><div class="quick-label">自治会館予約</div><div class="quick-sub">施設の予約はこちら</div></a>
+      <a class="quick-card" href="shiryo.html"><div class="quick-icon-wrap qi-coral"><i class="fa-solid fa-folder-open" style="font-size:27px;color:#d63031;"></i></div><div class="quick-label">各種資料</div><div class="quick-sub">行事予定表・議事録</div></a>
+      <a class="quick-card" href="https://1lo1xc7ol8x1.blog.fc2.com/" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-lavender"><i class="fa-solid fa-images" style="font-size:27px;color:var(--lavender);"></i></div><div class="quick-label">行事写真館</div><div class="quick-sub">FC2ブログ</div></a>
+      <a class="quick-card" href="https://lin.ee/NnQmKvP" target="_blank" rel="noopener"><div class="quick-icon-wrap" style="background:#06C755;"><i class="fa-brands fa-line" style="font-size:31px;color:#fff;"></i></div><div class="quick-label">LINE投稿する</div><div class="quick-sub">写真・近況を送ろう</div></a>
+      <a class="quick-card" href="katsudo.html"><div class="quick-icon-wrap qi-sky"><i class="fa-solid fa-calendar-check" style="font-size:27px;color:#1971c2;"></i></div><div class="quick-label">地域の定例活動</div><div class="quick-sub">毎月ひらかれる集まり</div></a>
+      <a class="quick-card" href="https://sites.google.com/view/rengoukosodate/%E3%83%9B%E3%83%BC%E3%83%A0" target="_blank" rel="noopener"><div class="quick-icon-wrap qi-amber"><i class="fa-solid fa-map-location-dot" style="font-size:27px;color:var(--peach);"></i></div><div class="quick-label">まちのいいとこ発見</div><div class="quick-sub">子育て・おでかけ情報</div></a>
     </div>
   </div>
 

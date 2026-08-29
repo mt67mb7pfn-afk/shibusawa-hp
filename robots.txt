@@ -13,3 +13,4 @@ Disallow: /post-bulletin.html
 
 Sitemap: https://shibusawa-hp.pages.dev/sitemap.xml
 Sitemap: https://shibusawa-hp.pages.dev/sitemap-main.xml
+Sitemap: https://shibusawa-hp.pages.dev/sitemap.txt

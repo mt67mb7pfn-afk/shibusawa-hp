@@ -1,37 +1,6 @@
 {
   "bulletin": [
     {
-      "id": 11,
-      "title": "ラジオ体操",
-      "type": "短期",
-      "startDate": "2026.08.20",
-      "endDate": "2026.08.26",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1cH9zH09ObsuNgZbiGroQf8lJhIEHAtK1"
-      ]
-    },
-    {
-      "id": 10,
-      "title": "【８月２６日（水）】えだきん夜店市　２０２６",
-      "type": "短期",
-      "startDate": "2026.07.29",
-      "endDate": "2026.08.26",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1IqpU_1Mr982-yUJtBAgaqr5wsRLQaa4U"
-      ]
-    },
-    {
-      "id": 14,
-      "title": "第三級アマチュア無線技士 養成課程講習会（短縮コース）",
-      "type": "短期",
-      "startDate": "",
-      "endDate": "2026.09.06",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1r5DcWXhFpguj_ngAxcrVit5u16Ga4zX7",
-        "https://lh3.googleusercontent.com/d/1c4Tl_eYufdLhAzCA9Xaca9X8OWIxlgzm"
-      ]
-    },
-    {
       "id": 15,
       "title": "令和8年度 横浜市総合防災訓練（10月4日・荏田南中学校）",
       "type": "短期",
@@ -39,16 +8,6 @@
       "endDate": "2026.10.04",
       "images": [
         "https://lh3.googleusercontent.com/d/11ArmB334V0UPTSEf5KW_nIoCyT0U0b4N"
-      ]
-    },
-    {
-      "id": 17,
-      "title": "にっぽんの伝統芸能 2026 in つづき（9月6日・ボッシュホール）",
-      "type": "短期",
-      "startDate": "",
-      "endDate": "2026.09.06",
-      "images": [
-        "https://lh3.googleusercontent.com/d/1RclAUs1F9klH8mesXzIqvTvt_QegJaIP"
       ]
     },
     {

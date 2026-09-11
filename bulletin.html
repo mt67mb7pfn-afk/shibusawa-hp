@@ -261,7 +261,21 @@ async function loadBulletin() {
   try {
     const res = await fetch('/data/bulletin.json');
     const data = await res.json();
-    allBulletin = data.bulletin || [];
+
+    // 掲載期間で絞り込む。GAS側でも除外しているが、JSONの再生成が走るまでは
+    // 期限切れが残るため、表示する側でも必ず判定する（トップページと同じ扱い）
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const toDate = s => { const [y, m, d] = String(s).split(/[.\-]/); return new Date(+y, +m - 1, +d); };
+
+    allBulletin = (data.bulletin || []).filter(item => {
+      if (item.hidden) return false;
+      const start = item.startDate ? toDate(item.startDate) : null;
+      const end   = item.endDate   ? toDate(item.endDate)   : null;
+      if (start && start > today) return false;
+      if (end   && end   < today) return false;
+      return true;
+    });
+
     renderBulletin();
   } catch(e) {
     document.getElementById('bulletin-grid').innerHTML =

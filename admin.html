@@ -900,7 +900,12 @@ function fetchSheet(sheet, force = false) {
   if (!force && sheetInflight[sheet]) return sheetInflight[sheet];
 
   const gen = sheetGen[sheet] = (sheetGen[sheet] || 0) + 1;
-  const p = fetch(`${GAS_URL}?type=admin_list&sheet=${encodeURIComponent(sheet)}`)
+  // 一覧には氏名・電話番号・LINEのIDなどが含まれるため、GETではなくPOSTで
+  // パスワードを添えて取りに行く。URLに載せると履歴やログに残ってしまう。
+  const p = fetch(GAS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ type: 'admin_list', sheet, password })
+    })
     .then(res => res.json())
     .then(data => {
       const list = data.list || [];

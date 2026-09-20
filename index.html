@@ -808,7 +808,10 @@ setTimeout(() => {
     }).sort((a, b) => {
       const ea = a.endDate ? parseLocalDate(a.endDate) : new Date('9999-12-31');
       const eb = b.endDate ? parseLocalDate(b.endDate) : new Date('9999-12-31');
-      return ea - eb;
+      if (ea - eb !== 0) return ea - eb;
+      // 期限なしの常設は全部同着になり、登録が古い順のまま並んでいた。
+      // IDは登録順に増えるので、同着はID降順にして新しいものを上に出す。
+      return Number(b.id) - Number(a.id);
     });
 
     if (items.length === 0) return;

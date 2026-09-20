@@ -276,6 +276,19 @@ async function loadBulletin() {
       return true;
     });
 
+    // 並び順もGAS側と同じ規則で作り直す。常設は開始日を入れないことが多く、
+    // 日付だけで比べると全部同着になり、登録が古い順のまま並んでしまう。
+    // IDは登録順に増えるので、同着はID降順にして新しいものを上に出す。
+    const typeOrder = { '短期': 0, '中期': 1, '常設': 2 };
+    allBulletin.sort((a, b) => {
+      const ta = typeOrder[a.type] ?? 99;
+      const tb = typeOrder[b.type] ?? 99;
+      if (ta !== tb) return ta - tb;
+      const d = (b.startDate || '').localeCompare(a.startDate || '');
+      if (d !== 0) return d;
+      return Number(b.id) - Number(a.id);
+    });
+
     renderBulletin();
   } catch(e) {
     document.getElementById('bulletin-grid').innerHTML =

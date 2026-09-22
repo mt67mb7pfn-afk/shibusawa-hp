@@ -887,6 +887,39 @@
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPfmeo3zuEohAdfTuX2OkNh0UV_SNW1JICeIOYNKknLR6YgGoA_ais9QGGhEhdWGK2uw/exec';
 let password = '';
 
+// ============================================================
+//  GASへの送信（再試行つき）
+//
+//  GASは時々、JSONではなくGoogleの404ページやリダイレクトを返してくる。
+//  実測で6回に2回。1回で諦めると「通信エラーが発生しました」になるため、
+//  JSONが返ってこなかった場合は少し待って投げ直す。
+// ============================================================
+const GAS_RETRY = 3;
+
+// 行番号を指定して消す処理だけは投げ直さない。
+// 1回目が実際には成功していて応答だけ失われていた場合、2回目は行が
+// ずれた状態で走り、別の行を消してしまう。取り返しがつかないため。
+const NO_RETRY = ['admin_delete', 'delete_gallery', 'delete_yakuin'];
+
+async function gasPost(payload) {
+  const 回数 = NO_RETRY.includes(payload && payload.type) ? 1 : GAS_RETRY;
+  let lastError;
+
+  for (let i = 0; i < 回数; i++) {
+    if (i > 0) await new Promise(r => setTimeout(r, 600 * i));   // 600ms, 1200ms
+    try {
+      const res  = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const text = await res.text();
+      // GASの不調時はHTMLが返る。JSONとして読めたときだけ成功とみなす
+      if (text.trim().startsWith('{')) return JSON.parse(text);
+      lastError = new Error('GASがJSONを返しませんでした (HTTP ' + res.status + ')');
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError;
+}
+
 // ===== シート取得のキャッシュ =====
 // GASは1リクエストあたり約2秒かかるため、一度読んだシートは保持して
 // タブ切替では再取得しない。更新・削除の直後だけ force で取り直す。
@@ -902,11 +935,7 @@ function fetchSheet(sheet, force = false) {
   const gen = sheetGen[sheet] = (sheetGen[sheet] || 0) + 1;
   // 一覧には氏名・電話番号・LINEのIDなどが含まれるため、GETではなくPOSTで
   // パスワードを添えて取りに行く。URLに載せると履歴やログに残ってしまう。
-  const p = fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'admin_list', sheet, password })
-    })
-    .then(res => res.json())
+  const p = gasPost({ type: 'admin_list', sheet, password })
     .then(data => {
       const list = data.list || [];
       if (gen === sheetGen[sheet]) {   // 最新のリクエストの結果だけ採用
@@ -945,11 +974,7 @@ async function login() {
   btn.disabled = true;
   btn.textContent = '確認中...';
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'verify_password', password: pw })
-    });
-    const data = await res.json();
+    const data = await gasPost({ type: 'verify_password', password: pw });
     if (data.success) {
       password = pw;
       try { localStorage.setItem('adminPassword', pw); } catch(_) {}
@@ -1136,16 +1161,12 @@ function renderTable(list, tabId) {
 async function toggleVisibility(sheet, row, show) {
   const action = show ? 'admin_show' : 'admin_hide';
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({
+    const data = await gasPost({
         type: action,
         sheet,
         row,
         password
-      })
-    });
-    const data = await res.json();
+      });
     if (data.success) {
       showToast(show ? '公開しました' : '非公開にしました', 'success');
       loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin', true);
@@ -1160,16 +1181,12 @@ async function toggleVisibility(sheet, row, show) {
 async function deleteItem(sheet, row, title) {
   if (!confirm(`「${title}」を完全に削除しますか？\nこの操作は元に戻せません。`)) return;
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({
+    const data = await gasPost({
         type: 'admin_delete',
         sheet,
         row,
         password
-      })
-    });
-    const data = await res.json();
+      });
     if (data.success) {
       showToast('削除しました', 'success');
       loadListTab(sheet === 'お知らせ' ? 'news' : sheet === 'トピックス' ? 'topics' : 'bulletin', true);
@@ -1229,18 +1246,14 @@ async function submitShiryo(e) {
     const reader = new FileReader();
     reader.onload = async (ev) => {
       const base64 = ev.target.result.split(',')[1];
-      const res = await fetch(GAS_URL, {
-        method: 'POST',
-        body: JSON.stringify({
+      const data = await gasPost({
           type: 'upload_shiryo',
           category,
           title,
           fileBase64: base64,
           fileName: file.name,
           password
-        })
-      });
-      const data = await res.json();
+        });
       if (data.success) {
         showToast('登録しました', 'success');
         resetShiyroForm();
@@ -1308,11 +1321,7 @@ function renderShiryoList(list) {
 async function deleteShiryo(row, title) {
   if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'admin_delete', sheet: '各種資料', row, password })
-    });
-    const data = await res.json();
+    const data = await gasPost({ type: 'admin_delete', sheet: '各種資料', row, password });
     if (data.success) {
       showToast('削除しました', 'success');
       loadShiryoList(true);
@@ -1379,11 +1388,7 @@ async function loadYakuinThumbs() {
     const fid = el.getAttribute('data-fid');
     el.removeAttribute('data-fid');
     try {
-      const res = await fetch(GAS_URL, {
-        method: 'POST',
-        body: JSON.stringify({ type: 'get_member_image', password: password, fileId: fid })
-      });
-      const d = await res.json();
+      const d = await gasPost({ type: 'get_member_image', password: password, fileId: fid });
       if (!d.success) throw new Error(d.error);
       const src = 'data:' + d.mime + ';base64,' + d.data;
       el.outerHTML = '<img src="' + src + '" style="height:48px;border-radius:4px;object-fit:cover;cursor:zoom-in;" onclick="openLightbox(this.src, event)">';
@@ -1396,11 +1401,7 @@ async function loadYakuinThumbs() {
 async function deleteYakuin(row, title) {
   if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'delete_yakuin', row, password })
-    });
-    const data = await res.json();
+    const data = await gasPost({ type: 'delete_yakuin', row, password });
     if (data.success) {
       showToast('削除しました', 'success');
       loadYakuinList(true);
@@ -1449,18 +1450,14 @@ async function submitYakuin(e) {
     const reader = new FileReader();
     reader.onload = async (ev) => {
       const base64 = ev.target.result.split(',')[1];
-      const res = await fetch(GAS_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          type: 'upload_yakuin',
-          fileType,
-          fileBase64: base64,
-          fileName: file.name,
-          password
-        })
+      const data = await gasPost({
+        type: 'upload_yakuin',
+        fileType,
+        fileBase64: base64,
+        fileName: file.name,
+        password
       });
       clearTimeout(timeoutId);
-      const data = await res.json();
       if (data.success) {
         showToast('追加しました', 'success');
         resetYakuinForm();
@@ -1668,8 +1665,7 @@ async function submitEdit() {
   }
 
   try {
-    const res = await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
-    const data = await res.json();
+    const data = await gasPost(payload);
     if (data.success) {
       showToast('保存しました', 'success');
       closeEdit();
@@ -1756,11 +1752,7 @@ async function approvePost(pendingId) {
   approveBtn.textContent = '処理中...';
 
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'approve_post', pendingId, title, body, password })
-    });
-    const data = await res.json();
+    const data = await gasPost({ type: 'approve_post', pendingId, title, body, password });
     if (data.success) {
       showToast('承認しました', 'success');
       invalidateSheet('ギャラリー');  // 承認された投稿がギャラリーに移るため
@@ -1789,11 +1781,7 @@ async function rejectPost(pendingId) {
   rejectBtn.textContent = '処理中...';
 
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'reject_post', pendingId, password })
-    });
-    const data = await res.json();
+    const data = await gasPost({ type: 'reject_post', pendingId, password });
     if (data.success) {
       showToast('却下しました', 'success');
       loadPendingPosts(true);
@@ -1866,11 +1854,7 @@ function renderGallery(list) {
 async function deleteGallery(row, title) {
   if (!confirm(`「${title}」を削除しますか？\nこの操作は元に戻せません。`)) return;
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      body: JSON.stringify({ type: 'delete_gallery', row, password })
-    });
-    const data = await res.json();
+    const data = await gasPost({ type: 'delete_gallery', row, password });
     if (data.success) {
       showToast('削除しました', 'success');
       loadGallery(true);

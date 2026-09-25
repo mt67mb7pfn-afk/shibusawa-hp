@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 46,
+      "title": "第31回 秋の渋沢フェスティバル レクリエーション大会",
+      "type": "短期",
+      "startDate": "2026.09.25",
+      "endDate": "2026.10.18",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1V0kaUKn2xAsSf7QdbERDKVgu0Sczp-1L"
+      ]
+    },
+    {
       "id": 45,
       "title": "",
       "type": "短期",

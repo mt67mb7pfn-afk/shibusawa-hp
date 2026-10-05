@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 50,
+      "title": "都筑区医師会 市民医学講演会 糖尿病を知ることから始めよう",
+      "type": "短期",
+      "startDate": "2026.10.05",
+      "endDate": "2026.11.15",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1sxnAgIln4-mCBMVKZshT6pvDXPaXShuq"
+      ]
+    },
+    {
       "id": 48,
       "title": "都筑ふれあいの丘まつり",
       "type": "短期",

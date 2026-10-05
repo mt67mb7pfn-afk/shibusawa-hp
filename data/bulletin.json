@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 48,
+      "title": "都筑ふれあいの丘まつり",
+      "type": "短期",
+      "startDate": "2026.10.05",
+      "endDate": "2026.11.08",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1tCGkh0U1tWOiqelACiQt0af3DyoE0yae"
+      ]
+    },
+    {
       "id": 47,
       "title": "大人のためのおはなし会",
       "type": "短期",

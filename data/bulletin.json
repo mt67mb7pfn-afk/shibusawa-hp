@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 55,
+      "title": "令和8年度 都筑区人権啓発講演会",
+      "type": "短期",
+      "startDate": "2026.10.29",
+      "endDate": "2026.12.21",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1Te1u0gbantOJtDklZ8eIP7PIB7H5u4a1"
+      ]
+    },
+    {
       "id": 54,
       "title": "第8回 渋沢へなちょこおやじたちの会トークショー",
       "type": "短期",

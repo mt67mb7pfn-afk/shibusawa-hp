@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 54,
+      "title": "第8回 渋沢へなちょこおやじたちの会トークショー",
+      "type": "短期",
+      "startDate": "2026.10.29",
+      "endDate": "2026.12.05",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1t1Fm23YAkOprqGHLqyOxwRrBh0EFrOsg"
+      ]
+    },
+    {
       "id": 53,
       "title": "",
       "type": "短期",

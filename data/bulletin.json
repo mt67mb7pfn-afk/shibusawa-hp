@@ -1,6 +1,16 @@
 {
   "bulletin": [
     {
+      "id": 56,
+      "title": "令和8年度 飛行場外離着陸訓練の実施について",
+      "type": "短期",
+      "startDate": "2026.10.29",
+      "endDate": "2026.12.03",
+      "images": [
+        "https://lh3.googleusercontent.com/d/1UDP5ADqH7TfYD7d9jZAYsB1MljsBtV--"
+      ]
+    },
+    {
       "id": 55,
       "title": "令和8年度 都筑区人権啓発講演会",
       "type": "短期",

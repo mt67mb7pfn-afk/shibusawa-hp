@@ -115,6 +115,40 @@ input[type="date"]{width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
 .submit-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(77,171,247,.5);}
 .submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
 
+/* 送信中の表示
+   文字が「送信中...」に変わるだけでは、固まっているのか
+   動いているのかが分からない。流れるバーと、1秒ごとに増える
+   経過秒数の2つで「生きている」ことを示す。 */
+.progress{display:none;margin-top:16px;}
+.progress.on{display:block;}
+.progress-text{
+  font-size:13px;color:var(--text2);text-align:center;
+  margin-bottom:10px;font-weight:700;
+}
+.progress-sec{color:var(--text3);font-weight:400;}
+.progress-bar{
+  height:6px;border-radius:3px;background:var(--border);
+  overflow:hidden;position:relative;
+}
+.progress-bar i{
+  position:absolute;top:0;left:0;height:100%;width:34%;
+  border-radius:3px;background:linear-gradient(90deg,var(--sky),var(--mint));
+  animation:progressSlide 1.3s ease-in-out infinite;
+}
+@keyframes progressSlide{
+  0%  {left:-34%;}
+  100%{left:100%;}
+}
+.progress-slow{
+  display:none;margin-top:10px;text-align:center;
+  font-size:12px;color:var(--text3);line-height:1.6;
+}
+.progress-slow.on{display:block;}
+/* 動きを控えたい設定の端末では、バーを止めて秒数だけで示す */
+@media (prefers-reduced-motion:reduce){
+  .progress-bar i{animation:none;left:0;width:100%;opacity:.5;}
+}
+
 /* 結果 */
 .result{
   text-align:center;padding:20px;border-radius:12px;
@@ -222,6 +256,18 @@ input[type="date"]{-webkit-appearance:none;appearance:auto;width:100%;max-width:
 
       <!-- 送信ボタン -->
       <button class="submit-btn" id="submit-btn" onclick="submitForm()">掲示する</button>
+
+      <div class="progress" id="progress">
+        <div class="progress-text">
+          <span id="progress-label">送信しています</span>
+          <span class="progress-sec" id="progress-sec"></span>
+        </div>
+        <div class="progress-bar"><i></i></div>
+        <div class="progress-slow" id="progress-slow">
+          時間がかかっています。そのままお待ちください。<br>
+          画面を閉じたり、もう一度押したりしないでください。
+        </div>
+      </div>
 
       <!-- 結果 -->
       <div class="result" id="result"></div>
@@ -344,6 +390,37 @@ function resizeImage(file, maxSize = 1600, quality = 0.85) {
   });
 }
 
+// ===== 送信中の表示 =====
+// 経過秒数を1秒ごとに書き換える。数字が増えていれば動いている証拠になる。
+let progressTimer = null;
+
+function startProgress(label) {
+  const t0 = Date.now();
+  document.getElementById('progress-label').textContent = label;
+  document.getElementById('progress-sec').textContent = '0秒';
+  document.getElementById('progress-slow').classList.remove('on');
+  document.getElementById('progress').classList.add('on');
+
+  clearInterval(progressTimer);
+  progressTimer = setInterval(() => {
+    const sec = Math.floor((Date.now() - t0) / 1000);
+    document.getElementById('progress-sec').textContent = `${sec}秒`;
+    // GASは遅いときがある。待ってよいのだと伝えて、二度押しを防ぐ
+    if (sec >= 15) document.getElementById('progress-slow').classList.add('on');
+  }, 1000);
+}
+
+function setProgressLabel(label) {
+  document.getElementById('progress-label').textContent = label;
+}
+
+function stopProgress() {
+  clearInterval(progressTimer);
+  progressTimer = null;
+  document.getElementById('progress').classList.remove('on');
+  document.getElementById('progress-slow').classList.remove('on');
+}
+
 // 投稿処理
 async function submitForm() {
   const title = document.getElementById('title').value.trim();
@@ -364,7 +441,8 @@ async function submitForm() {
 
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
-  btn.textContent = '画像を処理中...';
+  btn.textContent = '送信中';
+  startProgress('画像を準備しています');
 
   try {
     // 画像を最大3枚処理（送信前に縮小して通信時間を短縮）
@@ -380,7 +458,7 @@ async function submitForm() {
       }
     }
 
-    btn.textContent = '送信中...';
+    setProgressLabel('送信しています');
 
     const payload = {
       password: enteredPassword,
@@ -406,6 +484,7 @@ async function submitForm() {
   } catch(e) {
     showResult('❌ 送信に失敗しました。もう一度お試しください。', 'error');
   } finally {
+    stopProgress();
     btn.disabled = false;
     btn.textContent = '掲示する';
   }
